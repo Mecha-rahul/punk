@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOID STUDIOS — Luxury Heavyweight Streetwear & Editorial Archive</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#070707',
+              dark: '#0e0e0e',
+              surface: '#151515',
+              border: '#242424',
+              muted: '#7e7e84',
+              light: '#f5f5f0',
+              accent: '#ff3b30',
+              accentHover: '#e02d23',
+              bone: '#e8e6df',
+              zinc: '#2a2a2f'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            editorial: ['"Cinzel"', 'serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          letterSpacing: {
+            ultra: '0.25em',
+            mega: '0.35em'
+          },
+          animation: {
+            'marquee': 'marquee 30s linear infinite',
+            'marquee-reverse': 'marquee-reverse 30s linear infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'fade-in': 'fadeIn 0.4s ease-out forwards'
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' }
+            },
+            'marquee-reverse': {
+              '0%': { transform: 'translateX(-50%)' },
+              '100%': { transform: 'translateX(0%)' }
+            },
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(8px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React & Babel for zero-config preview -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .editorial-gradient {
+      background: linear-gradient(180deg, rgba(7,7,7,0) 0%, rgba(7,7,7,0.85) 75%, rgba(7,7,7,1) 100%);
+    }
+
+    .glass-nav {
+      background: rgba(10, 10, 10, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .glass-card {
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    /* Smooth Dragging Cursor */
+    .drag-cursor {
+      cursor: grab;
+    }
+    .drag-cursor:active {
+      cursor: grabbing;
+    }
+  </style>
+</head>
+<body class="bg-brand-black text-brand-light font-sans antialiased selection:bg-brand-accent selection:text-white min-h-screen">
+  <div id="root"></div>
+
+  <!-- Main React App Script -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo, createContext, useContext } = React;
+
+    // --- MOCK DATABASE & CATALOG ---
+    const CURRENCIES = {
+      USD: { symbol: '$', rate: 1.0, name: 'USD' },
+      EUR: { symbol: '€', rate: 0.92, name: 'EUR' },
+      GBP: { symbol: '£', rate: 0.79, name: 'GBP' },
+      JPY: { symbol: '¥', rate: 154.0, name: 'JPY' }
+    };
+
+    const PRODUCTS_DATA = [
+      {
+        id: 'vd-01',
+        name: 'Heavyweight Boxy Hoodie',
+        tagline: '520 GSM French Terry Cotton',
+        category: 'Hoodies',
+        fit: 'Boxy',
+        priceUSD: 140,
+        tags: ['LIMITED DROP', 'HEAVYWEIGHT'],
+        inStock: true,
+        stockCount: 14,
+        rating: 4.9,
+        reviewsCount: 38,
+        colors: [
+          { name: 'Obsidian Black', hex: '#111111', imgIndex: 0 },
+          { name: 'Washed Charcoal', hex: '#373737', imgIndex: 1 },
+          { name: 'Bone Taupe', hex: '#cfc9be', imgIndex: 2 }
+        ],
+        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+        sizeStock: { S: 3, M: 6, L: 4, XL: 1, XXL: 0 },
+        images: [
+          'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1000&q=85'
+        ],
+        details: [
+          '520 GSM ultra-heavyweight brushed loopback French Terry',
+          'Double-layered hood with seamless kangaroo pocket',
+          'Drop shoulder architectural silhouette with tight ribbed waist',
+          'Preshrunk with enzyme wash for vintage lived-in handfeel',
+          'Signature gunmetal engraved VOID metal bar at hem'
+        ],
+        care: 'Cold hand wash or gentle cycle inside out. Lay flat to dry. Do not tumble dry.',
+        fitGuide: 'True to boxy fit. Take your normal size for intended relaxed look, or size up for exaggerated drape.'
+      },
+      {
+        id: 'vd-02',
+        name: 'Archival Oversized Tee',
+        tagline: '300 GSM Organic Combed Jersey',
+        category: 'Tees',
+        fit: 'Oversized',
+        priceUSD: 58,
+        tags: ['CORE ESSENTIAL', 'BESTSELLER'],
+        inStock: true,
+        stockCount: 42,
+        rating: 4.8,
+        reviewsCount: 94,
+        colors: [
+          { name: 'Vintage Black', hex: '#161616', imgIndex: 0 },
+          { name: 'Raw Bone', hex: '#e3dfd3', imgIndex: 1 },
+          { name: 'Zinc Olive', hex: '#3b3e34', imgIndex: 2 }
+        ],
+        sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+        sizeStock: { XS: 4, S: 12, M: 15, L: 8, XL: 3, XXL: 0 },
+        images: [
+          'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1000&q=85'
+        ],
+        details: [
+          '300 GSM custom-knit combed cotton',
+          'Thick 1.25" high-neck rib collar (keeps shape forever)',
+          'Elongated sleeve with dropped shoulder drape',
+          'Blind stitched hems for clean minimalist profile',
+          'Screenprinted subtle tonal studio coordinate branding on nape'
+        ],
+        care: 'Machine wash cold with like colors. Hang dry.',
+        fitGuide: 'Oversized by design with a generous chest and dropped shoulders.'
+      },
+      {
+        id: 'vd-03',
+        name: 'Technical Tactical Bomber',
+        tagline: 'Water-Repellent Italian Ripstop',
+        category: 'Outerwear',
+        fit: 'Relaxed',
+        priceUSD: 285,
+        tags: ['DROP 01', 'LOW STOCK'],
+        inStock: true,
+        stockCount: 5,
+        rating: 5.0,
+        reviewsCount: 19,
+        colors: [
+          { name: 'Stealth Black', hex: '#0a0a0a', imgIndex: 0 },
+          { name: 'Titanium Grey', hex: '#4a4d52', imgIndex: 1 }
+        ],
+        sizes: ['S', 'M', 'L', 'XL'],
+        sizeStock: { S: 1, M: 2, L: 2, XL: 0 },
+        images: [
+          'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=1000&q=85'
+        ],
+        details: [
+          'Custom waterproof matte Italian technical nylon',
+          'PrimaLoft® Gold thermal insulation for all-season warmth',
+          '2-way matte black heavy-duty Raccagni zipper',
+          'Modular chest utility pocket with hidden key ring clip',
+          'Magnetic closure side entry pockets with fleece lining'
+        ],
+        care: 'Specialist dry clean only.',
+        fitGuide: 'Relaxed fit with room for layering over heavy knitwear or hoodies.'
+      },
+      {
+        id: 'vd-04',
+        name: 'Pleated Cargo Trouser',
+        tagline: 'Heavy Cotton Twill with Bungee Cuffs',
+        category: 'Bottoms',
+        fit: 'Relaxed',
+        priceUSD: 165,
+        tags: ['NEW ARRIVAL'],
+        inStock: true,
+        stockCount: 19,
+        rating: 4.7,
+        reviewsCount: 22,
+        colors: [
+          { name: 'Onyx', hex: '#111111', imgIndex: 0 },
+          { name: 'Washed Earth', hex: '#4e433a', imgIndex: 1 }
+        ],
+        sizes: ['28', '30', '32', '34', '36'],
+        sizeStock: { 28: 2, 30: 6, 32: 8, 34: 3, 36: 0 },
+        images: [
+          'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=1000&q=85'
+        ],
+        details: [
+          '380 GSM Japanese cotton-twill weave',
+          'Deep dual front pleats for voluminous silhouette',
+          'Streamlined envelope cargo pockets with matte snap buttons',
+          'Adjustable elastic toggle hem for tapered or wide-leg styling',
+          'Internal drawstring waistband with premium horn buttons'
+        ],
+        care: 'Machine wash cold inside out. Warm iron on reverse.',
+        fitGuide: 'Wide-leg straight fit through thigh with customizable ankle cinch.'
+      },
+      {
+        id: 'vd-05',
+        name: 'Cropped Thermal Zip-Up',
+        tagline: 'Waffle-Knit Lined Heavyweight Fleece',
+        category: 'Hoodies',
+        fit: 'Cropped',
+        priceUSD: 155,
+        tags: ['LIMITED DROP', 'SOLD OUT'],
+        inStock: false,
+        stockCount: 0,
+        rating: 4.9,
+        reviewsCount: 41,
+        colors: [
+          { name: 'Vintage Sun-fade Grey', hex: '#484848', imgIndex: 0 },
+          { name: 'Off-White Milk', hex: '#f0ece1', imgIndex: 1 }
+        ],
+        sizes: ['S', 'M', 'L', 'XL'],
+        sizeStock: { S: 0, M: 0, L: 0, XL: 0 },
+        images: [
+          'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=85'
+        ],
+        details: [
+          'Cropped waist with exaggerated wide sleeves',
+          '480 GSM French Terry outer + 240 GSM thermal waffle interior',
+          'Distressed raw edges around pockets and cuffs',
+          'Antiqued silver double-slider zipper'
+        ],
+        care: 'Hand wash cold. Lay flat to dry.',
+        fitGuide: 'Boxy cropped length sitting right at belt line.'
+      },
+      {
+        id: 'vd-06',
+        name: 'Sculpted Minimalist Crossbody',
+        tagline: 'Full-Grain Italian Calfskin',
+        category: 'Accessories',
+        fit: 'One Size',
+        priceUSD: 110,
+        tags: ['LEATHER', 'CORE ESSENTIAL'],
+        inStock: true,
+        stockCount: 8,
+        rating: 4.9,
+        reviewsCount: 15,
+        colors: [
+          { name: 'Matte Nero', hex: '#0d0d0d', imgIndex: 0 }
+        ],
+        sizes: ['ONE SIZE'],
+        sizeStock: { 'ONE SIZE': 8 },
+        images: [
+          'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=85'
+        ],
+        details: [
+          'Supple pebbled Italian calfskin leather',
+          'Adjustable nylon webbing strap with quick-release metal buckle',
+          'Internal card slots and microfiber phone divider',
+          'Debossed minimalist VOID logo branding'
+        ],
+        care: 'Treat with natural leather balm.',
+        fitGuide: 'Adjustable strap extends from 34" to 58".'
+      },
+      {
+        id: 'vd-07',
+        name: 'Raw Edge Boxy Mockneck',
+        tagline: '400 GSM Heavy Interlock Cotton',
+        category: 'Tees',
+        fit: 'Boxy',
+        priceUSD: 72,
+        tags: ['DROP 01'],
+        inStock: true,
+        stockCount: 12,
+        rating: 4.8,
+        reviewsCount: 17,
+        colors: [
+          { name: 'Raw Chalk', hex: '#eceae2', imgIndex: 0 },
+          { name: 'Onyx', hex: '#111111', imgIndex: 1 }
+        ],
+        sizes: ['S', 'M', 'L', 'XL'],
+        sizeStock: { S: 3, M: 5, L: 4, XL: 0 },
+        images: [
+          'https://images.unsplash.com/photo-1503342452485-86b7f54527ef?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=85'
+        ],
+        details: [
+          '400 GSM double-faced compact cotton',
+          '2-inch mock neck collar with subtle rolled lip',
+          'Architectural wide body with high armholes',
+          'Reinforced shoulder tape for structural longevity'
+        ],
+        care: 'Cold gentle wash. Flat dry.',
+        fitGuide: 'Tailored boxy drape.'
+      },
+      {
+        id: 'vd-08',
+        name: 'Structured Studio Cap',
+        tagline: 'Heavy Washed Canvas + Metal Buckle',
+        category: 'Accessories',
+        fit: 'One Size',
+        priceUSD: 45,
+        tags: ['RESTOCK'],
+        inStock: true,
+        stockCount: 25,
+        rating: 4.9,
+        reviewsCount: 63,
+        colors: [
+          { name: 'Faded Black', hex: '#222222', imgIndex: 0 },
+          { name: 'Desert Sand', hex: '#d1c7b7', imgIndex: 1 }
+        ],
+        sizes: ['ONE SIZE'],
+        sizeStock: { 'ONE SIZE': 25 },
+        images: [
+          'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1000&q=85',
+          'https://images.unsplash.com/photo-1534215754734-18e55d13e346?auto=format&fit=crop&w=1000&q=85'
+        ],
+        details: [
+          'Unstructured 6-panel low profile fit',
+          'Custom antiqued brass slider clasp',
+          'Tonal embroidery of minimalist monogram'
+        ],
+        care: 'Spot clean with damp cloth.',
+        fitGuide: 'Adjustable one size fits all (54-62cm).'
+      }
+    ];
+
+    const LOOKBOOK_SLIDES = [
+      {
+        id: 'look-01',
+        title: '01 / OBSIDIAN SILHOUETTES',
+        season: 'AUTUMN / WINTER 2026',
+        image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
+        quote: '"Form precedes function. Heavyweight drapery sculpted for urban solitude."',
+        productId: 'vd-01',
+        productName: 'Heavyweight Boxy Hoodie',
+        productPrice: 140,
+        hotspot: { x: '48%', y: '42%' }
+      },
+      {
+        id: 'look-02',
+        title: '02 / ARCHITECTURAL LAYERING',
+        season: 'EDITORIAL SERIE 04',
+        image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85',
+        quote: '"Precision tailored ripstop paired with 520 GSM loopback cotton."',
+        productId: 'vd-03',
+        productName: 'Technical Tactical Bomber',
+        productPrice: 285,
+        hotspot: { x: '52%', y: '38%' }
+      },
+      {
+        id: 'look-03',
+        title: '03 / MONOLITH PROPORTIONS',
+        season: 'LIMITED ARCHIVE',
+        image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=85',
+        quote: '"Deconstructed essentials with raw-edge hems and bespoke Japanese hardware."',
+        productId: 'vd-04',
+        productName: 'Pleated Cargo Trouser',
+        productPrice: 165,
+        hotspot: { x: '45%', y: '65%' }
+      },
+      {
+        id: 'look-04',
+        title: '04 / NOCTURNAL TEXTURES',
+        season: 'STUDIO CAMPAIGN',
+        image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=85',
+        quote: '"High-density 300 GSM combed cotton that creates structural drape."',
+        productId: 'vd-02',
+        productName: 'Archival Oversized Tee',
+        productPrice: 58,
+        hotspot: { x: '50%', y: '40%' }
+      },
+      {
+        id: 'look-05',
+        title: '05 / THE LEATHER CAPSULE',
+        season: 'ACCESSORY SERIES',
+        image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=85',
+        quote: '"Supple Italian calfskin with gunmetal hardware. Handcrafted in Milan."',
+        productId: 'vd-06',
+        productName: 'Sculpted Minimalist Crossbody',
+        productPrice: 110,
+        hotspot: { x: '55%', y: '50%' }
+      }
+    ];
+
+    // --- CART & STORE CONTEXT ---
+    const StoreContext = createContext();
+
+    function StoreProvider({ children }) {
+      const [cart, setCart] = useState(() => {
+        try {
+          const saved = localStorage.getItem('void_cart');
+          return saved ? JSON.parse(saved) : [];
+        } catch(e) { return []; }
+      });
+      const [currency, setCurrency] = useState('USD');
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+      const [isSearchOpen, setIsSearchOpen] = useState(false);
+      const [searchQuery, setSearchQuery] = useState('');
+      const [wishlist, setWishlist] = useState([]);
+      const [toastMessage, setToastMessage] = useState(null);
+      const [promoCode, setPromoCode] = useState('');
+      const [discountPercent, setDiscountPercent] = useState(0);
+
+      useEffect(() => {
+        try {
+          localStorage.setItem('void_cart', JSON.stringify(cart));
+        } catch(e) {}
+      }, [cart]);
+
+      const showToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3200);
+      };
+
+      const formatPrice = (usdAmount) => {
+        const curr = CURRENCIES[currency];
+        const converted = usdAmount * curr.rate;
+        if (currency === 'JPY') {
+          return `${curr.symbol}${Math.round(converted).toLocaleString()}`;
+        }
+        return `${curr.symbol}${converted.toFixed(0)}`;
+      };
+
+      const addToCart = (product, size, color, quantity = 1) => {
+        const itemKey = `${product.id}-${size}-${color.name}`;
+        setCart(prev => {
+          const existing = prev.find(item => item.key === itemKey);
+          if (existing) {
+            return prev.map(item =>
+              item.key === itemKey ? { ...item, quantity: item.quantity + quantity } : item
+            );
+          }
+          return [...prev, {
+            key: itemKey,
+            productId: product.id,
+            name: product.name,
+            tagline: product.tagline,
+            priceUSD: product.priceUSD,
+            size,
+            color,
+            image: product.images[color.imgIndex || 0],
+            quantity
+          }];
+        });
+        showToast(`Added "${product.name}" (${size}) to bag`);
+        setIsCartOpen(true);
+      };
+
+      const updateQuantity = (key, delta) => {
+        setCart(prev => prev.map(item => {
+          if (item.key === key) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        }).filter(Boolean));
+      };
+
+      const removeFromCart = (key) => {
+        setCart(prev => prev.filter(item => item.key !== key));
+        showToast('Item removed from bag');
+      };
+
+      const toggleWishlist = (productId) => {
+        setWishlist(prev => {
+          const exists = prev.includes(productId);
+          if (exists) {
+            showToast('Removed from wishlist');
+            return prev.filter(id => id !== productId);
+          } else {
+            showToast('Saved to wishlist');
+            return [...prev, productId];
+          }
+        });
+      };
+
+      const applyPromo = (code) => {
+        const upper = code.trim().toUpperCase();
+        if (upper === 'VOID15' || upper === 'DROP01' || upper === 'PIYUSH') {
+          setDiscountPercent(15);
+          showToast('15% VIP discount applied!');
+          return true;
+        } else if (upper === 'VOID20') {
+          setDiscountPercent(20);
+          showToast('20% Black Tier discount applied!');
+          return true;
+        } else {
+          showToast('Invalid promo code. Try "VOID15"');
+          return false;
+        }
+      };
+
+      const subtotalUSD = cart.reduce((sum, item) => sum + (item.priceUSD * item.quantity), 0);
+      const discountUSD = (subtotalUSD * discountPercent) / 100;
+      const finalSubtotalUSD = subtotalUSD - discountUSD;
+      const freeShippingThresholdUSD = 150;
+      const shippingRemainingUSD = Math.max(0, freeShippingThresholdUSD - finalSubtotalUSD);
+      const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      return (
+        <StoreContext.Provider value={{
+          cart,
+          currency,
+          setCurrency,
+          formatPrice,
+          isCartOpen,
+          setIsCartOpen,
+          selectedProduct,
+          setSelectedProduct,
+          isSizeGuideOpen,
+          setIsSizeGuideOpen,
+          isSearchOpen,
+          setIsSearchOpen,
+          searchQuery,
+          setSearchQuery,
+          wishlist,
+          toggleWishlist,
+          addToCart,
+          updateQuantity,
+          removeFromCart,
+          toastMessage,
+          showToast,
+          subtotalUSD,
+          discountUSD,
+          finalSubtotalUSD,
+          discountPercent,
+          applyPromo,
+          promoCode,
+          setPromoCode,
+          shippingRemainingUSD,
+          freeShippingThresholdUSD,
+          cartCount
+        }}>
+          {children}
+        </StoreContext.Provider>
+      );
+    }
+
+    const useStore = () => useContext(StoreContext);
+
+    // --- REUSABLE ICON HELPER ---
+    function Icon({ name, className = "w-5 h-5", size = 20 }) {
+      const ref = useRef(null);
+      useEffect(() => {
+        if (window.lucide && ref.current) {
+          ref.current.innerHTML = '';
+          const iconEl = window.lucide.createElement(window.lucide.icons[name] || window.lucide.icons.HelpCircle);
+          if (iconEl) {
+            iconEl.setAttribute('width', size);
+            iconEl.setAttribute('height', size);
+            ref.current.appendChild(iconEl);
+          }
+        }
+      }, [name, size]);
+
+      return <span ref={ref} className={`inline-flex items-center justify-center ${className}`} />;
+    }
+
+    // --- ANNOUNCEMENT BAR ---
+    function AnnouncementBar() {
+      const { shippingRemainingUSD, formatPrice } = useStore();
+      return (
+        <div className="bg-brand-black border-b border-brand-border text-[11px] font-mono tracking-widest text-brand-muted py-2 px-4 overflow-hidden relative z-40">
+          <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-ping inline-block"></span>
+              <strong className="text-brand-light">DROP 01 LIVE NOW</strong> — ARCHIVAL HEAVYWEIGHTS
+            </span>
+            <span>•</span>
+            <span>
+              {shippingRemainingUSD === 0 ? (
+                <strong className="text-brand-light">COMPLIMENTARY WORLDWIDE EXPRESS SHIPPING UNLOCKED</strong>
+              ) : (
+                <>ADD {formatPrice(shippingRemainingUSD)} FOR COMPLIMENTARY EXPRESS SHIPPING</>
+              )}
+            </span>
+            <span>•</span>
+            <span>PROMO CODE <span className="text-brand-light font-bold">VOID15</span> FOR 15% OFF FIRST DROP</span>
+            <span>•</span>
+            <span>ETHICALLY MILLED 520 GSM HEAVYWEIGHT FRENCH TERRY</span>
+            <span>•</span>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-ping inline-block"></span>
+              <strong className="text-brand-light">DROP 01 LIVE NOW</strong> — ARCHIVAL HEAVYWEIGHTS
+            </span>
+            <span>•</span>
+            <span>ADD {formatPrice(shippingRemainingUSD)} FOR COMPLIMENTARY EXPRESS SHIPPING</span>
+            <span>•</span>
+            <span>PROMO CODE <span className="text-brand-light font-bold">VOID15</span> FOR 15% OFF FIRST DROP</span>
+          </div>
+        </div>
+      );
+    }
+
+    // --- HEADER COMPONENT ---
+    function Header() {
+      const { 
+        cartCount, 
+        setIsCartOpen, 
+        setIsSearchOpen, 
+        currency, 
+        setCurrency,
+        wishlist,
+        setIsSizeGuideOpen 
+      } = useStore();
+      const [isScrolled, setIsScrolled] = useState(false);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          setIsScrolled(window.scrollY > 40);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const scrollToSection = (id) => {
+        setMobileMenuOpen(false);
+        const el = document.getElementById(id);
+        if (el) {
+          const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      };
+
+      return (
+        <header className={`sticky top-0 z-30 transition-all duration-300 ${isScrolled ? 'glass-nav border-b border-brand-border/60 py-3.5 shadow-2xl' : 'bg-brand-black/90 py-5'}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            
+            {/* Left Nav */}
+            <nav className="hidden md:flex items-center gap-8 text-[12px] uppercase tracking-widest font-mono text-brand-muted">
+              <button onClick={() => scrollToSection('shop-section')} className="hover:text-brand-light transition-colors">Shop All</button>
+              <button onClick={() => scrollToSection('lookbook-section')} className="hover:text-brand-light transition-colors">Lookbook</button>
+              <button onClick={() => scrollToSection('drops-section')} className="hover:text-brand-light transition-colors flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-accent"></span>
+                Drops
+              </button>
+              <button onClick={() => scrollToSection('about-section')} className="hover:text-brand-light transition-colors">Archive</button>
+            </nav>
+
+            {/* Mobile Menu Trigger */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden text-brand-light p-1 focus:outline-none"
+              aria-label="Menu"
+            >
+              <Icon name={mobileMenuOpen ? "X" : "Menu"} size={22} />
+            </button>
+
+            {/* Center Logo */}
+            <div className="flex flex-col items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <span className="font-editorial text-2xl sm:text-3xl font-black tracking-mega text-brand-light hover:text-brand-bone transition-colors">
+                VOID
+              </span>
+              <span className="text-[9px] font-mono tracking-ultra text-brand-muted -mt-1 uppercase">
+                Studios Archive
+              </span>
+            </div>
+
+            {/* Right Controls */}
+            <div className="flex items-center gap-4 sm:gap-6">
+              
+              {/* Currency Selector */}
+              <div className="relative group hidden sm:block">
+                <select 
+                  value={currency} 
+                  onChange={(e) => setCurrency(e.target.value)}
+                  className="bg-brand-dark/90 text-brand-light text-[11px] font-mono uppercase tracking-wider py-1.5 px-2.5 rounded border border-brand-border hover:border-brand-muted/60 focus:outline-none cursor-pointer"
+                >
+                  {Object.keys(CURRENCIES).map(curr => (
+                    <option key={curr} value={curr} className="bg-brand-dark text-brand-light">
+                      {curr} ({CURRENCIES[curr].symbol})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Search Icon */}
+              <button 
+                onClick={() => setIsSearchOpen(true)}
+                className="text-brand-muted hover:text-brand-light transition-colors p-1"
+                title="Search Archive"
+              >
+                <Icon name="Search" size={19} />
+              </button>
+
+              {/* Size Guide Trigger */}
+              <button 
+                onClick={() => setIsSizeGuideOpen(true)}
+                className="hidden lg:flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-brand-muted hover:text-brand-light transition-colors border border-brand-border px-2.5 py-1 rounded hover:border-brand-muted/50"
+              >
+                <Icon name="Ruler" size={13} />
+                <span>Size Guide</span>
+              </button>
+
+              {/* Shopping Bag Button */}
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="relative bg-brand-light hover:bg-white text-brand-black px-3.5 py-1.5 rounded-full font-mono text-[12px] font-bold flex items-center gap-2 transition-all hover:scale-[1.03] active:scale-95 shadow-lg shadow-white/5"
+              >
+                <Icon name="ShoppingBag" size={15} />
+                <span>BAG</span>
+                <span className="bg-brand-accent text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center font-bold">
+                  {cartCount}
+                </span>
+              </button>
+
+            </div>
+          </div>
+
+          {/* Mobile Navigation Dropdown */}
+          {mobileMenuOpen && (
+            <div className="md:hidden glass-nav border-b border-brand-border px-6 py-6 space-y-4 animate-fade-in text-sm font-mono tracking-widest uppercase">
+              <button onClick={() => scrollToSection('shop-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Shop Collection</button>
+              <button onClick={() => scrollToSection('lookbook-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Editorial Lookbook</button>
+              <button onClick={() => scrollToSection('drops-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40 flex items-center justify-between">
+                <span>Upcoming Drops</span>
+                <span className="text-[10px] bg-brand-accent/20 text-brand-accent px-2 py-0.5 rounded border border-brand-accent/30">COUNTDOWN</span>
+              </button>
+              <button onClick={() => scrollToSection('about-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Brand Philosophy</button>
+              <div className="pt-2 flex items-center justify-between">
+                <span className="text-xs text-brand-muted">Currency:</span>
+                <select 
+                  value={currency} 
+                  onChange={(e) => setCurrency(e.target.value)}
+                  className="bg-brand-dark text-brand-light text-xs font-mono py-1 px-2 rounded border border-brand-border"
+                >
+                  {Object.keys(CURRENCIES).map(curr => (
+                    <option key={curr} value={curr}>{curr} ({CURRENCIES[curr].symbol})</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+        </header>
+      );
+    }
+
+    // --- HERO SECTION ---
+    function Hero() {
+      const { setSelectedProduct } = useStore();
+
+      return (
+        <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden border-b border-brand-border">
+          {/* Background Visual Collage with Subtle Zoom */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2000&q=90" 
+              alt="VOID Studios Editorial Campaign" 
+              className="w-full h-full object-cover object-center filter brightness-[0.4] contrast-125 scale-105 transition-transform duration-1000 ease-out"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-brand-black/60"></div>
+          </div>
+
+          {/* Hero Content */}
+          <div className="relative z-10 max-w-5xl mx-auto px-6 text-center py-20">
+            
+            {/* Drop Tag Pill */}
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-brand-surface/90 border border-brand-border/80 text-[11px] font-mono tracking-mega uppercase text-brand-muted mb-6 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-brand-accent animate-ping"></span>
+              <span>DROP 01 // AUTUMN / WINTER 2026</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="font-editorial text-4xl sm:text-6xl md:text-8xl font-black tracking-widest text-brand-light uppercase leading-[1.05] mb-6">
+              MONOLITHIC<br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-light via-brand-bone to-brand-muted">
+                ARCHIVES
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-brand-muted font-light tracking-wide mb-10 leading-relaxed">
+              Architectural proportions crafted from 520 GSM loopback cotton, Japanese ripstop nylon, and Milanese calfskin. Designed in London. Milled for eternity.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 font-mono text-xs tracking-widest uppercase">
+              <a 
+                href="#shop-section"
+                className="w-full sm:w-auto px-8 py-4 bg-brand-light text-brand-black font-bold rounded hover:bg-white transition-all transform hover:-translate-y-0.5 shadow-2xl flex items-center justify-center gap-2"
+              >
+                <span>EXPLORE DROP 01</span>
+                <Icon name="ArrowRight" size={15} />
+              </a>
+
+              <a 
+                href="#lookbook-section"
+                className="w-full sm:w-auto px-8 py-4 bg-brand-surface/80 hover:bg-brand-surface text-brand-light border border-brand-border rounded transition-all backdrop-blur-sm flex items-center justify-center gap-2"
+              >
+                <span>VIEW EDITORIAL</span>
+                <Icon name="Eye" size={15} />
+              </a>
+            </div>
+
+            {/* Minimal Stat Strip */}
+            <div className="mt-16 pt-8 border-t border-brand-border/60 grid grid-cols-2 md:grid-cols-4 gap-6 text-left max-w-3xl mx-auto font-mono text-[11px]">
+              <div>
+                <span className="block text-brand-muted uppercase">Fabric Density</span>
+                <span className="text-brand-light font-bold text-sm">300 – 520 GSM</span>
+              </div>
+              <div>
+                <span className="block text-brand-muted uppercase">Production</span>
+                <span className="text-brand-light font-bold text-sm">150 Units / Drop</span>
+              </div>
+              <div>
+                <span className="block text-brand-muted uppercase">Sourcing</span>
+                <span className="text-brand-light font-bold text-sm">Osaka & Biella</span>
+              </div>
+              <div>
+                <span className="block text-brand-muted uppercase">Dispatch</span>
+                <span className="text-brand-light font-bold text-sm">Worldwide Express</span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Scroll Down Indicator */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-brand-muted font-mono text-[10px] tracking-widest uppercase">
+            <span>SCROLL</span>
+            <Icon name="ChevronDown" size={14} className="animate-bounce" />
+          </div>
+        </section>
+      );
+    }
+
+    // --- HORIZONTAL LOOKBOOK SECTION ---
+    function HorizontalLookbook() {
+      const { setSelectedProduct, formatPrice } = useStore();
+      const scrollRef = useRef(null);
+      const [isDragging, setIsDragging] = useState(false);
+      const [startX, setStartX] = useState(0);
+      const [scrollLeftState, setScrollLeftState] = useState(0);
+      const [activeIndex, setActiveIndex] = useState(0);
+
+      const handleMouseDown = (e) => {
+        setIsDragging(true);
+        setStartX(e.pageX - scrollRef.current.offsetLeft);
+        setScrollLeftState(scrollRef.current.scrollLeft);
+      };
+
+      const handleMouseLeave = () => setIsDragging(false);
+      const handleMouseUp = () => setIsDragging(false);
+
+      const handleMouseMove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - scrollRef.current.offsetLeft;
+        const walk = (x - startX) * 1.6;
+        scrollRef.current.scrollLeft = scrollLeftState - walk;
+      };
+
+      const scrollByAmount = (direction) => {
+        if (scrollRef.current) {
+          const shift = direction === 'left' ? -420 : 420;
+          scrollRef.current.scrollBy({ left: shift, behavior: 'smooth' });
+        }
+      };
+
+      const handleScrollEvent = () => {
+        if (scrollRef.current) {
+          const index = Math.round(scrollRef.current.scrollLeft / 380);
+          setActiveIndex(Math.min(index, LOOKBOOK_SLIDES.length - 1));
+        }
+      };
+
+      const openHotspotProduct = (productId) => {
+        const prod = PRODUCTS_DATA.find(p => p.id === productId);
+        if (prod) setSelectedProduct(prod);
+      };
+
+      return (
+        <section id="lookbook-section" className="py-24 bg-brand-dark border-b border-brand-border relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-mega text-brand-accent mb-2">
+                <Icon name="Compass" size={14} />
+                <span>Cinematic Editorial</span>
+              </div>
+              <h2 className="font-editorial text-3xl sm:text-5xl font-bold tracking-widest text-brand-light uppercase">
+                THE LOOKBOOK
+              </h2>
+              <p className="text-brand-muted text-xs sm:text-sm font-light mt-2 max-w-xl">
+                Drag horizontally or use arrow triggers to explore Campaign Serie 01. Click interactive hotspots on models to instantly inspect garments.
+              </p>
+            </div>
+
+            {/* Gallery Navigation Controls */}
+            <div className="flex items-center gap-4">
+              <div className="font-mono text-xs text-brand-muted">
+                <span className="text-brand-light font-bold">{String(activeIndex + 1).padStart(2, '0')}</span> / {String(LOOKBOOK_SLIDES.length).padStart(2, '0')}
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => scrollByAmount('left')}
+                  className="w-10 h-10 rounded-full border border-brand-border bg-brand-surface hover:bg-brand-black hover:border-brand-muted flex items-center justify-center text-brand-light transition-all active:scale-95"
+                  aria-label="Scroll left"
+                >
+                  <Icon name="ArrowLeft" size={16} />
+                </button>
+                <button 
+                  onClick={() => scrollByAmount('right')}
+                  className="w-10 h-10 rounded-full border border-brand-border bg-brand-surface hover:bg-brand-black hover:border-brand-muted flex items-center justify-center text-brand-light transition-all active:scale-95"
+                  aria-label="Scroll right"
+                >
+                  <Icon name="ArrowRight" size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Horizontal Drag Strip */}
+          <div 
+            ref={scrollRef}
+            onMouseDown={handleMouseDown}
+            onMouseLeave={handleMouseLeave}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onScroll={handleScrollEvent}
+            className="flex gap-6 overflow-x-auto hide-scrollbar px-4 sm:px-8 pb-8 pt-2 drag-cursor select-none snap-x"
+            style={{ scrollSnapType: 'x mandatory' }}
+          >
+            {LOOKBOOK_SLIDES.map((slide, idx) => (
+              <div 
+                key={slide.id}
+                className="flex-shrink-0 w-[300px] sm:w-[380px] md:w-[460px] snap-center group relative rounded-lg overflow-hidden bg-brand-surface border border-brand-border/80 transition-all duration-300 hover:border-brand-muted/70"
+              >
+                {/* Image Frame */}
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <img 
+                    src={slide.image} 
+                    alt={slide.title}
+                    draggable="false"
+                    className="w-full h-full object-cover object-center filter grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                  />
+                  <div className="absolute inset-0 editorial-gradient opacity-90"></div>
+
+                  {/* Season Badge */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="font-mono text-[10px] uppercase tracking-widest bg-brand-black/80 backdrop-blur-md px-2.5 py-1 rounded text-brand-light border border-brand-border">
+                      {slide.season}
+                    </span>
+                  </div>
+
+                  {/* Interactive Garment Hotspot */}
+                  <div 
+                    style={{ top: slide.hotspot.y, left: slide.hotspot.x }}
+                    className="absolute z-20 -translate-x-1/2 -translate-y-1/2 group/hotspot"
+                  >
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openHotspotProduct(slide.productId);
+                      }}
+                      className="relative w-8 h-8 rounded-full bg-brand-accent/80 hover:bg-brand-accent text-white flex items-center justify-center backdrop-blur-md border border-white/40 shadow-xl transition-transform hover:scale-110 active:scale-95"
+                      title="Shop this look"
+                    >
+                      <span className="absolute inset-0 rounded-full bg-brand-accent animate-ping opacity-60"></span>
+                      <Icon name="Plus" size={14} className="relative z-10" />
+                    </button>
+
+                    {/* Popover Card */}
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 hidden group-hover/hotspot:flex flex-col w-52 p-3 bg-brand-black/95 backdrop-blur-xl border border-brand-border rounded shadow-2xl text-left pointer-events-none animate-fade-in z-30">
+                      <span className="text-[9px] font-mono uppercase tracking-wider text-brand-accent">Shop The Piece</span>
+                      <span className="text-xs font-bold text-brand-light mt-0.5">{slide.productName}</span>
+                      <span className="text-[11px] font-mono text-brand-muted mt-1">{formatPrice(slide.productPrice)}</span>
+                    </div>
+                  </div>
+
+                  {/* Slide Editorial Information */}
+                  <div className="absolute bottom-4 left-4 right-4 z-10 space-y-2">
+                    <h3 className="font-editorial text-lg sm:text-xl font-bold tracking-wider text-brand-light uppercase">
+                      {slide.title}
+                    </h3>
+                    <p className="text-xs font-light text-brand-bone/80 italic leading-relaxed">
+                      {slide.quote}
+                    </p>
+
+                    <div className="pt-2 flex items-center justify-between border-t border-white/10">
+                      <button 
+                        onClick={() => openHotspotProduct(slide.productId)}
+                        className="text-[11px] font-mono uppercase tracking-widest text-brand-light hover:text-brand-accent flex items-center gap-1.5 transition-colors"
+                      >
+                        <span>Inspect Garment</span>
+                        <Icon name="ArrowUpRight" size={13} />
+                      </button>
+                      <span className="text-[10px] font-mono text-brand-muted uppercase">VOID ARCHIVE</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom Drag Prompt */}
+          <div className="text-center mt-2 text-[11px] font-mono tracking-widest text-brand-muted uppercase flex items-center justify-center gap-2">
+            <Icon name="MoveHorizontal" size={14} />
+            <span>Click and drag horizontally to view full spread</span>
+          </div>
+        </section>
+      );
+    }
+
+    // --- PRODUCT CARD COMPONENT ---
+    function ProductCard({ product }) {
+      const { setSelectedProduct, formatPrice, toggleWishlist, wishlist, addToCart } = useStore();
+      const [currentImgIndex, setCurrentImgIndex] = useState(0);
+      const [isHovered, setIsHovered] = useState(false);
+      const isWishlisted = wishlist.includes(product.id);
+
+      const defaultColor = product.colors[0];
+      const defaultSize = product.sizes[0];
+
+      return (
+        <div 
+          className="group relative flex flex-col bg-brand-surface rounded border border-brand-border/80 overflow-hidden transition-all duration-300 hover:border-brand-muted/60 hover:shadow-2xl"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Image Container */}
+          <div 
+            className="relative aspect-[3/4] bg-brand-dark overflow-hidden cursor-pointer"
+            onClick={() => setSelectedProduct(product)}
+          >
+            {/* Primary & Secondary Image Flip */}
+            <img 
+              src={isHovered && product.images[1] ? product.images[1] : product.images[currentImgIndex]} 
+              alt={product.name}
+              className="w-full h-full object-cover object-center filter grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out"
+              loading="lazy"
+            />
+
+            {/* Badges */}
+            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+              {product.tags.map((tag, i) => (
+                <span 
+                  key={i}
+                  className={`text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold ${
+                    tag === 'LIMITED DROP' ? 'bg-brand-accent text-white' :
+                    tag === 'SOLD OUT' ? 'bg-zinc-800 text-zinc-400' :
+                    'bg-brand-black/80 backdrop-blur-md text-brand-light border border-brand-border'
+                  }`}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Wishlist Heart Trigger */}
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleWishlist(product.id);
+              }}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-brand-black/70 backdrop-blur-md border border-brand-border flex items-center justify-center text-brand-light hover:text-brand-accent transition-all z-10"
+              title="Save to wishlist"
+            >
+              <Icon 
+                name={isWishlisted ? "Heart" : "Heart"} 
+                size={14} 
+                className={isWishlisted ? "text-brand-accent fill-brand-accent" : ""} 
+              />
+            </button>
+
+            {/* Fit Badge */}
+            <div className="absolute bottom-3 left-3 z-10">
+              <span className="text-[10px] font-mono uppercase tracking-wider bg-brand-black/90 backdrop-blur-md text-brand-bone px-2 py-0.5 rounded border border-brand-border">
+                {product.fit} Cut
+              </span>
+            </div>
+
+            {/* Quick Add Overlay on Hover */}
+            {product.inStock && (
+              <div className="absolute inset-x-3 bottom-3 hidden group-hover:flex gap-1.5 z-20 animate-fade-in">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedProduct(product);
+                  }}
+                  className="flex-1 bg-brand-light hover:bg-white text-brand-black font-mono text-[11px] font-bold py-2.5 px-3 rounded text-center tracking-wider transition-colors uppercase flex items-center justify-center gap-1 shadow-lg"
+                >
+                  <Icon name="Eye" size={13} />
+                  <span>Inspect</span>
+                </button>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(product, defaultSize, defaultColor);
+                  }}
+                  className="bg-brand-black hover:bg-zinc-900 text-brand-light border border-brand-border font-mono text-[11px] py-2.5 px-3 rounded flex items-center justify-center transition-colors"
+                  title="Quick Add to Bag"
+                >
+                  <Icon name="Plus" size={14} />
+                </button>
+              </div>
+            )}
+
+            {!product.inStock && (
+              <div className="absolute inset-0 bg-brand-black/60 backdrop-blur-[2px] flex items-center justify-center">
+                <span className="font-mono text-xs uppercase tracking-widest text-zinc-400 border border-zinc-700 bg-brand-black/80 px-3 py-1 rounded">
+                  ARCHIVED / SOLD OUT
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Card Info */}
+          <div className="p-4 flex flex-col flex-1 justify-between gap-3">
+            <div>
+              {/* Color Swatches */}
+              <div className="flex items-center gap-1.5 mb-2">
+                {product.colors.map((c, i) => (
+                  <button 
+                    key={i}
+                    onClick={() => setCurrentImgIndex(c.imgIndex || 0)}
+                    className={`w-3.5 h-3.5 rounded-full border transition-all ${currentImgIndex === (c.imgIndex || 0) ? 'border-brand-accent scale-110' : 'border-zinc-700 hover:border-zinc-500'}`}
+                    style={{ backgroundColor: c.hex }}
+                    title={c.name}
+                  />
+                ))}
+                <span className="text-[10px] font-mono text-brand-muted ml-1 uppercase">
+                  {product.colors.length} {product.colors.length === 1 ? 'colorway' : 'colorways'}
+                </span>
+              </div>
+
+              {/* Title & Tagline */}
+              <h3 
+                onClick={() => setSelectedProduct(product)}
+                className="font-medium text-sm text-brand-light group-hover:text-brand-bone cursor-pointer tracking-wide"
+              >
+                {product.name}
+              </h3>
+              <p className="text-[11px] font-mono text-brand-muted mt-0.5 truncate">
+                {product.tagline}
+              </p>
+            </div>
+
+            {/* Price & Sizes */}
+            <div className="pt-2 border-t border-brand-border/60 flex items-center justify-between font-mono text-xs">
+              <span className="font-bold text-brand-light tracking-wider">
+                {formatPrice(product.priceUSD)}
+              </span>
+              <div className="flex gap-1 text-[10px] text-brand-muted uppercase">
+                {product.sizes.slice(0, 4).map((s, idx) => (
+                  <span key={idx} className={product.sizeStock[s] === 0 ? 'line-through opacity-40' : ''}>
+                    {s}
+                  </span>
+                ))}
+                {product.sizes.length > 4 && <span>+{product.sizes.length - 4}</span>}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- PRODUCT CATALOG / SHOP SECTION ---
+    function ProductGrid() {
+      const [selectedCategory, setSelectedCategory] = useState('ALL');
+      const [selectedFit, setSelectedFit] = useState('ALL');
+      const [sortBy, setSortBy] = useState('FEATURED');
+      const [inStockOnly, setInStockOnly] = useState(false);
+
+      const categories = ['ALL', 'Hoodies', 'Tees', 'Outerwear', 'Bottoms', 'Accessories'];
+      const fits = ['ALL', 'Boxy', 'Oversized', 'Relaxed', 'Cropped'];
+
+      const filteredProducts = useMemo(() => {
+        return PRODUCTS_DATA.filter(product => {
+          if (selectedCategory !== 'ALL' && product.category !== selectedCategory) return false;
+          if (selectedFit !== 'ALL' && product.fit !== selectedFit) return false;
+          if (inStockOnly && !product.inStock) return false;
+          return true;
+        }).sort((a, b) => {
+          if (sortBy === 'PRICE_LOW') return a.priceUSD - b.priceUSD;
+          if (sortBy === 'PRICE_HIGH') return b.priceUSD - a.priceUSD;
+          if (sortBy === 'RATING') return b.rating - a.rating;
+          return 0; // FEATURED
+        });
+      }, [selectedCategory, selectedFit, sortBy, inStockOnly]);
+
+      return (
+        <section id="shop-section" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Header Title */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-brand-border">
+            <div>
+              <span className="text-[11px] font-mono uppercase tracking-mega text-brand-muted block mb-1">
+                Catalogue 01 / {filteredProducts.length} Garments
+              </span>
+              <h2 className="font-editorial text-3xl sm:text-4xl font-bold tracking-widest text-brand-light uppercase">
+                SHOP ARCHIVE
+              </h2>
+            </div>
+
+            {/* Sort & In-stock toggle */}
+            <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
+              <label className="flex items-center gap-2 text-brand-muted hover:text-brand-light cursor-pointer select-none">
+                <input 
+                  type="checkbox" 
+                  checked={inStockOnly} 
+                  onChange={(e) => setInStockOnly(e.target.checked)}
+                  className="rounded bg-brand-dark border-brand-border text-brand-accent focus:ring-0 w-3.5 h-3.5"
+                />
+                <span>In-Stock Only</span>
+              </label>
+
+              <div className="flex items-center gap-2">
+                <span className="text-brand-muted">Sort:</span>
+                <select 
+                  value={sortBy} 
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-brand-surface text-brand-light text-xs font-mono py-1.5 px-3 rounded border border-brand-border focus:outline-none cursor-pointer"
+                >
+                  <option value="FEATURED">Featured Drop</option>
+                  <option value="PRICE_LOW">Price: Low to High</option>
+                  <option value="PRICE_HIGH">Price: High to Low</option>
+                  <option value="RATING">Top Rated</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-b border-brand-border/60">
+            
+            {/* Category Filter Pills */}
+            <div className="flex flex-wrap gap-2">
+              {categories.map(cat => (
+                <button 
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`text-xs font-mono uppercase tracking-wider py-1.5 px-3.5 rounded transition-all ${
+                    selectedCategory === cat 
+                      ? 'bg-brand-light text-brand-black font-bold shadow-md' 
+                      : 'bg-brand-surface text-brand-muted hover:text-brand-light hover:bg-brand-zinc border border-brand-border/80'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Fit Filter Pills */}
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className="text-brand-muted text-[11px] uppercase">Fit Silhouette:</span>
+              <div className="flex gap-1.5">
+                {fits.map(f => (
+                  <button 
+                    key={f}
+                    onClick={() => setSelectedFit(f)}
+                    className={`text-[11px] uppercase py-1 px-2.5 rounded transition-colors ${
+                      selectedFit === f 
+                        ? 'bg-brand-zinc text-brand-light border border-brand-muted' 
+                        : 'text-brand-muted hover:text-brand-light border border-transparent'
+                    }`}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Product Grid */}
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 pt-10">
+              {filteredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 bg-brand-surface/40 rounded border border-brand-border mt-8">
+              <Icon name="Inbox" size={36} className="text-brand-muted mx-auto mb-3" />
+              <p className="font-mono text-sm text-brand-light">No pieces match current criteria.</p>
+              <button 
+                onClick={() => { setSelectedCategory('ALL'); setSelectedFit('ALL'); setInStockOnly(false); }}
+                className="mt-4 text-xs font-mono uppercase tracking-widest text-brand-accent hover:underline"
+              >
+                Reset All Filters
+              </button>
+            </div>
+          )}
+
+        </section>
+      );
+    }
+
+    // --- PRODUCT DETAIL MODAL (PDP) ---
+    function ProductDetailModal() {
+      const { selectedProduct, setSelectedProduct, formatPrice, addToCart, setIsSizeGuideOpen } = useStore();
+      if (!selectedProduct) return null;
+
+      const [selectedColor, setSelectedColor] = useState(selectedProduct.colors[0]);
+      const [selectedSize, setSelectedSize] = useState(selectedProduct.sizes[0]);
+      const [activeImgIndex, setActiveImgIndex] = useState(selectedColor.imgIndex || 0);
+      const [quantity, setQuantity] = useState(1);
+      const [activeTab, setActiveTab] = useState('DETAILS');
+
+      // Sync image if color changes
+      const handleColorSelect = (color) => {
+        setSelectedColor(color);
+        setActiveImgIndex(color.imgIndex || 0);
+      };
+
+      const currentStockForSize = selectedProduct.sizeStock[selectedSize] || 0;
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-black/85 backdrop-blur-xl overflow-y-auto">
+          <div 
+            className="relative w-full max-w-5xl bg-brand-dark border border-brand-border rounded-lg shadow-2xl overflow-hidden animate-fade-in my-8 text-brand-light"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Modal Button */}
+            <button 
+              onClick={() => setSelectedProduct(null)}
+              className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-brand-black/80 border border-brand-border text-brand-muted hover:text-brand-light flex items-center justify-center transition-colors"
+            >
+              <Icon name="X" size={18} />
+            </button>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
+              
+              {/* Left Column: Image Gallery with Horizontal Thumbnail Strip */}
+              <div className="lg:col-span-7 bg-brand-black p-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-brand-border">
+                {/* Main Large Image */}
+                <div className="relative aspect-[4/5] rounded overflow-hidden bg-brand-surface mb-4">
+                  <img 
+                    src={selectedProduct.images[activeImgIndex] || selectedProduct.images[0]} 
+                    alt={selectedProduct.name} 
+                    className="w-full h-full object-cover object-center filter contrast-105"
+                  />
+                  <div className="absolute top-3 left-3">
+                    <span className="text-[10px] font-mono uppercase tracking-widest bg-brand-black/90 px-2.5 py-1 rounded text-brand-light border border-brand-border">
+                      {selectedProduct.fit} Cut
+                    </span>
+                  </div>
+                </div>
+
+                {/* Horizontal Thumbnails */}
+                <div className="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
+                  {selectedProduct.images.map((img, idx) => (
+                    <button 
+                      key={idx}
+                      onClick={() => setActiveImgIndex(idx)}
+                      className={`relative w-20 h-24 flex-shrink-0 rounded overflow-hidden border-2 transition-all ${
+                        activeImgIndex === idx ? 'border-brand-accent scale-95' : 'border-brand-border opacity-60 hover:opacity-100'
+                      }`}
+                    >
+                      <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Column: Garment Specs, Sizing & Add to Cart */}
+              <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-brand-dark">
+                
+                <div>
+                  {/* Category & Tags */}
+                  <div className="flex items-center justify-between text-xs font-mono text-brand-muted mb-2">
+                    <span className="uppercase tracking-widest">{selectedProduct.category}</span>
+                    <div className="flex items-center gap-1 text-brand-accent">
+                      <Icon name="Star" size={13} className="fill-brand-accent" />
+                      <span>{selectedProduct.rating} ({selectedProduct.reviewsCount} reviews)</span>
+                    </div>
+                  </div>
+
+                  {/* Title & Price */}
+                  <h2 className="font-editorial text-2xl sm:text-3xl font-bold tracking-wider uppercase text-brand-light">
+                    {selectedProduct.name}
+                  </h2>
+                  <p className="text-xs font-mono text-brand-muted mt-1">
+                    {selectedProduct.tagline}
+                  </p>
+
+                  <div className="mt-4 pb-4 border-b border-brand-border flex items-baseline justify-between">
+                    <span className="text-2xl font-mono font-bold tracking-wider text-brand-light">
+                      {formatPrice(selectedProduct.priceUSD)}
+                    </span>
+                    <span className="text-[11px] font-mono text-brand-muted">
+                      Taxes & duties included
+                    </span>
+                  </div>
+
+                  {/* Colorway Selection */}
+                  <div className="mt-6">
+                    <div className="flex items-center justify-between text-xs font-mono mb-2">
+                      <span className="text-brand-muted uppercase">Colorway:</span>
+                      <span className="text-brand-light font-bold">{selectedColor.name}</span>
+                    </div>
+                    <div className="flex gap-2.5">
+                      {selectedProduct.colors.map((col, i) => (
+                        <button 
+                          key={i}
+                          onClick={() => handleColorSelect(col)}
+                          className={`w-8 h-8 rounded-full border-2 transition-all flex items-center justify-center ${
+                            selectedColor.name === col.name ? 'border-brand-accent scale-110' : 'border-zinc-700 hover:border-zinc-400'
+                          }`}
+                          style={{ backgroundColor: col.hex }}
+                          title={col.name}
+                        >
+                          {selectedColor.name === col.name && (
+                            <Icon name="Check" size={12} className={col.hex === '#111111' || col.hex === '#0a0a0a' ? 'text-white' : 'text-black'} />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size Selection */}
+                  <div className="mt-6">
+                    <div className="flex items-center justify-between text-xs font-mono mb-2">
+                      <span className="text-brand-muted uppercase">Select Size:</span>
+                      <button 
+                        onClick={() => setIsSizeGuideOpen(true)}
+                        className="text-brand-accent hover:underline flex items-center gap-1 text-[11px]"
+                      >
+                        <Icon name="Ruler" size={12} />
+                        <span>Size Chart & Fit Guide</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-5 gap-2">
+                      {selectedProduct.sizes.map((sz) => {
+                        const stock = selectedProduct.sizeStock[sz] || 0;
+                        const isSoldOut = stock === 0;
+                        return (
+                          <button 
+                            key={sz}
+                            disabled={isSoldOut}
+                            onClick={() => setSelectedSize(sz)}
+                            className={`py-2.5 text-xs font-mono rounded border transition-all relative ${
+                              isSoldOut 
+                                ? 'bg-brand-surface/30 border-brand-border/40 text-zinc-600 cursor-not-allowed line-through' 
+                                : selectedSize === sz 
+                                  ? 'bg-brand-light text-brand-black font-bold border-white' 
+                                  : 'bg-brand-surface text-brand-light border-brand-border hover:border-brand-muted'
+                            }`}
+                          >
+                            {sz}
+                            {stock > 0 && stock <= 3 && (
+                              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-brand-accent"></span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Stock Status Indicator */}
+                    <div className="mt-2 text-[11px] font-mono text-brand-muted">
+                      {currentStockForSize === 0 ? (
+                        <span className="text-red-400">Sold out in size {selectedSize}. Restock dropping next month.</span>
+                      ) : currentStockForSize <= 3 ? (
+                        <span className="text-brand-accent font-bold">Only {currentStockForSize} left in stock for size {selectedSize}</span>
+                      ) : (
+                        <span className="text-green-400">In Stock — Dispatches within 24 Hours</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Quantity and Add to Bag */}
+                  <div className="mt-6 pt-6 border-t border-brand-border flex gap-3">
+                    <div className="flex items-center border border-brand-border rounded bg-brand-surface">
+                      <button 
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        className="px-3 py-2 text-brand-muted hover:text-brand-light"
+                      >
+                        -
+                      </button>
+                      <span className="px-2 font-mono text-xs">{quantity}</span>
+                      <button 
+                        onClick={() => setQuantity(quantity + 1)}
+                        className="px-3 py-2 text-brand-muted hover:text-brand-light"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <button 
+                      disabled={currentStockForSize === 0}
+                      onClick={() => {
+                        addToCart(selectedProduct, selectedSize, selectedColor, quantity);
+                        setSelectedProduct(null);
+                      }}
+                      className={`flex-1 py-3.5 px-6 rounded font-mono text-xs font-bold tracking-widest uppercase transition-all shadow-xl flex items-center justify-center gap-2 ${
+                        currentStockForSize === 0 
+                          ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' 
+                          : 'bg-brand-accent hover:bg-brand-accentHover text-white active:scale-95'
+                      }`}
+                    >
+                      <Icon name="ShoppingBag" size={15} />
+                      <span>{currentStockForSize === 0 ? 'Sold Out' : `Add To Bag • ${formatPrice(selectedProduct.priceUSD * quantity)}`}</span>
+                    </button>
+                  </div>
+
+                  {/* Tabs: Specifications & Care */}
+                  <div className="mt-8 border-t border-brand-border pt-4">
+                    <div className="flex gap-6 border-b border-brand-border/60 pb-2 text-xs font-mono uppercase tracking-wider">
+                      <button 
+                        onClick={() => setActiveTab('DETAILS')}
+                        className={`pb-1 transition-colors ${activeTab === 'DETAILS' ? 'text-brand-light border-b-2 border-brand-accent' : 'text-brand-muted hover:text-brand-light'}`}
+                      >
+                        Garment Specs
+                      </button>
+                      <button 
+                        onClick={() => setActiveTab('CARE')}
+                        className={`pb-1 transition-colors ${activeTab === 'CARE' ? 'text-brand-light border-b-2 border-brand-accent' : 'text-brand-muted hover:text-brand-light'}`}
+                      >
+                        Fabric & Care
+                      </button>
+                      <button 
+                        onClick={() => setActiveTab('FIT')}
+                        className={`pb-1 transition-colors ${activeTab === 'FIT' ? 'text-brand-light border-b-2 border-brand-accent' : 'text-brand-muted hover:text-brand-light'}`}
+                      >
+                        Fit Advice
+                      </button>
+                    </div>
+
+                    <div className="pt-3 text-xs text-brand-bone/80 font-light leading-relaxed">
+                      {activeTab === 'DETAILS' && (
+                        <ul className="space-y-1.5 list-disc list-inside">
+                          {selectedProduct.details.map((d, i) => (
+                            <li key={i}>{d}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {activeTab === 'CARE' && (
+                        <p>{selectedProduct.care}</p>
+                      )}
+                      {activeTab === 'FIT' && (
+                        <p>{selectedProduct.fitGuide}</p>
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- SLIDE-OVER CART DRAWER ---
+    function CartDrawer() {
+      const { 
+        isCartOpen, 
+        setIsCartOpen, 
+        cart, 
+        removeFromCart, 
+        updateQuantity, 
+        formatPrice,
+        subtotalUSD,
+        discountUSD,
+        finalSubtotalUSD,
+        discountPercent,
+        applyPromo,
+        promoCode,
+        setPromoCode,
+        shippingRemainingUSD,
+        freeShippingThresholdUSD
+      } = useStore();
+
+      const [inputCode, setInputCode] = useState('');
+      const [isCheckingOut, setIsCheckingOut] = useState(false);
+      const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+
+      if (!isCartOpen) return null;
+
+      const shippingProgress = Math.min(100, Math.round(((freeShippingThresholdUSD - shippingRemainingUSD) / freeShippingThresholdUSD) * 100));
+
+      const handleCheckout = () => {
+        setIsCheckingOut(true);
+        setTimeout(() => {
+          setIsCheckingOut(false);
+          setCheckoutSuccess(true);
+        }, 1600);
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 overflow-hidden bg-brand-black/80 backdrop-blur-sm animate-fade-in flex justify-end">
+          <div 
+            className="w-full max-w-md bg-brand-dark border-l border-brand-border h-full flex flex-col justify-between shadow-2xl animate-fade-in text-brand-light"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Cart Header */}
+            <div className="p-6 border-b border-brand-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Icon name="ShoppingBag" size={18} className="text-brand-accent" />
+                <h3 className="font-editorial text-lg font-bold tracking-widest uppercase">
+                  Your Archive Bag ({cart.reduce((s, i) => s + i.quantity, 0)})
+                </h3>
+              </div>
+              <button 
+                onClick={() => { setIsCartOpen(false); setCheckoutSuccess(false); }}
+                className="w-8 h-8 rounded-full border border-brand-border hover:border-brand-muted flex items-center justify-center text-brand-muted hover:text-brand-light"
+              >
+                <Icon name="X" size={16} />
+              </button>
+            </div>
+
+            {/* Free Shipping Milestone Meter */}
+            <div className="bg-brand-surface px-6 py-3 border-b border-brand-border text-xs font-mono">
+              <div className="flex justify-between items-center mb-1.5 text-[11px]">
+                <span className="text-brand-muted uppercase">Complimentary Express Shipping</span>
+                <span className="font-bold text-brand-light">
+                  {shippingRemainingUSD === 0 ? 'UNLOCKED' : `${formatPrice(shippingRemainingUSD)} remaining`}
+                </span>
+              </div>
+              <div className="w-full h-1.5 bg-brand-dark rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-brand-accent transition-all duration-500 rounded-full"
+                  style={{ width: `${shippingProgress}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Cart Items List */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              {checkoutSuccess ? (
+                <div className="text-center py-16 space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 flex items-center justify-center mx-auto">
+                    <Icon name="CheckCircle" size={32} />
+                  </div>
+                  <h4 className="font-editorial text-xl font-bold uppercase tracking-wider text-brand-light">
+                    Order Dispatched Simulation
+                  </h4>
+                  <p className="text-xs font-mono text-brand-muted max-w-xs mx-auto">
+                    Thank you for ordering with VOID Studios. Confirmation email sent to your inbox.
+                  </p>
+                  <button 
+                    onClick={() => { setIsCartOpen(false); setCheckoutSuccess(false); }}
+                    className="mt-4 px-6 py-2.5 bg-brand-light text-brand-black font-mono text-xs font-bold rounded uppercase tracking-wider"
+                  >
+                    Continue Browsing
+                  </button>
+                </div>
+              ) : cart.length === 0 ? (
+                <div className="text-center py-20 space-y-3">
+                  <Icon name="ShoppingBag" size={36} className="text-brand-muted mx-auto stroke-1" />
+                  <p className="font-mono text-sm text-brand-light uppercase">Your bag is empty</p>
+                  <p className="text-xs font-mono text-brand-muted">Explore Drop 01 to add archival garments.</p>
+                  <button 
+                    onClick={() => setIsCartOpen(false)}
+                    className="mt-4 px-6 py-2 bg-brand-surface border border-brand-border text-brand-light font-mono text-xs uppercase tracking-wider rounded hover:border-brand-muted"
+                  >
+                    Explore Catalogue
+                  </button>
+                </div>
+              ) : (
+                cart.map(item => (
+                  <div key={item.key} className="flex gap-4 p-3 bg-brand-surface rounded border border-brand-border/70">
+                    <img src={item.image} alt={item.name} className="w-20 h-24 object-cover rounded bg-brand-dark" />
+                    
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start">
+                          <h4 className="text-xs font-bold text-brand-light">{item.name}</h4>
+                          <button 
+                            onClick={() => removeFromCart(item.key)}
+                            className="text-brand-muted hover:text-brand-accent p-0.5"
+                            title="Remove"
+                          >
+                            <Icon name="Trash2" size={13} />
+                          </button>
+                        </div>
+                        <p className="text-[11px] font-mono text-brand-muted mt-0.5">
+                          Size: <span className="text-brand-light font-bold">{item.size}</span> • Color: {item.color.name}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-brand-border/40 font-mono text-xs">
+                        <div className="flex items-center border border-brand-border rounded bg-brand-dark">
+                          <button 
+                            onClick={() => updateQuantity(item.key, -1)}
+                            className="px-2 py-0.5 text-brand-muted hover:text-brand-light"
+                          >
+                            -
+                          </button>
+                          <span className="px-2 text-[11px]">{item.quantity}</span>
+                          <button 
+                            onClick={() => updateQuantity(item.key, 1)}
+                            className="px-2 py-0.5 text-brand-muted hover:text-brand-light"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="font-bold text-brand-light">
+                          {formatPrice(item.priceUSD * item.quantity)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Cart Footer */}
+            {cart.length > 0 && !checkoutSuccess && (
+              <div className="p-6 bg-brand-surface border-t border-brand-border space-y-4">
+                {/* Promo Code Box */}
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    placeholder="PROMO CODE (e.g. VOID15)" 
+                    value={inputCode}
+                    onChange={(e) => setInputCode(e.target.value)}
+                    className="flex-1 bg-brand-dark border border-brand-border rounded px-3 py-2 text-xs font-mono uppercase text-brand-light focus:outline-none focus:border-brand-muted"
+                  />
+                  <button 
+                    onClick={() => applyPromo(inputCode)}
+                    className="px-4 py-2 bg-brand-zinc text-brand-light font-mono text-xs uppercase tracking-wider rounded hover:bg-zinc-700 transition-colors"
+                  >
+                    Apply
+                  </button>
+                </div>
+
+                {/* Subtotal Calculations */}
+                <div className="space-y-1.5 font-mono text-xs border-t border-brand-border/60 pt-3">
+                  <div className="flex justify-between text-brand-muted">
+                    <span>Subtotal</span>
+                    <span>{formatPrice(subtotalUSD)}</span>
+                  </div>
+
+                  {discountPercent > 0 && (
+                    <div className="flex justify-between text-brand-accent">
+                      <span>VIP Discount ({discountPercent}%)</span>
+                      <span>-{formatPrice(discountUSD)}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between text-brand-muted">
+                    <span>Express Worldwide Shipping</span>
+                    <span>{shippingRemainingUSD === 0 ? 'FREE' : formatPrice(15)}</span>
+                  </div>
+
+                  <div className="flex justify-between text-sm font-bold text-brand-light pt-2 border-t border-brand-border/60">
+                    <span>Estimated Total</span>
+                    <span>{formatPrice(finalSubtotalUSD + (shippingRemainingUSD === 0 ? 0 : 15))}</span>
+                  </div>
+                </div>
+
+                {/* Checkout Actions */}
+                <button 
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                  className="w-full py-4 bg-brand-accent hover:bg-brand-accentHover text-white font-mono text-xs font-bold tracking-widest uppercase rounded transition-all shadow-xl flex items-center justify-center gap-2 active:scale-98"
+                >
+                  {isCheckingOut ? (
+                    <>
+                      <Icon name="Loader2" size={16} className="animate-spin" />
+                      <span>Processing Order...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Icon name="Lock" size={14} />
+                      <span>Proceed to Checkout • {formatPrice(finalSubtotalUSD + (shippingRemainingUSD === 0 ? 0 : 15))}</span>
+                    </>
+                  )}
+                </button>
+
+                <div className="text-[10px] font-mono text-brand-muted text-center flex items-center justify-center gap-2">
+                  <Icon name="ShieldCheck" size={12} />
+                  <span>256-Bit Encrypted Checkout • Free 30-Day Returns</span>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      );
+    }
+
+    // --- UPCOMING DROPS & COUNTDOWN ---
+    function DropCountdown() {
+      const [timeLeft, setTimeLeft] = useState({ days: 4, hours: 16, minutes: 42, seconds: 18 });
+      const [email, setEmail] = useState('');
+      const [signedUp, setSignedUp] = useState(false);
+
+      useEffect(() => {
+        const timer = setInterval(() => {
+          setTimeLeft(prev => {
+            if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+            if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
+            if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+            if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
+            return prev;
+          });
+        }, 1000);
+        return () => clearInterval(timer);
+      }, []);
+
+      const handleSignup = (e) => {
+        e.preventDefault();
+        if (email) setSignedUp(true);
+      };
+
+      return (
+        <section id="drops-section" className="py-24 bg-brand-surface/70 border-b border-brand-border relative overflow-hidden">
+          <div className="max-w-5xl mx-auto px-6 text-center">
+            
+            <span className="text-[11px] font-mono uppercase tracking-mega text-brand-accent block mb-2">
+              Next Archive Release
+            </span>
+            <h2 className="font-editorial text-3xl sm:text-5xl font-bold tracking-widest text-brand-light uppercase mb-4">
+              DROP 02 // MONOCHROME MONOLITH
+            </h2>
+            <p className="max-w-xl mx-auto text-xs sm:text-sm font-light text-brand-muted mb-12">
+              Strictly limited to 150 pieces worldwide. Heavyweight Japanese Melton wool outerwear, technical trousers, and raw silver accessories.
+            </p>
+
+            {/* Countdown Clock Grid */}
+            <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-lg mx-auto font-mono mb-12">
+              {[
+                { label: 'DAYS', val: timeLeft.days },
+                { label: 'HOURS', val: timeLeft.hours },
+                { label: 'MINUTES', val: timeLeft.minutes },
+                { label: 'SECONDS', val: timeLeft.seconds }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-brand-dark p-4 rounded border border-brand-border shadow-xl">
+                  <span className="text-2xl sm:text-4xl font-bold text-brand-light block">
+                    {String(item.val).padStart(2, '0')}
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] uppercase text-brand-muted tracking-widest mt-1 block">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* VIP Early Access Sign Up Form */}
+            <div className="max-w-md mx-auto">
+              {signedUp ? (
+                <div className="p-4 bg-brand-dark rounded border border-green-500/40 text-green-400 font-mono text-xs flex items-center justify-center gap-2">
+                  <Icon name="Check" size={15} />
+                  <span>VIP Access Confirmed. Password sent 1 hour prior to drop.</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSignup} className="flex gap-2">
+                  <input 
+                    type="email" 
+                    required
+                    placeholder="ENTER EMAIL FOR 1-HR EARLY ACCESS" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 bg-brand-dark border border-brand-border rounded px-4 py-3 text-xs font-mono text-brand-light focus:outline-none focus:border-brand-muted placeholder:text-brand-muted/70"
+                  />
+                  <button 
+                    type="submit"
+                    className="px-6 py-3 bg-brand-light hover:bg-white text-brand-black font-mono text-xs font-bold uppercase tracking-wider rounded transition-all"
+                  >
+                    Join VIP
+                  </button>
+                </form>
+              )}
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    // --- BRAND STORY / MANIFESTO ---
+    function BrandStory() {
+      return (
+        <section id="about-section" className="py-24 bg-brand-black border-b border-brand-border">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div className="lg:col-span-6 space-y-6">
+              <span className="text-[11px] font-mono uppercase tracking-mega text-brand-muted block">
+                Brand Manifesto & Sourcing
+              </span>
+              <h2 className="font-editorial text-3xl sm:text-5xl font-bold tracking-widest text-brand-light uppercase leading-tight">
+                WE DO NOT MAKE FAST FASHION. WE SCULPT ARCHIVES.
+              </h2>
+              <p className="text-brand-muted text-sm sm:text-base leading-relaxed font-light">
+                VOID Studios was founded on an unyielding principle: clothing should possess physical gravity. In an era of disposable synthetic blends, we engineer silhouettes with substantial architectural presence.
+              </p>
+              <p className="text-brand-muted text-sm sm:text-base leading-relaxed font-light">
+                Every hoodie is knitted from 520 GSM zero-shrink organic French Terry. Every seam is double-needle reinforced. Our limited runs eliminate waste and preserve authentic rarity for our collectors.
+              </p>
+
+              <div className="pt-4 grid grid-cols-3 gap-4 border-t border-brand-border font-mono text-xs">
+                <div>
+                  <span className="text-brand-light font-bold block text-base">520 GSM</span>
+                  <span className="text-brand-muted text-[10px] uppercase">Loopback Terry</span>
+                </div>
+                <div>
+                  <span className="text-brand-light font-bold block text-base">100% ORGANIC</span>
+                  <span className="text-brand-muted text-[10px] uppercase">Combed Cotton</span>
+                </div>
+                <div>
+                  <span className="text-brand-light font-bold block text-base">LIMITED</span>
+                  <span className="text-brand-muted text-[10px] uppercase">Zero Overproduction</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 grid grid-cols-2 gap-4">
+              <div className="aspect-[3/4] rounded overflow-hidden bg-brand-surface border border-brand-border">
+                <img 
+                  src="https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=85" 
+                  alt="Studio craft" 
+                  className="w-full h-full object-cover filter grayscale contrast-125"
+                />
+              </div>
+              <div className="aspect-[3/4] rounded overflow-hidden bg-brand-surface border border-brand-border mt-8">
+                <img 
+                  src="https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=85" 
+                  alt="Fabric details" 
+                  className="w-full h-full object-cover filter grayscale contrast-125"
+                />
+              </div>
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    // --- SIZE GUIDE MODAL ---
+    function SizeGuideModal() {
+      const { isSizeGuideOpen, setIsSizeGuideOpen } = useStore();
+      const [unit, setUnit] = useState('IN'); // 'IN' or 'CM'
+      const [heightVal, setHeightVal] = useState(178);
+      const [weightVal, setWeightVal] = useState(72);
+
+      if (!isSizeGuideOpen) return null;
+
+      // Simple recommendation calculator
+      const recommendedSize = weightVal < 65 ? 'S' : weightVal < 78 ? 'M' : weightVal < 90 ? 'L' : 'XL';
+
+      const chartData = [
+        { size: 'XS', chestIN: '36–38', chestCM: '91–96', lengthIN: '27.5', lengthCM: '70', sleeveIN: '24.0', sleeveCM: '61' },
+        { size: 'S', chestIN: '38–40', chestCM: '96–101', lengthIN: '28.5', lengthCM: '72', sleeveIN: '24.5', sleeveCM: '62' },
+        { size: 'M', chestIN: '41–43', chestCM: '104–109', lengthIN: '29.5', lengthCM: '75', sleeveIN: '25.0', sleeveCM: '63.5' },
+        { size: 'L', chestIN: '44–46', chestCM: '112–117', lengthIN: '30.5', lengthCM: '77', sleeveIN: '25.5', sleeveCM: '65' },
+        { size: 'XL', chestIN: '47–49', chestCM: '119–124', lengthIN: '31.5', lengthCM: '80', sleeveIN: '26.0', sleeveCM: '66' },
+        { size: 'XXL', chestIN: '50–52', chestCM: '127–132', lengthIN: '32.0', lengthCM: '81', sleeveIN: '26.5', sleeveCM: '67' },
+      ];
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-black/85 backdrop-blur-xl animate-fade-in">
+          <div 
+            className="w-full max-w-2xl bg-brand-dark border border-brand-border rounded-lg shadow-2xl p-6 sm:p-8 text-brand-light relative max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setIsSizeGuideOpen(false)}
+              className="absolute top-4 right-4 text-brand-muted hover:text-brand-light p-1"
+            >
+              <Icon name="X" size={18} />
+            </button>
+
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-brand-accent mb-1">
+              <Icon name="Ruler" size={14} />
+              <span>Universal Fit Guide</span>
+            </div>
+            <h3 className="font-editorial text-2xl font-bold tracking-widest uppercase mb-4">
+              ARCHIVE SIZING SPECIFICATIONS
+            </h3>
+
+            {/* Smart Fit Predictor */}
+            <div className="bg-brand-surface p-4 rounded border border-brand-border mb-6">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-brand-muted block mb-3">
+                Smart Size Advisor (Based on Boxy Streetwear Cut)
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                <div>
+                  <label className="block text-brand-muted mb-1">Your Height: {heightVal} cm</label>
+                  <input 
+                    type="range" min="150" max="210" value={heightVal} 
+                    onChange={(e) => setHeightVal(Number(e.target.value))}
+                    className="w-full accent-brand-accent cursor-pointer"
+                  />
+                </div>
+                <div>
+                  <label className="block text-brand-muted mb-1">Your Weight: {weightVal} kg</label>
+                  <input 
+                    type="range" min="50" max="120" value={weightVal} 
+                    onChange={(e) => setWeightVal(Number(e.target.value))}
+                    className="w-full accent-brand-accent cursor-pointer"
+                  />
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-brand-border flex items-center justify-between text-xs font-mono">
+                <span className="text-brand-muted">Recommended Standard Size:</span>
+                <span className="text-sm font-bold text-brand-accent bg-brand-dark px-3 py-1 rounded border border-brand-accent/30">
+                  SIZE {recommendedSize} (Oversized Boxy Fit)
+                </span>
+              </div>
+            </div>
+
+            {/* Unit Switcher */}
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-brand-muted">Garment Measurements</span>
+              <div className="flex border border-brand-border rounded overflow-hidden text-xs font-mono">
+                <button 
+                  onClick={() => setUnit('IN')}
+                  className={`px-3 py-1 ${unit === 'IN' ? 'bg-brand-light text-brand-black font-bold' : 'text-brand-muted hover:text-brand-light'}`}
+                >
+                  Inches
+                </button>
+                <button 
+                  onClick={() => setUnit('CM')}
+                  className={`px-3 py-1 ${unit === 'CM' ? 'bg-brand-light text-brand-black font-bold' : 'text-brand-muted hover:text-brand-light'}`}
+                >
+                  Centimeters
+                </button>
+              </div>
+            </div>
+
+            {/* Measurement Table */}
+            <div className="overflow-x-auto border border-brand-border rounded">
+              <table className="w-full text-xs font-mono text-left">
+                <thead className="bg-brand-surface text-brand-muted uppercase text-[10px] tracking-wider border-b border-brand-border">
+                  <tr>
+                    <th className="py-2.5 px-4">Size</th>
+                    <th className="py-2.5 px-4">Chest Width</th>
+                    <th className="py-2.5 px-4">Body Length</th>
+                    <th className="py-2.5 px-4">Sleeve Length</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-brand-border">
+                  {chartData.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-brand-surface/50">
+                      <td className="py-2.5 px-4 font-bold text-brand-light">{row.size}</td>
+                      <td className="py-2.5 px-4 text-brand-bone">{unit === 'IN' ? `${row.chestIN}"` : `${row.chestCM} cm`}</td>
+                      <td className="py-2.5 px-4 text-brand-bone">{unit === 'IN' ? `${row.lengthIN}"` : `${row.lengthCM} cm`}</td>
+                      <td className="py-2.5 px-4 text-brand-bone">{unit === 'IN' ? `${row.sleeveIN}"` : `${row.sleeveCM} cm`}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="text-[11px] font-mono text-brand-muted mt-4">
+              *All measurements refer to garment dimensions laid flat. For standard drape, take your normal size. For an exaggerated silhouette, size up one tier.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    // --- SEARCH OVERLAY MODAL ---
+    function SearchModal() {
+      const { isSearchOpen, setIsSearchOpen, searchQuery, setSearchQuery, setSelectedProduct, formatPrice } = useStore();
+      const inputRef = useRef(null);
+
+      useEffect(() => {
+        if (isSearchOpen && inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, [isSearchOpen]);
+
+      if (!isSearchOpen) return null;
+
+      const searchResults = PRODUCTS_DATA.filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.fit.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      return (
+        <div className="fixed inset-0 z-50 bg-brand-black/90 backdrop-blur-md p-4 sm:p-8 animate-fade-in flex flex-col items-center">
+          <div className="w-full max-w-3xl">
+            
+            {/* Search Input Bar */}
+            <div className="flex items-center justify-between border-b border-brand-muted/40 pb-4 mb-8">
+              <div className="flex items-center gap-3 flex-1">
+                <Icon name="Search" size={24} className="text-brand-muted" />
+                <input 
+                  ref={inputRef}
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="SEARCH GARMENTS, GSM WEIGHT, CUT, COLORWAYS..."
+                  className="w-full bg-transparent text-xl sm:text-2xl font-editorial text-brand-light placeholder:text-brand-muted/50 focus:outline-none uppercase tracking-wider"
+                />
+              </div>
+              <button 
+                onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
+                className="text-brand-muted hover:text-brand-light p-2"
+              >
+                <Icon name="X" size={24} />
+              </button>
+            </div>
+
+            {/* Results Grid */}
+            <div className="overflow-y-auto max-h-[70vh] space-y-4">
+              {searchQuery.trim() === '' ? (
+                <div className="text-xs font-mono text-brand-muted space-y-2">
+                  <span className="uppercase tracking-widest block mb-2">Suggested Inquiries:</span>
+                  <div className="flex flex-wrap gap-2">
+                    {['520 GSM Hoodie', 'Ripstop Bomber', 'Boxy Tee', 'Pleated Cargo', 'Calfskin Bag'].map((tag, i) => (
+                      <button 
+                        key={i}
+                        onClick={() => setSearchQuery(tag)}
+                        className="bg-brand-surface px-3 py-1.5 rounded border border-brand-border hover:border-brand-muted text-brand-bone"
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : searchResults.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {searchResults.map(prod => (
+                    <div 
+                      key={prod.id}
+                      onClick={() => {
+                        setSelectedProduct(prod);
+                        setIsSearchOpen(false);
+                      }}
+                      className="flex gap-4 p-3 bg-brand-surface rounded border border-brand-border hover:border-brand-muted cursor-pointer transition-colors"
+                    >
+                      <img src={prod.images[0]} alt={prod.name} className="w-16 h-20 object-cover rounded bg-brand-dark" />
+                      <div className="flex flex-col justify-center">
+                        <span className="text-[10px] font-mono uppercase text-brand-accent">{prod.category} • {prod.fit}</span>
+                        <h4 className="text-sm font-bold text-brand-light">{prod.name}</h4>
+                        <span className="text-xs font-mono text-brand-muted mt-1">{formatPrice(prod.priceUSD)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center py-12 font-mono text-xs text-brand-muted">
+                  No matching garments located for "{searchQuery}".
+                </p>
+              )}
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // --- FOOTER COMPONENT ---
+    function Footer() {
+      return (
+        <footer className="bg-brand-black border-t border-brand-border py-16 text-brand-muted font-mono text-xs">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+            
+            {/* Col 1: Brand */}
+            <div className="space-y-3">
+              <span className="font-editorial text-2xl font-black tracking-mega text-brand-light block">
+                VOID
+              </span>
+              <p className="text-[11px] leading-relaxed text-brand-muted max-w-xs">
+                Luxury heavyweight streetwear archive and architectural garments. Made in limited quantities with zero overproduction.
+              </p>
+              <div className="pt-2 text-[10px] text-brand-zinc">
+                © 2026 VOID STUDIOS LTD. ALL RIGHTS RESERVED.
+              </div>
+            </div>
+
+            {/* Col 2: Navigation */}
+            <div className="space-y-2 uppercase tracking-wider text-[11px]">
+              <span className="text-brand-light font-bold block mb-3">Archive Directory</span>
+              <a href="#shop-section" className="block hover:text-brand-light transition-colors">Shop All Drops</a>
+              <a href="#lookbook-section" className="block hover:text-brand-light transition-colors">Campaign Lookbook</a>
+              <a href="#drops-section" className="block hover:text-brand-light transition-colors">Drop Schedule</a>
+              <a href="#about-section" className="block hover:text-brand-light transition-colors">Fabric & Craft Manifesto</a>
+            </div>
+
+            {/* Col 3: Customer Care */}
+            <div className="space-y-2 uppercase tracking-wider text-[11px]">
+              <span className="text-brand-light font-bold block mb-3">Client Services</span>
+              <a href="#" className="block hover:text-brand-light transition-colors">Worldwide Express Shipping</a>
+              <a href="#" className="block hover:text-brand-light transition-colors">Returns & Authenticity</a>
+              <a href="#" className="block hover:text-brand-light transition-colors">Garment Care Instructions</a>
+              <a href="#" className="block hover:text-brand-light transition-colors">Contact / Concierge</a>
+            </div>
+
+            {/* Col 4: GitHub / Developer Link */}
+            <div className="space-y-3">
+              <span className="text-brand-light font-bold block uppercase tracking-wider text-[11px]">Repository & Creator</span>
+              <p className="text-[11px] leading-relaxed">
+                Engineered with React + Tailwind CSS. Designed for seamless deployment on Vercel or GitHub Pages.
+              </p>
+              <a 
+                href="https://github.com/piyushpant-rgb" 
+                target="_blank" 
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-3.5 py-2 bg-brand-surface hover:bg-brand-zinc text-brand-light border border-brand-border rounded text-[11px] font-bold uppercase transition-colors"
+              >
+                <Icon name="Github" size={14} />
+                <span>github.com/piyushpant-rgb</span>
+              </a>
+            </div>
+
+          </div>
+        </footer>
+      );
+    }
+
+    // --- MAIN APP ROOT ---
+    function App() {
+      const { toastMessage } = useStore();
+
+      return (
+        <div className="min-h-screen flex flex-col bg-brand-black text-brand-light">
+          {/* Toast Notification */}
+          {toastMessage && (
+            <div className="fixed bottom-6 right-6 z-50 bg-brand-surface border border-brand-border text-brand-light px-4 py-3 rounded shadow-2xl font-mono text-xs flex items-center gap-3 animate-fade-in">
+              <span className="w-2 h-2 rounded-full bg-brand-accent"></span>
+              <span>{toastMessage}</span>
+            </div>
+          )}
+
+          <AnnouncementBar />
+          <Header />
+          
+          <main className="flex-1">
+            <Hero />
+            <HorizontalLookbook />
+            <ProductGrid />
+            <DropCountdown />
+            <BrandStory />
+          </main>
+
+          <Footer />
+
+          {/* Modals & Overlays */}
+          <ProductDetailModal />
+          <CartDrawer />
+          <SizeGuideModal />
+          <SearchModal />
+        </div>
+      );
+    }
+
+    // Mount React App
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(
+      <StoreProvider>
+        <App />
+      </StoreProvider>
+    );
+  </script>
+</body>
+</html>
