@@ -6,11 +6,12 @@ const StoreContext = createContext();
 export function StoreProvider({ children }) {
   const [cart, setCart] = useState(() => {
     try {
-      const saved = localStorage.getItem('void_cart');
+      const saved = localStorage.getItem('punk_cart');
       return saved ? JSON.parse(saved) : [];
     } catch(e) { return []; }
   });
-  const [currency, setCurrency] = useState('USD');
+  // DEFAULT CURRENCY: INR
+  const [currency, setCurrency] = useState('INR');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
@@ -18,12 +19,11 @@ export function StoreProvider({ children }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [wishlist, setWishlist] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
-  const [promoCode, setPromoCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
 
   useEffect(() => {
     try {
-      localStorage.setItem('void_cart', JSON.stringify(cart));
+      localStorage.setItem('punk_cart', JSON.stringify(cart));
     } catch(e) {}
   }, [cart]);
 
@@ -32,13 +32,13 @@ export function StoreProvider({ children }) {
     setTimeout(() => setToastMessage(null), 3200);
   };
 
-  const formatPrice = (usdAmount) => {
-    const curr = CURRENCIES[currency];
-    const converted = usdAmount * curr.rate;
-    if (currency === 'JPY') {
-      return `${curr.symbol}${Math.round(converted).toLocaleString()}`;
+  const formatPrice = (inrAmount) => {
+    const curr = CURRENCIES[currency] || CURRENCIES.INR;
+    if (currency === 'INR') {
+      return `₹${inrAmount.toLocaleString('en-IN')}`;
     }
-    return `${curr.symbol}${converted.toFixed(0)}`;
+    const converted = inrAmount * curr.rate;
+    return `${curr.symbol}${converted.toFixed(currency === 'JPY' ? 0 : 2)}`;
   };
 
   const addToCart = (product, size, color, quantity = 1) => {
@@ -55,10 +55,10 @@ export function StoreProvider({ children }) {
         productId: product.id,
         name: product.name,
         tagline: product.tagline,
-        priceUSD: product.priceUSD,
+        priceINR: product.priceINR,
         size,
         color,
-        image: product.images[color.imgIndex || 0],
+        image: product.images[color.imgIndex || 0] || product.images[0],
         quantity
       }];
     });
@@ -96,25 +96,25 @@ export function StoreProvider({ children }) {
 
   const applyPromo = (code) => {
     const upper = code.trim().toUpperCase();
-    if (upper === 'VOID15' || upper === 'DROP01' || upper === 'PIYUSH') {
-      setDiscountPercent(15);
-      showToast('15% VIP discount applied!');
+    if (upper === 'PUNK10' || upper === 'DELHI' || upper === 'PIYUSH') {
+      setDiscountPercent(10);
+      showToast('10% Delhi VIP discount applied!');
       return true;
-    } else if (upper === 'VOID20') {
+    } else if (upper === 'PUNK20') {
       setDiscountPercent(20);
-      showToast('20% Black Tier discount applied!');
+      showToast('20% Drop 01 discount applied!');
       return true;
     } else {
-      showToast('Invalid promo code. Try "VOID15"');
+      showToast('Invalid code. Try "PUNK10"');
       return false;
     }
   };
 
-  const subtotalUSD = cart.reduce((sum, item) => sum + (item.priceUSD * item.quantity), 0);
-  const discountUSD = (subtotalUSD * discountPercent) / 100;
-  const finalSubtotalUSD = subtotalUSD - discountUSD;
-  const freeShippingThresholdUSD = 150;
-  const shippingRemainingUSD = Math.max(0, freeShippingThresholdUSD - finalSubtotalUSD);
+  const subtotalINR = cart.reduce((sum, item) => sum + (item.priceINR * item.quantity), 0);
+  const discountINR = (subtotalINR * discountPercent) / 100;
+  const finalSubtotalINR = subtotalINR - discountINR;
+  const freeShippingThresholdINR = 2499;
+  const shippingRemainingINR = Math.max(0, freeShippingThresholdINR - finalSubtotalINR);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -140,15 +140,13 @@ export function StoreProvider({ children }) {
       removeFromCart,
       toastMessage,
       showToast,
-      subtotalUSD,
-      discountUSD,
-      finalSubtotalUSD,
+      subtotalINR,
+      discountINR,
+      finalSubtotalINR,
       discountPercent,
       applyPromo,
-      promoCode,
-      setPromoCode,
-      shippingRemainingUSD,
-      freeShippingThresholdUSD,
+      shippingRemainingINR,
+      freeShippingThresholdINR,
       cartCount
     }}>
       {children}

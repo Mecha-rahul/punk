@@ -10,13 +10,13 @@ export function CartDrawer() {
     removeFromCart, 
     updateQuantity, 
     formatPrice,
-    subtotalUSD,
-    discountUSD,
-    finalSubtotalUSD,
+    subtotalINR,
+    discountINR,
+    finalSubtotalINR,
     discountPercent,
     applyPromo,
-    shippingRemainingUSD,
-    freeShippingThresholdUSD
+    shippingRemainingINR,
+    freeShippingThresholdINR
   } = useStore();
 
   const [inputCode, setInputCode] = useState('');
@@ -25,7 +25,7 @@ export function CartDrawer() {
 
   if (!isCartOpen) return null;
 
-  const shippingProgress = Math.min(100, Math.round(((freeShippingThresholdUSD - shippingRemainingUSD) / freeShippingThresholdUSD) * 100));
+  const shippingProgress = Math.min(100, Math.round(((freeShippingThresholdINR - shippingRemainingINR) / freeShippingThresholdINR) * 100));
 
   const handleCheckout = () => {
     setIsCheckingOut(true);
@@ -41,7 +41,6 @@ export function CartDrawer() {
         className="w-full max-w-md bg-brand-dark border-l border-brand-border h-full flex flex-col justify-between shadow-2xl animate-fade-in text-brand-light"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cart Header */}
         <div className="p-6 border-b border-brand-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShoppingBag size={18} className="text-brand-accent" />
@@ -57,12 +56,12 @@ export function CartDrawer() {
           </button>
         </div>
 
-        {/* Free Shipping Milestone Meter */}
+        {/* Free Shipping Milestone */}
         <div className="bg-brand-surface px-6 py-3 border-b border-brand-border text-xs font-mono">
           <div className="flex justify-between items-center mb-1.5 text-[11px]">
-            <span className="text-brand-muted uppercase">Complimentary Express Shipping</span>
+            <span className="text-brand-muted uppercase">Free Pan-India Express Shipping</span>
             <span className="font-bold text-brand-light">
-              {shippingRemainingUSD === 0 ? 'UNLOCKED' : `${formatPrice(shippingRemainingUSD)} remaining`}
+              {shippingRemainingINR === 0 ? 'UNLOCKED' : `${formatPrice(shippingRemainingINR)} remaining`}
             </span>
           </div>
           <div className="w-full h-1.5 bg-brand-dark rounded-full overflow-hidden">
@@ -73,7 +72,7 @@ export function CartDrawer() {
           </div>
         </div>
 
-        {/* Cart Items List */}
+        {/* Cart Items */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {checkoutSuccess ? (
             <div className="text-center py-16 space-y-4">
@@ -84,7 +83,7 @@ export function CartDrawer() {
                 Order Dispatched Simulation
               </h4>
               <p className="text-xs font-mono text-brand-muted max-w-xs mx-auto">
-                Thank you for ordering with VOID Studios. Confirmation email sent to your inbox.
+                Thank you for ordering with PUNK.IN. Order confirmation sent via WhatsApp/SMS.
               </p>
               <button 
                 onClick={() => { setIsCartOpen(false); setCheckoutSuccess(false); }}
@@ -97,7 +96,7 @@ export function CartDrawer() {
             <div className="text-center py-20 space-y-3">
               <ShoppingBag size={36} className="text-brand-muted mx-auto stroke-1" />
               <p className="font-mono text-sm text-brand-light uppercase">Your bag is empty</p>
-              <p className="text-xs font-mono text-brand-muted">Explore Drop 01 to add archival garments.</p>
+              <p className="text-xs font-mono text-brand-muted">Explore Drop 01 to add archival streetwear.</p>
               <button 
                 onClick={() => setIsCartOpen(false)}
                 className="mt-4 px-6 py-2 bg-brand-surface border border-brand-border text-brand-light font-mono text-xs uppercase tracking-wider rounded hover:border-brand-muted"
@@ -144,7 +143,7 @@ export function CartDrawer() {
                       </button>
                     </div>
                     <span className="font-bold text-brand-light">
-                      {formatPrice(item.priceUSD * item.quantity)}
+                      {formatPrice(item.priceINR * item.quantity)}
                     </span>
                   </div>
                 </div>
@@ -156,11 +155,10 @@ export function CartDrawer() {
         {/* Cart Footer */}
         {cart.length > 0 && !checkoutSuccess && (
           <div className="p-6 bg-brand-surface border-t border-brand-border space-y-4">
-            {/* Promo Code Box */}
             <div className="flex gap-2">
               <input 
                 type="text" 
-                placeholder="PROMO CODE (e.g. VOID15)" 
+                placeholder="PROMO CODE (e.g. PUNK10)" 
                 value={inputCode}
                 onChange={(e) => setInputCode(e.target.value)}
                 className="flex-1 bg-brand-dark border border-brand-border rounded px-3 py-2 text-xs font-mono uppercase text-brand-light focus:outline-none focus:border-brand-muted"
@@ -173,32 +171,30 @@ export function CartDrawer() {
               </button>
             </div>
 
-            {/* Subtotal Calculations */}
             <div className="space-y-1.5 font-mono text-xs border-t border-brand-border/60 pt-3">
               <div className="flex justify-between text-brand-muted">
                 <span>Subtotal</span>
-                <span>{formatPrice(subtotalUSD)}</span>
+                <span>{formatPrice(subtotalINR)}</span>
               </div>
 
               {discountPercent > 0 && (
                 <div className="flex justify-between text-brand-accent">
                   <span>VIP Discount ({discountPercent}%)</span>
-                  <span>-{formatPrice(discountUSD)}</span>
+                  <span>-{formatPrice(discountINR)}</span>
                 </div>
               )}
 
               <div className="flex justify-between text-brand-muted">
-                <span>Express Worldwide Shipping</span>
-                <span>{shippingRemainingUSD === 0 ? 'FREE' : formatPrice(15)}</span>
+                <span>Express Pan-India Shipping</span>
+                <span>{shippingRemainingINR === 0 ? 'FREE' : formatPrice(150)}</span>
               </div>
 
               <div className="flex justify-between text-sm font-bold text-brand-light pt-2 border-t border-brand-border/60">
-                <span>Estimated Total</span>
-                <span>{formatPrice(finalSubtotalUSD + (shippingRemainingUSD === 0 ? 0 : 15))}</span>
+                <span>Estimated Total (INR)</span>
+                <span>{formatPrice(finalSubtotalINR + (shippingRemainingINR === 0 ? 0 : 150))}</span>
               </div>
             </div>
 
-            {/* Checkout Actions */}
             <button 
               onClick={handleCheckout}
               disabled={isCheckingOut}
@@ -212,14 +208,14 @@ export function CartDrawer() {
               ) : (
                 <>
                   <Lock size={14} />
-                  <span>Proceed to Checkout • {formatPrice(finalSubtotalUSD + (shippingRemainingUSD === 0 ? 0 : 15))}</span>
+                  <span>Proceed to Checkout • {formatPrice(finalSubtotalINR + (shippingRemainingINR === 0 ? 0 : 150))}</span>
                 </>
               )}
             </button>
 
             <div className="text-[10px] font-mono text-brand-muted text-center flex items-center justify-center gap-2">
               <ShieldCheck size={12} />
-              <span>256-Bit Encrypted Checkout • Free 30-Day Returns</span>
+              <span>UPI / Cards / NetBanking Supported • 7-Day Easy Returns</span>
             </div>
           </div>
         )}
