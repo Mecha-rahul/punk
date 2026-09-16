@@ -1,6 +1,10 @@
 $ErrorActionPreference = "Stop"
 
-$token = "VERCEL_TOKEN_ENV_VAR"
+# Token is read from the environment (never committed). Set it once per machine:
+#   setx VERCEL_TOKEN "your-token"      (then reopen the terminal)
+# Or pass inline:  $env:VERCEL_TOKEN="..."; .\deploy.ps1
+if (-not $env:VERCEL_TOKEN) { Write-Host "ERROR: set `$env:VERCEL_TOKEN first"; exit 1 }
+$token = $env:VERCEL_TOKEN
 $projectId = "prj_wBlADbfn0HwJN9MFnXccrzb8p8hR"
 $aliasDomain = "punkstudios.vercel.app"
 
