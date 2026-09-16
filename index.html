@@ -818,14 +818,17 @@
         setMobileMenuOpen(false);
         const el = document.getElementById(id);
         if (el) {
-          const y = el.getBoundingClientRect().top + window.pageYOffset - 75;
+          const y = el.getBoundingClientRect().top + window.pageYOffset - (window.innerWidth < 1024 ? 104 : 75);
           window.scrollTo({ top: y, behavior: 'smooth' });
         }
       };
 
       return (
         <header className={`sticky top-0 z-30 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-sm' : 'bg-white border-b border-neutral-200/80'}`}>
-          <div className="relative max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 lg:gap-6 h-14 lg:h-16">
+          <div className="max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-8">
+
+            {/* Row 1 — menu (mobile) / nav (desktop) · centered logo · bag */}
+            <div className="relative flex items-center justify-between h-14 lg:h-16 gap-3">
             
             {/* Left Nav (Clean uppercase luxury links) */}
             <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-[10px] xl:text-[11px] uppercase tracking-[0.16em] font-medium text-neutral-600 flex-1 min-w-0">
@@ -847,9 +850,9 @@
               <Icon name={mobileMenuOpen ? "X" : "Menu"} size={22} />
             </button>
 
-            {/* Center Logo - absolutely centered, never collides with controls */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <span className="font-sans text-[10px] min-[400px]:text-base min-[480px]:text-lg md:text-xl xl:text-2xl font-black tracking-[0.12em] min-[400px]:tracking-[0.18em] sm:tracking-[0.22em] text-black hover:opacity-75 transition-opacity whitespace-nowrap uppercase">
+            {/* Center Logo - absolutely centered with fluid sizing; fits available space at every width */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center cursor-pointer max-w-[46%] min-[480px]:max-w-[60%] lg:max-w-none" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <span className="font-sans font-black text-black hover:opacity-75 transition-opacity whitespace-nowrap uppercase leading-none text-[clamp(0.625rem,1.6vw+0.5rem,1.25rem)] lg:text-xl xl:text-2xl tracking-[0.04em] min-[480px]:tracking-[0.12em] lg:tracking-[0.16em] xl:tracking-[0.18em]">
                 PUNK THRIFT STUDIO
               </span>
               <span className="hidden sm:block text-[8px] sm:text-[9px] font-medium tracking-[0.28em] text-neutral-400 -mt-0.5 uppercase">
@@ -875,7 +878,9 @@
                 </select>
               </div>
 
-              {/* Account / Sign In Button */}
+              {/* Desktop utility group — account, search, size guide (mobile gets Row 2 below) */}
+            <div className="hidden lg:flex items-center gap-1.5 xl:gap-3">
+            {/* Account / Sign In Button */}
               {currentUser ? (
                 <div className="flex items-center gap-2">
                   <div
@@ -924,6 +929,8 @@
                 <span>Size Guide</span>
               </button>
 
+              </div>
+
               {/* Shopping Bag Button (Crisp luxury black badge) */}
               <button 
                 onClick={() => setIsCartOpen(true)}
@@ -936,6 +943,34 @@
                 </span>
               </button>
 
+            </div>
+            </div>
+
+            {/* Row 2 — mobile utility bar: account, search, size guide */}
+            <div className="lg:hidden flex items-center justify-center gap-7 pb-2.5 text-black">
+              {currentUser ? (
+                <div className="flex items-center gap-2.5">
+                  <span className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em]">
+                    <span className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[9px] font-bold">{currentUser.name.charAt(0).toUpperCase()}</span>
+                    <span className="max-w-[90px] truncate">{currentUser.name.split(' ')[0]}</span>
+                  </span>
+                  <button onClick={logout} className="text-neutral-500 hover:text-black transition-colors" title="Sign out">
+                    <Icon name="LogOut" size={14} />
+                  </button>
+                </div>
+              ) : (
+                <button onClick={() => openAuth('login')} className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] hover:opacity-70 transition-opacity">
+                  <Icon name="User" size={15} />
+                  Sign In
+                </button>
+              )}
+              <button onClick={() => setIsSearchOpen(true)} className="text-neutral-700 hover:text-black transition-colors" title="Search Catalogue">
+                <Icon name="Search" size={17} />
+              </button>
+              <button onClick={() => setIsSizeGuideOpen(true)} className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-700 hover:text-black transition-colors">
+                <Icon name="Ruler" size={13} />
+                Size Guide
+              </button>
             </div>
           </div>
 
