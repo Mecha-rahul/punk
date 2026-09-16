@@ -4,7 +4,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
-// ─── Helper: generate both tokens and save refresh token to DB ────────────────
 const generateTokens = async (userId) => {
   const user = await User.findById(userId);
   const accessToken = user.generateAccessToken();
@@ -16,7 +15,7 @@ const generateTokens = async (userId) => {
 
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: true 
 };
 
 // ─── REGISTER ─────────────────────────────────────────────────────────────────
@@ -32,32 +31,12 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with email or username already exists");
   }
 
-  // Handle avatar upload
-  const avtaarLocalPath = req.files?.avtaar?.[0]?.path;
-  if (!avtaarLocalPath) {
-    throw new ApiError(400, "Avatar image is required");
-  }
-
-  const avtaarUpload = await uploadOnCloudinary(avtaarLocalPath);
-  if (!avtaarUpload) {
-    throw new ApiError(500, "Avatar upload failed");
-  }
-
-  // Handle optional cover image
-  let coverImageUrl = "";
-  const coverLocalPath = req.files?.coverImage?.[0]?.path;
-  if (coverLocalPath) {
-    const coverUpload = await uploadOnCloudinary(coverLocalPath);
-    coverImageUrl = coverUpload?.secure_url || "";
-  }
 
   const user = await User.create({
     fullname,
     username: username.toLowerCase(),
     email,
     password,
-    avtaar: avtaarUpload.secure_url,
-    coverImage: coverImageUrl,
   });
 
   const createdUser = await User.findById(user._id).select(
