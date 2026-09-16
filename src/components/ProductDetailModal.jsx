@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../context/StoreContext';
-import { X, Star, Ruler, Check, ShoppingBag, ChevronLeft, ChevronRight, MoveHorizontal } from 'lucide-react';
+import { X, Star, Ruler, Check, ShoppingBag, ChevronLeft, ChevronRight, MoveHorizontal, ArrowLeft, RotateCcw } from 'lucide-react';
 
 export function ProductDetailModal() {
   const { selectedProduct, setSelectedProduct, formatPrice, addToCart, setIsSizeGuideOpen } = useStore();
@@ -15,6 +15,13 @@ export function ProductDetailModal() {
   const handleColorSelect = (color) => {
     setSelectedColor(color);
     setActiveImgIndex(color.imgIndex || 0);
+  };
+
+  const handleResetSelection = () => {
+    setSelectedColor(selectedProduct.colors[0]);
+    setSelectedSize(selectedProduct.sizes[0]);
+    setActiveImgIndex(selectedProduct.colors[0].imgIndex || 0);
+    setQuantity(1);
   };
 
   const totalImages = selectedProduct.images.length;
@@ -42,24 +49,54 @@ export function ProductDetailModal() {
   const currentStockForSize = selectedProduct.sizeStock[selectedSize] || 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-black/85 backdrop-blur-xl overflow-y-auto">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-brand-black/85 backdrop-blur-xl overflow-y-auto"
+      onClick={() => setSelectedProduct(null)}
+    >
       <div 
         className="relative w-full max-w-5xl bg-brand-dark border border-brand-border rounded-lg shadow-2xl overflow-hidden animate-fade-in my-8 text-brand-light"
         onClick={(e) => e.stopPropagation()}
       >
-        <button 
-          onClick={() => setSelectedProduct(null)}
-          className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-brand-black/80 border border-brand-border text-brand-muted hover:text-brand-light flex items-center justify-center transition-colors"
-        >
-          <X size={18} />
-        </button>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
+        {/* Top Navigation Bar with Back / Undo Button */}
+        <div className="bg-brand-surface/90 px-4 sm:px-6 py-3 border-b border-brand-border flex items-center justify-between">
           
-          {/* Left Column: Image Gallery WITH SWIPE / PREV / NEXT BUTTONS */}
+          {/* Back to Catalogue */}
+          <button 
+            onClick={() => setSelectedProduct(null)}
+            className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-brand-muted hover:text-brand-light bg-brand-dark px-3 py-1.5 rounded border border-brand-border hover:border-brand-muted transition-all active:scale-95"
+            title="Back to Catalog"
+          >
+            <ArrowLeft size={14} />
+            <span>Back to Catalogue</span>
+          </button>
+
+          <div className="flex items-center gap-3">
+            {/* Reset / Undo */}
+            <button 
+              onClick={handleResetSelection}
+              className="hidden sm:flex items-center gap-1 text-[11px] font-mono text-brand-muted hover:text-brand-light transition-colors"
+              title="Reset color and size options"
+            >
+              <RotateCcw size={12} />
+              <span>Reset Options</span>
+            </button>
+
+            {/* Close 'X' */}
+            <button 
+              onClick={() => setSelectedProduct(null)}
+              className="w-8 h-8 rounded-full bg-brand-black border border-brand-border text-brand-muted hover:text-brand-light flex items-center justify-center transition-colors"
+              title="Close"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+          
+          {/* Left Column: Image Gallery with Swipe Buttons */}
           <div className="lg:col-span-7 bg-brand-black p-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-brand-border">
             
-            {/* Main Large Image Frame with SWIPE CONTROLS */}
             <div className="relative aspect-[4/5] rounded overflow-hidden bg-brand-surface mb-4 group select-none">
               <img 
                 src={selectedProduct.images[activeImgIndex] || selectedProduct.images[0]} 
@@ -79,20 +116,20 @@ export function ProductDetailModal() {
                 </span>
               </div>
 
-              {/* ⬅️ PREV SWIPE BUTTON */}
+              {/* Prev Swipe Button */}
               <button 
                 onClick={handlePrevImage}
                 className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-brand-black/80 hover:bg-brand-black text-brand-light border border-brand-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-xl"
-                title="Previous Image (Left Arrow)"
+                title="Previous Image"
               >
                 <ChevronLeft size={20} />
               </button>
 
-              {/* ➡️ NEXT SWIPE BUTTON */}
+              {/* Next Swipe Button */}
               <button 
                 onClick={handleNextImage}
                 className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-brand-black/80 hover:bg-brand-black text-brand-light border border-brand-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-xl"
-                title="Next Image (Right Arrow)"
+                title="Next Image"
               >
                 <ChevronRight size={20} />
               </button>
@@ -121,7 +158,7 @@ export function ProductDetailModal() {
             </div>
           </div>
 
-          {/* Right Column: Details */}
+          {/* Right Column */}
           <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-brand-dark">
             <div>
               <div className="flex items-center justify-between text-xs font-mono text-brand-muted mb-2">
@@ -148,7 +185,7 @@ export function ProductDetailModal() {
                 </span>
               </div>
 
-              {/* Colorways */}
+              {/* Colorway */}
               <div className="mt-6">
                 <div className="flex items-center justify-between text-xs font-mono mb-2">
                   <span className="text-brand-muted uppercase">Colorway:</span>

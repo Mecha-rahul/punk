@@ -55,13 +55,13 @@ export function Header() {
           {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
-        {/* Center Logo */}
+        {/* Center Logo -> PUNK STUDIOS */}
         <div className="flex flex-col items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <span className="font-editorial text-2xl sm:text-3xl font-black tracking-mega text-brand-light hover:text-brand-bone transition-colors">
-            PUNK.IN
+            PUNK STUDIOS
           </span>
           <span className="text-[9px] font-mono tracking-ultra text-brand-muted -mt-1 uppercase">
-            Thrift & Heavywear Studios // Delhi
+            Heavywear & Thrift Archive // Delhi
           </span>
         </div>
 

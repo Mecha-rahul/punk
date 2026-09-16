@@ -254,5 +254,36 @@ export const PRODUCTS_DATA = [
     ],
     care: 'Hand wash cold. Lay flat to dry.',
     fitGuide: 'Boxy cropped silhouette.'
+  },
+  {
+    id: 'pk-green-tee-01',
+    name: 'Dark Fleur Gothic Graphic Tee',
+    tagline: '240 GSM Heavyweight Oversized Boxy Tee',
+    category: 'Tees',
+    gender: 'Men',
+    fit: 'Oversized Boxy',
+    priceINR: 1000,
+    tags: ['NEW', 'MEN', '240 GSM'],
+    inStock: true,
+    stockCount: 2,
+    rating: 4.9,
+    reviewsCount: 1,
+    colors: [
+      { name: 'Forest Green', hex: '#1a5c4a', imgIndex: 0 }
+    ],
+    sizes: ['XL'],
+    sizeStock: { XL: 2 },
+    images: [
+      '/images/tee-green-affliction.jpg'
+    ],
+    details: [
+      '240 GSM 100% combed cotton heavyweight jersey',
+      'Oversized boxy silhouette — designed and milled in Delhi',
+      'Large Gothic Fleur-de-Lis screen print on back',
+      'Tonal lettering on collar / sleeve hem',
+      'Drop-shoulder construction with raw ribbed cuffs'
+    ],
+    care: 'Cold machine wash inside out. Hang dry in shade to preserve print integrity.',
+    fitGuide: 'Boxy oversized cut. Fits true to size with generous room in shoulders and chest. Size XL fits chest 44–46".'
   }
 ];

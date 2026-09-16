@@ -7,30 +7,30 @@ export function BrandStory() {
         
         <div className="lg:col-span-6 space-y-6">
           <span className="text-[11px] font-mono uppercase tracking-mega text-brand-muted block">
-            Brand Manifesto & Sourcing
+            Brand Manifesto & Sourcing // Delhi, India
           </span>
           <h2 className="font-editorial text-3xl sm:text-5xl font-bold tracking-widest text-brand-light uppercase leading-tight">
-            WE DO NOT MAKE FAST FASHION. WE SCULPT ARCHIVES.
+            AUTHENTIC HEAVYWEAR. NO COMPROMISE.
           </h2>
           <p className="text-brand-muted text-sm sm:text-base leading-relaxed font-light">
-            VOID Studios was founded on an unyielding principle: clothing should possess physical gravity. In an era of disposable synthetic blends, we engineer silhouettes with substantial architectural presence.
+            PUNK STUDIOS is built in New Delhi with a clear obsession: delivering substantial, authentic heavyweight streetwear and curated archival thrift pieces that stand the test of time.
           </p>
           <p className="text-brand-muted text-sm sm:text-base leading-relaxed font-light">
-            Every hoodie is knitted from 520 GSM zero-shrink organic French Terry. Every seam is double-needle reinforced. Our limited runs eliminate waste and preserve authentic rarity for our collectors.
+            We craft our garments from 200–340 GSM Indian combed cotton. Every batch is produced in limited numbers to eliminate deadstock and guarantee exclusivity for our community.
           </p>
 
           <div className="pt-4 grid grid-cols-3 gap-4 border-t border-brand-border font-mono text-xs">
             <div>
-              <span className="text-brand-light font-bold block text-base">520 GSM</span>
-              <span className="text-brand-muted text-[10px] uppercase">Loopback Terry</span>
+              <span className="text-brand-light font-bold block text-base">200–340 GSM</span>
+              <span className="text-brand-muted text-[10px] uppercase">Custom Knit Cotton</span>
             </div>
             <div>
-              <span className="text-brand-light font-bold block text-base">100% ORGANIC</span>
-              <span className="text-brand-muted text-[10px] uppercase">Combed Cotton</span>
+              <span className="text-brand-light font-bold block text-base">DELHI HQ</span>
+              <span className="text-brand-muted text-[10px] uppercase">Designed & Milled</span>
             </div>
             <div>
-              <span className="text-brand-light font-bold block text-base">LIMITED</span>
-              <span className="text-brand-muted text-[10px] uppercase">Zero Overproduction</span>
+              <span className="text-brand-light font-bold block text-base">LIMITED RUNS</span>
+              <span className="text-brand-muted text-[10px] uppercase">100 Pieces / Drop</span>
             </div>
           </div>
         </div>

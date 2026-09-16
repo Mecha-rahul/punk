@@ -5,12 +5,12 @@ import { Ruler, X } from 'lucide-react';
 export function SizeGuideModal() {
   const { isSizeGuideOpen, setIsSizeGuideOpen } = useStore();
   const [unit, setUnit] = useState('IN');
-  const [heightVal, setHeightVal] = useState(178);
-  const [weightVal, setWeightVal] = useState(72);
+  const [heightVal, setHeightVal] = useState(175);
+  const [weightVal, setWeightVal] = useState(70);
 
   if (!isSizeGuideOpen) return null;
 
-  const recommendedSize = weightVal < 65 ? 'S' : weightVal < 78 ? 'M' : weightVal < 90 ? 'L' : 'XL';
+  const recommendedSize = weightVal < 62 ? 'S' : weightVal < 75 ? 'M' : weightVal < 88 ? 'L' : 'XL';
 
   const chartData = [
     { size: 'XS', chestIN: '36–38', chestCM: '91–96', lengthIN: '27.5', lengthCM: '70', sleeveIN: '24.0', sleeveCM: '61' },
@@ -36,22 +36,21 @@ export function SizeGuideModal() {
 
         <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-brand-accent mb-1">
           <Ruler size={14} />
-          <span>Universal Fit Guide</span>
+          <span>Universal Sizing Guide</span>
         </div>
         <h3 className="font-editorial text-2xl font-bold tracking-widest uppercase mb-4">
-          ARCHIVE SIZING SPECIFICATIONS
+          PUNK STUDIOS SIZE & FIT CALCULATOR
         </h3>
 
-        {/* Smart Fit Predictor */}
         <div className="bg-brand-surface p-4 rounded border border-brand-border mb-6">
           <span className="text-[11px] font-mono uppercase tracking-wider text-brand-muted block mb-3">
-            Smart Size Advisor (Based on Boxy Streetwear Cut)
+            Smart Size Predictor (Tailored for Indian Streetwear Cuts)
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
             <div>
               <label className="block text-brand-muted mb-1">Your Height: {heightVal} cm</label>
               <input 
-                type="range" min="150" max="210" value={heightVal} 
+                type="range" min="150" max="205" value={heightVal} 
                 onChange={(e) => setHeightVal(Number(e.target.value))}
                 className="w-full accent-brand-accent cursor-pointer"
               />
@@ -59,7 +58,7 @@ export function SizeGuideModal() {
             <div>
               <label className="block text-brand-muted mb-1">Your Weight: {weightVal} kg</label>
               <input 
-                type="range" min="50" max="120" value={weightVal} 
+                type="range" min="45" max="115" value={weightVal} 
                 onChange={(e) => setWeightVal(Number(e.target.value))}
                 className="w-full accent-brand-accent cursor-pointer"
               />
@@ -68,14 +67,13 @@ export function SizeGuideModal() {
           <div className="mt-4 pt-3 border-t border-brand-border flex items-center justify-between text-xs font-mono">
             <span className="text-brand-muted">Recommended Standard Size:</span>
             <span className="text-sm font-bold text-brand-accent bg-brand-dark px-3 py-1 rounded border border-brand-accent/30">
-              SIZE {recommendedSize} (Oversized Boxy Fit)
+              SIZE {recommendedSize} (Boxy Relaxed Fit)
             </span>
           </div>
         </div>
 
-        {/* Unit Switcher */}
         <div className="flex justify-between items-center mb-3">
-          <span className="text-xs font-mono uppercase tracking-wider text-brand-muted">Garment Measurements</span>
+          <span className="text-xs font-mono uppercase tracking-wider text-brand-muted">Garment Dimensions</span>
           <div className="flex border border-brand-border rounded overflow-hidden text-xs font-mono">
             <button 
               onClick={() => setUnit('IN')}
@@ -92,7 +90,6 @@ export function SizeGuideModal() {
           </div>
         </div>
 
-        {/* Measurement Table */}
         <div className="overflow-x-auto border border-brand-border rounded">
           <table className="w-full text-xs font-mono text-left">
             <thead className="bg-brand-surface text-brand-muted uppercase text-[10px] tracking-wider border-b border-brand-border">
@@ -115,10 +112,6 @@ export function SizeGuideModal() {
             </tbody>
           </table>
         </div>
-
-        <p className="text-[11px] font-mono text-brand-muted mt-4">
-          *All measurements refer to garment dimensions laid flat. For standard drape, take your normal size. For an exaggerated silhouette, size up one tier.
-        </p>
       </div>
     </div>
   );

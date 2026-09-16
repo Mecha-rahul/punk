@@ -9,7 +9,7 @@ export function AnnouncementBar() {
       <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">
         <span className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-ping inline-block"></span>
-          <strong className="text-brand-light">PUNK.IN DROP 01 LIVE</strong> — BASED IN DELHI, INDIA
+          <strong className="text-brand-light">PUNK STUDIOS DROP 01 LIVE</strong> — BASED IN DELHI, INDIA
         </span>
         <span>•</span>
         <span>
@@ -26,7 +26,7 @@ export function AnnouncementBar() {
         <span>•</span>
         <span className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-ping inline-block"></span>
-          <strong className="text-brand-light">PUNK.IN DROP 01 LIVE</strong> — BASED IN DELHI, INDIA
+          <strong className="text-brand-light">PUNK STUDIOS DROP 01 LIVE</strong> — BASED IN DELHI, INDIA
         </span>
         <span>•</span>
         <span>ADD {formatPrice(shippingRemainingINR)} FOR FREE EXPRESS DELIVERY</span>

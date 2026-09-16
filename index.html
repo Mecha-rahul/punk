@@ -1,48 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PUNK THRIFT IN — Heavyweight Streetwear & Archival Thrift (Delhi, India)</title>
+  <title>PUNK THRIFT STUDIO — Contemporary Streetwear & Archival Thrift (Delhi, India)</title>
   
-  <!-- Fonts -->
+  <!-- Fonts: Montserrat (FADL Style) + Noto Sans (for ₹) + Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Noto+Sans:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           colors: {
             brand: {
-              black: '#070707',
-              dark: '#0e0e0e',
-              surface: '#151515',
-              border: '#242424',
-              muted: '#7e7e84',
-              light: '#f5f5f0',
-              accent: '#ff3b30',
-              accentHover: '#e02d23',
-              bone: '#e8e6df',
-              zinc: '#2a2a2f'
+              black: '#000000',
+              dark: '#111111',
+              surface: '#FFFFFF',
+              canvas: '#FAFAFA',
+              border: '#E8E8E8',
+              borderLight: '#F2F2F2',
+              muted: '#737373',
+              light: '#0A0A0A',
+              accent: '#000000',
+              accentHover: '#262626',
+              bone: '#1A1A1A',
+              zinc: '#F5F5F7'
             }
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            editorial: ['"Cinzel"', 'serif'],
-            mono: ['"Space Mono"', 'monospace'],
+            sans: ['"Montserrat"', '"Plus Jakarta Sans"', '"Noto Sans"', 'sans-serif'],
+            editorial: ['"Montserrat"', 'sans-serif'],
+            mono: ['"Space Mono"', '"Noto Sans"', 'monospace'],
           },
           letterSpacing: {
-            ultra: '0.25em',
-            mega: '0.35em'
+            tracked: '0.12em',
+            ultra: '0.22em',
+            mega: '0.3em'
           },
           animation: {
             'marquee': 'marquee 28s linear infinite',
-            'fade-in': 'fadeIn 0.35s ease-out forwards'
+            'fade-in': 'fadeIn 0.3s ease-out forwards'
           },
           keyframes: {
             marquee: {
@@ -50,7 +52,7 @@
               '100%': { transform: 'translateX(-50%)' }
             },
             fadeIn: {
-              '0%': { opacity: '0', transform: 'translateY(8px)' },
+              '0%': { opacity: '0', transform: 'translateY(6px)' },
               '100%': { opacity: '1', transform: 'translateY(0)' }
             }
           }
@@ -73,10 +75,10 @@
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #0a0a0a;
+      background: #FAFAFA;
     }
     ::-webkit-scrollbar-thumb {
-      background: #27272a;
+      background: #D4D4D8;
       border-radius: 3px;
     }
     .hide-scrollbar::-webkit-scrollbar {
@@ -87,10 +89,10 @@
       scrollbar-width: none;
     }
     .editorial-gradient {
-      background: linear-gradient(180deg, rgba(7,7,7,0) 0%, rgba(7,7,7,0.85) 75%, rgba(7,7,7,1) 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 65%, rgba(255,255,255,0.98) 100%);
     }
     .glass-nav {
-      background: rgba(10, 10, 10, 0.88);
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
     }
@@ -100,9 +102,13 @@
     .drag-cursor:active {
       cursor: grabbing;
     }
+    /* Force Noto Sans for price/currency text so ₹ renders correctly */
+    .price-text {
+      font-family: 'Noto Sans', 'Montserrat', 'Segoe UI', Arial, sans-serif !important;
+    }
   </style>
 </head>
-<body class="bg-brand-black text-brand-light font-sans antialiased selection:bg-brand-accent selection:text-white min-h-screen">
+<body class="bg-[#FAFAFA] text-[#0A0A0A] font-sans antialiased selection:bg-black selection:text-white min-h-screen">
   <div id="root"></div>
 
   <script type="text/babel">
@@ -110,76 +116,165 @@
 
     // --- CURRENCIES (INR DEFAULT) ---
     const CURRENCIES = {
-      INR: { symbol: '₹', rate: 1.0, name: 'INR (India)' },
-      USD: { symbol: '$', rate: 0.012, name: 'USD ($)' },
-      EUR: { symbol: '€', rate: 0.011, name: 'EUR (€)' },
-      GBP: { symbol: '£', rate: 0.0095, name: 'GBP (£)' }
+      INR: { symbol: '\u20B9', rate: 1.0, name: '\u20B9 INR' },
+      USD: { symbol: '$', rate: 0.012, name: '$ USD' },
+      EUR: { symbol: '\u20AC', rate: 0.011, name: '\u20AC EUR' },
+      GBP: { symbol: '\u00A3', rate: 0.0095, name: '\u00A3 GBP' }
     };
 
-    // --- PRODUCTS DATA (200-340 GSM, INR PRICING, DELHI BASED) ---
+    // --- PRODUCTS DATA (180-300 GSM, INR PRICING, DELHI BASED) ---
     const PRODUCTS_DATA = [
       {
+        id: 'pk-brown-centipede-01',
+        name: 'Vintage Brown Centipede Spine Tee',
+        tagline: '200 GSM Heavy Cotton · Arthropod Spine Graphic · Vintage Wash',
+        category: 'Tees',
+        gender: 'Men',
+        fit: 'Vintage Relaxed',
+        priceINR: 999,
+        tags: ['NEW', 'VINTAGE', '200 GSM'],
+        inStock: true,
+        stockCount: 1,
+        rating: 5.0,
+        reviewsCount: 1,
+        colors: [
+          { name: 'Vintage Earth Brown', hex: '#4a3b32', imgIndex: 0 }
+        ],
+        sizes: ['L'],
+        sizeStock: { L: 1 },
+        images: [
+          '/images/tee-brown-centipede.jpg'
+        ],
+        details: [
+          '200 GSM 100% vintage-washed combed cotton',
+          'Full-length centipede exoskeleton spine back graphic',
+          'Aged earth brown garment dye with vintage handfeel',
+          'Relaxed cut with reinforced ribbed neckline and seams',
+          'Delhi thrift archive curation · One-of-one vintage piece'
+        ],
+        care: 'Cold wash inside out with like colors. Hang dry in shade.',
+        fitGuide: 'Relaxed vintage fit. Size L fits chest 42–44".'
+      },
+      {
+        id: 'pk-skull-tribal-01',
+        name: 'Skull Tribal Graphic Tee',
+        tagline: 'White Oversized Tee · Hand-Airbrushed Skull & Tribal Print',
+        category: 'Tees',
+        gender: 'Men',
+        fit: 'Oversized',
+        priceINR: 1199,
+        tags: ['NEW', 'ONE-OF-ONE', 'HAND PAINTED'],
+        inStock: true,
+        stockCount: 1,
+        rating: 5.0,
+        reviewsCount: 1,
+        colors: [
+          { name: 'Off White', hex: '#f0eeeb', imgIndex: 0 }
+        ],
+        sizes: ['L', 'XL'],
+        sizeStock: { L: 1, XL: 0 },
+        images: [
+          '/images/tee-skull-tribal-full.webp',
+          '/images/tee-skull-tribal-detail.webp'
+        ],
+        details: [
+          'Oversized boxy silhouette with dropped shoulders',
+          'Hand-airbrushed skull & gothic tribal graphic – one-of-one',
+          'Premium soft cotton base with breathable open weave',
+          'Crew neck with raw edge ribbing',
+          'Delhi thrift archive studio piece – no two are identical'
+        ],
+        care: 'Cold hand wash inside out. Hang dry in shade. Do not iron on print.',
+        fitGuide: 'Oversized boxy fit. Size L fits chest 42–46". Order down one size for a regular fit.'
+      },
+      {
+        id: 'pk-green-tee-01',
+        name: 'Dark Fleur Gothic Graphic Tee',
+        tagline: '240 GSM Heavyweight Oversized Boxy Tee',
+        category: 'Tees',
+        gender: 'Men',
+        fit: 'Oversized',
+        priceINR: 1000,
+        tags: ['NEW', 'MEN', '240 GSM'],
+        inStock: true,
+        stockCount: 2,
+        rating: 4.9,
+        reviewsCount: 1,
+        colors: [
+          { name: 'Forest Green', hex: '#1a5c4a', imgIndex: 0 }
+        ],
+        sizes: ['XL'],
+        sizeStock: { XL: 2 },
+        images: [
+          '/images/tee-green-affliction.jpg'
+        ],
+        details: [
+          '240 GSM 100% combed cotton heavyweight jersey',
+          'Oversized boxy silhouette — designed and milled in Delhi',
+          'Large Gothic Fleur-de-Lis screen print on back',
+          'Tonal gothic lettering on collar & sleeve hem',
+          'Drop-shoulder construction with raw ribbed cuffs'
+        ],
+        care: 'Cold machine wash inside out. Hang dry in shade to preserve print.',
+        fitGuide: 'Boxy oversized cut. Size XL fits chest 44–46". Order your usual size.'
+      },
+      {
         id: 'pk-01',
-        name: 'Acid Wash Boxy Hoodie',
-        tagline: '340 GSM Heavyweight Loopback Cotton',
+        name: 'Concrete Riot Acid-Wash Hoodie',
+        tagline: '340 GSM Heavyweight Loopback Cotton · Hand Acid-Washed',
         category: 'Hoodies',
+        gender: 'Unisex',
         fit: 'Boxy',
         priceINR: 2899,
-        tags: ['DROP 01', '340 GSM'],
-        inStock: true,
-        stockCount: 14,
-        rating: 4.9,
-        reviewsCount: 42,
+        tags: ['SOLD OUT'],
+        inStock: false,
+        stockCount: 0,
+        rating: 5.0,
+        reviewsCount: 1,
         colors: [
           { name: 'Acid Faded Black', hex: '#1c1c1c', imgIndex: 0 },
           { name: 'Vintage Washed Charcoal', hex: '#383838', imgIndex: 1 },
           { name: 'Raw Sand', hex: '#cfc9be', imgIndex: 2 }
         ],
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-        sizeStock: { S: 3, M: 6, L: 4, XL: 1, XXL: 0 },
-        images: [
-          'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1000&q=85'
-        ],
+        sizeStock: { S: 0, M: 0, L: 0, XL: 0, XXL: 0 },
+        images: [],
         details: [
           '340 GSM custom knit loopback 100% Indian combed cotton',
-          'Drop-shoulder boxy silhouette tailored in New Delhi',
+          'Hand acid-washed finish — every piece fades differently',
+          'Drop-shoulder boxy silhouette cut and sewn in New Delhi',
           'Double-layered hood with seamless kangaroo pocket',
-          'Distressed raw ribbed hem for vintage lived-in look',
-          'Tonal embroidered PUNK THRIFT archival monogram'
+          'Tonal embroidered PUNK STUDIOS archival monogram'
         ],
         care: 'Cold machine wash inside out. Flat dry in shade to preserve wash texture.',
-        fitGuide: 'True to boxy streetwear cut. Choose your usual size for standard relaxed look.'
+        fitGuide: 'True to boxy streetwear cut. Take your usual size for the relaxed look.'
       },
       {
         id: 'pk-02',
-        name: 'Archival Distressed Graphic Tee',
-        tagline: '240 GSM Pure Combed Cotton Jersey',
+        name: 'Static Archive Distressed Tee',
+        tagline: '240 GSM Combed Cotton · Hand-Distressed Raw Edges',
         category: 'Tees',
+        gender: 'Unisex',
         fit: 'Oversized',
         priceINR: 1399,
-        tags: ['BESTSELLER', '240 GSM'],
-        inStock: true,
-        stockCount: 38,
-        rating: 4.8,
-        reviewsCount: 89,
+        tags: ['SOLD OUT'],
+        inStock: false,
+        stockCount: 0,
+        rating: 5.0,
+        reviewsCount: 1,
         colors: [
           { name: 'Vintage Onyx', hex: '#161616', imgIndex: 0 },
           { name: 'Off-White Milk', hex: '#e8e5dc', imgIndex: 1 },
           { name: 'Faded Moss', hex: '#3a3f36', imgIndex: 2 }
         ],
         sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-        sizeStock: { XS: 5, S: 11, M: 14, L: 8, XL: 4, XXL: 0 },
-        images: [
-          'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1000&q=85'
-        ],
+        sizeStock: { XS: 0, S: 0, M: 0, L: 0, XL: 0, XXL: 0 },
+        images: [],
         details: [
-          '240 GSM heavy compact combed cotton',
-          '1.2-inch thick ribbed mock collar (anti-sagging)',
-          'Hand-screenprinted vintage artwork using eco water-based dyes',
+          '240 GSM heavy compact combed cotton jersey',
+          'Hand-distressed collar and hem for a lived-in archive feel',
+          '1.2-inch thick ribbed mock collar — anti-sagging construction',
+          'Water-based eco screenprint that softens into the fabric',
           'Double-needle stitching across shoulders and hem'
         ],
         care: 'Gentle wash in cold water. Do not iron directly on print.',
@@ -187,237 +282,232 @@
       },
       {
         id: 'pk-03',
-        name: 'Technical Tactical Windbreaker',
-        tagline: 'Matte Nylon Ripstop with Mesh Lining',
+        name: 'Night Patrol Tactical Windbreaker',
+        tagline: 'Matte Nylon Ripstop · Mesh Lined · YKK Hardware',
         category: 'Outerwear',
+        gender: 'Unisex',
         fit: 'Relaxed',
         priceINR: 3499,
-        tags: ['LIMITED DROP', 'LOW STOCK'],
-        inStock: true,
-        stockCount: 6,
+        tags: ['SOLD OUT'],
+        inStock: false,
+        stockCount: 0,
         rating: 5.0,
-        reviewsCount: 18,
+        reviewsCount: 1,
         colors: [
           { name: 'Stealth Black', hex: '#0d0d0d', imgIndex: 0 },
           { name: 'Cement Grey', hex: '#525458', imgIndex: 1 }
         ],
         sizes: ['S', 'M', 'L', 'XL'],
-        sizeStock: { S: 1, M: 3, L: 2, XL: 0 },
-        images: [
-          'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=1000&q=85'
-        ],
+        sizeStock: { S: 0, M: 0, L: 0, XL: 0 },
+        images: [],
         details: [
-          'Water-resistant matte nylon ripstop with breathable mesh',
-          'Dual two-way heavy YKK zipper with branded pullers',
-          'Concealed chest utility pockets with key loop clip',
-          'Adjustable elastic bungee cord toggle waistband'
+          'Water-resistant matte nylon ripstop shell with breathable mesh lining',
+          'Dual two-way heavy YKK zippers with branded pullers',
+          'Concealed chest utility pockets with key-loop clips',
+          'Adjustable elastic bungee-cord toggle waistband',
+          'Packable into its own rear utility pocket'
         ],
         care: 'Hand wash or dry clean recommended.',
-        fitGuide: 'Relaxed layerable cut.'
+        fitGuide: 'Relaxed layerable cut — room for a hoodie underneath.'
       },
       {
         id: 'pk-04',
-        name: 'Wide-Leg Pleated Parachute Pants',
-        tagline: '280 GSM Cotton Twill with Ankle Bungees',
+        name: 'Bunker Wide-Leg Parachute Pants',
+        tagline: '280 GSM Cotton Twill · Ankle Bungee Cinches',
         category: 'Bottoms',
+        gender: 'Unisex',
         fit: 'Relaxed',
         priceINR: 2499,
-        tags: ['NEW DROP', '280 GSM'],
-        inStock: true,
-        stockCount: 18,
-        rating: 4.8,
-        reviewsCount: 27,
+        tags: ['SOLD OUT'],
+        inStock: false,
+        stockCount: 0,
+        rating: 5.0,
+        reviewsCount: 1,
         colors: [
           { name: 'Washed Black', hex: '#141414', imgIndex: 0 },
           { name: 'Olive Khaki', hex: '#48443b', imgIndex: 1 }
         ],
         sizes: ['28', '30', '32', '34', '36'],
-        sizeStock: { 28: 3, 30: 7, 32: 6, 34: 2, 36: 0 },
-        images: [
-          'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=1000&q=85'
-        ],
+        sizeStock: { 28: 0, 30: 0, 32: 0, 34: 0, 36: 0 },
+        images: [],
         details: [
-          '280 GSM premium Indian cotton twill',
-          'Deep knee dart pleats creating exaggerated volume',
+          '280 GSM premium Indian cotton twill, enzyme washed',
+          'Deep knee-dart pleats creating exaggerated volume',
           'Dual oversized cargo utility flap pockets',
-          'Internal drawstring waist + ankle cinch toggles'
+          'Internal drawstring waist plus ankle cinch toggles',
+          'Bar-tack reinforced stress points throughout'
         ],
         care: 'Machine wash cold. Line dry.',
         fitGuide: 'Wide-leg straight fit with customizable ankle taper.'
       },
       {
         id: 'pk-05',
-        name: 'Raw Hem Boxy Mockneck Tee',
-        tagline: '260 GSM Compact Interlock Cotton',
+        name: 'Monolith Raw Hem Mockneck Tee',
+        tagline: '260 GSM Compact Interlock · Raw Edge Collar',
         category: 'Tees',
+        gender: 'Unisex',
         fit: 'Boxy',
         priceINR: 1499,
-        tags: ['260 GSM', 'ESSENTIAL'],
-        inStock: true,
-        stockCount: 22,
-        rating: 4.7,
-        reviewsCount: 31,
+        tags: ['SOLD OUT'],
+        inStock: false,
+        stockCount: 0,
+        rating: 5.0,
+        reviewsCount: 1,
         colors: [
           { name: 'Raw Chalk', hex: '#ede9df', imgIndex: 0 },
           { name: 'Onyx Black', hex: '#111111', imgIndex: 1 }
         ],
         sizes: ['S', 'M', 'L', 'XL'],
-        sizeStock: { S: 4, M: 8, L: 7, XL: 3 },
-        images: [
-          'https://images.unsplash.com/photo-1503342452485-86b7f54527ef?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=85'
-        ],
+        sizeStock: { S: 0, M: 0, L: 0, XL: 0 },
+        images: [],
         details: [
-          '260 GSM double-faced compact cotton',
-          'High 2-inch mock collar with raw edge cuff finish',
-          'Square boxy body proportions tailored for Indian climate',
-          'Pre-shrunk to retain shape wash after wash'
+          '260 GSM double-faced compact cotton interlock',
+          'High 2-inch mock collar with raw edge finish',
+          'Square boxy body proportions cut for the Indian climate',
+          'Pre-shrunk to hold shape wash after wash',
+          'Side-seamed construction with tonal woven label'
         ],
         care: 'Cold gentle wash. Flat dry.',
-        fitGuide: 'Structured boxy fit.'
+        fitGuide: 'Structured boxy fit — size down for a closer cut.'
       },
       {
         id: 'pk-06',
-        name: 'Curated Leather Crossbody Bag',
-        tagline: 'Full-Grain Pebble Leather + Metal Hardware',
+        name: 'Vault 01 Leather Crossbody Bag',
+        tagline: 'Full-Grain Pebble Leather · Gunmetal Hardware',
         category: 'Accessories',
+        gender: 'Unisex',
         fit: 'One Size',
         priceINR: 1899,
-        tags: ['THRIFT ARCHIVE'],
-        inStock: true,
-        stockCount: 9,
-        rating: 4.9,
-        reviewsCount: 19,
+        tags: ['SOLD OUT'],
+        inStock: false,
+        stockCount: 0,
+        rating: 5.0,
+        reviewsCount: 1,
         colors: [
           { name: 'Nero Black', hex: '#0f0f0f', imgIndex: 0 }
         ],
         sizes: ['ONE SIZE'],
-        sizeStock: { 'ONE SIZE': 9 },
-        images: [
-          'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=85'
-        ],
+        sizeStock: { 'ONE SIZE': 0 },
+        images: [],
         details: [
           'Pebbled full-grain leather with water-repellent coating',
           'Matte gunmetal hardware with quick-release buckle',
-          'Interior padded compartment for everyday essentials'
+          'Padded interior compartment sized for phones, wallets, keys',
+          'Curated thrift-archive piece — sourced and restored in Delhi'
         ],
         care: 'Wipe clean with natural leather conditioner.',
         fitGuide: 'Adjustable strap extends up to 54 inches.'
       },
       {
         id: 'pk-07',
-        name: 'Vintage Wash Distressed Cap',
-        tagline: 'Heavy 100% Washed Cotton Canvas',
+        name: 'Deadstock Wash Distressed Cap',
+        tagline: 'Heavy Washed Cotton Canvas · 6-Panel Unstructured',
         category: 'Accessories',
+        gender: 'Unisex',
         fit: 'One Size',
         priceINR: 899,
-        tags: ['RESTOCKED'],
-        inStock: true,
-        stockCount: 30,
-        rating: 4.9,
-        reviewsCount: 54,
+        tags: ['SOLD OUT'],
+        inStock: false,
+        stockCount: 0,
+        rating: 5.0,
+        reviewsCount: 1,
         colors: [
           { name: 'Faded Black', hex: '#242424', imgIndex: 0 },
           { name: 'Earth Clay', hex: '#877b6d', imgIndex: 1 }
         ],
         sizes: ['ONE SIZE'],
-        sizeStock: { 'ONE SIZE': 30 },
-        images: [
-          'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1534215754734-18e55d13e346?auto=format&fit=crop&w=1000&q=85'
-        ],
+        sizeStock: { 'ONE SIZE': 0 },
+        images: [],
         details: [
-          'Unstructured 6-panel low profile crown',
+          'Unstructured 6-panel low-profile crown',
+          'Heavy enzyme-washed cotton canvas with hand-distressed brim',
           'Antiqued brass slider buckle with tuck-in strap',
-          'Embroidered PUNK.IN mini monogram'
+          'Embroidered PUNK STUDIOS mini monogram'
         ],
         care: 'Spot clean only.',
-        fitGuide: 'Adjustable standard fit (54-62cm).'
+        fitGuide: 'Adjustable standard fit (54–62cm).'
       },
       {
         id: 'pk-08',
-        name: 'Cropped Thermal Zip Hoodie',
-        tagline: '320 GSM French Terry Fleece',
+        name: 'Half-Life Cropped Thermal Zip Hoodie',
+        tagline: '320 GSM French Terry · Thermal Lined',
         category: 'Hoodies',
+        gender: 'Unisex',
         fit: 'Cropped',
         priceINR: 2799,
-        tags: ['LIMITED DROP', 'SOLD OUT'],
+        tags: ['SOLD OUT'],
         inStock: false,
         stockCount: 0,
-        rating: 4.9,
-        reviewsCount: 36,
+        rating: 5.0,
+        reviewsCount: 1,
         colors: [
           { name: 'Vintage Charcoal', hex: '#333333', imgIndex: 0 },
           { name: 'Bone Taupe', hex: '#d5cfc4', imgIndex: 1 }
         ],
         sizes: ['S', 'M', 'L', 'XL'],
         sizeStock: { S: 0, M: 0, L: 0, XL: 0 },
-        images: [
-          'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85',
-          'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=85'
-        ],
+        images: [],
         details: [
           '320 GSM loopback cotton fleece with thermal lining',
-          'Cropped waist sitting right at belt-line with oversized sleeves',
-          'Double-slider metal zipper'
+          'Cropped waist hitting at belt-line with oversized sleeves',
+          'Double-slider metal zipper',
+          'Ribbed raw-edge cuffs and hem'
         ],
         care: 'Hand wash cold. Lay flat to dry.',
-        fitGuide: 'Boxy cropped silhouette.'
+        fitGuide: 'Boxy cropped silhouette — pairs with high-waist bottoms.'
       }
     ];
 
     const LOOKBOOK_SLIDES = [
       {
         id: 'look-01',
-        title: '01 / DELHI STREETS ARCHIVE',
+        title: '01 / ARCHIVAL CENTIPEDE SPINE',
         season: 'DROP 01 // DELHI, INDIA',
-        image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
-        quote: '"Heavyweight 340 GSM cotton built for raw urban expression and effortless drape."',
-        productId: 'pk-01',
-        productName: 'Acid Wash Boxy Hoodie',
-        productPriceINR: 2899,
-        hotspot: { x: '48%', y: '42%' }
+        image: '/images/tee-brown-centipede.jpg',
+        quote: '"200 GSM vintage-washed combed cotton with arthropod spine back graphic."',
+        productId: 'pk-brown-centipede-01',
+        productName: 'Vintage Brown Centipede Spine Tee',
+        productPriceINR: 999,
+        hotspot: { x: '50%', y: '45%' }
       },
       {
         id: 'look-02',
-        title: '02 / ARCHIVAL THRIFT SILHOUETTES',
+        title: '02 / DARK FLEUR GOTHIC TEE',
         season: 'EDITORIAL SERIE 02',
-        image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85',
-        quote: '"Deconstructed proportions, deep pleats, and 240 GSM organic combed jersey."',
-        productId: 'pk-02',
-        productName: 'Archival Distressed Graphic Tee',
-        productPriceINR: 1399,
-        hotspot: { x: '52%', y: '38%' }
+        image: '/images/tee-green-affliction.jpg',
+        quote: '"240 GSM heavy compact combed jersey with Gothic Fleur-de-Lis screenprint."',
+        productId: 'pk-green-tee-01',
+        productName: 'Dark Fleur Gothic Graphic Tee',
+        productPriceINR: 1000,
+        hotspot: { x: '50%', y: '45%' }
       },
       {
         id: 'look-03',
-        title: '03 / TACTICAL DRAPE',
-        season: 'LIMITED EDITION',
-        image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=85',
-        quote: '"280 GSM cotton twill parachute trousers engineered with modular bungees."',
-        productId: 'pk-04',
-        productName: 'Wide-Leg Pleated Parachute Pants',
-        productPriceINR: 2499,
-        hotspot: { x: '45%', y: '65%' }
-      },
-      {
-        id: 'look-04',
-        title: '04 / NOCTURNAL ESSENTIALS',
-        season: 'STUDIO CAMPAIGN',
-        image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=85',
-        quote: '"Every stitch and wash crafted locally in New Delhi for authentic streetwear gravity."',
-        productId: 'pk-05',
-        productName: 'Raw Hem Boxy Mockneck Tee',
-        productPriceINR: 1499,
-        hotspot: { x: '50%', y: '40%' }
+        title: '03 / SKULL TRIBAL FULL LAY',
+        season: 'ONE-OF-ONE · HAND PAINTED',
+        image: '/images/tee-skull-tribal-full.webp',
+        quote: '"Hand-airbrushed skull and gothic tribal art on an oversized boxy base — no two identical."',
+        productId: 'pk-skull-tribal-01',
+        productName: 'Skull Tribal Graphic Tee',
+        productPriceINR: 1199,
+        hotspot: { x: '50%', y: '45%' }
       }
     ];
 
     // --- STORE CONTEXT ---
     const StoreContext = createContext();
+
+    // --- AUTH HELPERS (localStorage demo accounts) ---
+    const AUTH_USERS_KEY = 'punk_users';
+    const AUTH_SESSION_KEY = 'punk_session';
+
+    function loadAuthUsers() {
+      try { return JSON.parse(localStorage.getItem(AUTH_USERS_KEY)) || []; } catch(e) { return []; }
+    }
+
+    function saveAuthUsers(users) {
+      try { localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(users)); } catch(e) {}
+    }
 
     function StoreProvider({ children }) {
       const [cart, setCart] = useState(() => {
@@ -426,7 +516,6 @@
           return saved ? JSON.parse(saved) : [];
         } catch(e) { return []; }
       });
-      // DEFAULT CURRENCY: INR
       const [currency, setCurrency] = useState('INR');
       const [isCartOpen, setIsCartOpen] = useState(false);
       const [selectedProduct, setSelectedProduct] = useState(null);
@@ -436,6 +525,23 @@
       const [wishlist, setWishlist] = useState([]);
       const [toastMessage, setToastMessage] = useState(null);
       const [discountPercent, setDiscountPercent] = useState(0);
+
+      // --- AUTH STATE ---
+      const [currentUser, setCurrentUser] = useState(() => {
+        try {
+          const saved = localStorage.getItem(AUTH_SESSION_KEY);
+          return saved ? JSON.parse(saved) : null;
+        } catch(e) { return null; }
+      });
+      const [isAuthOpen, setIsAuthOpen] = useState(false);
+      const [authView, setAuthView] = useState('login'); // 'login' | 'signup'
+
+      useEffect(() => {
+        try {
+          if (currentUser) localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(currentUser));
+          else localStorage.removeItem(AUTH_SESSION_KEY);
+        } catch(e) {}
+      }, [currentUser]);
 
       useEffect(() => {
         try {
@@ -451,7 +557,7 @@
       const formatPrice = (inrAmount) => {
         const curr = CURRENCIES[currency] || CURRENCIES.INR;
         if (currency === 'INR') {
-          return `₹${inrAmount.toLocaleString('en-IN')}`;
+          return curr.symbol + inrAmount.toLocaleString('en-IN');
         }
         const converted = inrAmount * curr.rate;
         return `${curr.symbol}${converted.toFixed(currency === 'JPY' ? 0 : 2)}`;
@@ -474,7 +580,7 @@
             priceINR: product.priceINR,
             size,
             color,
-            image: product.images[color.imgIndex || 0] || product.images[0],
+            image: (product.images && product.images.length > 0) ? (product.images[color.imgIndex || 0] || product.images[0]) : null,
             quantity
           }];
         });
@@ -526,6 +632,54 @@
         }
       };
 
+      const signUp = (name, email, password) => {
+        const users = loadAuthUsers();
+        const emailNorm = email.trim().toLowerCase();
+        if (!name.trim() || !emailNorm || !password) {
+          showToast('Please fill in all fields');
+          return false;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNorm)) {
+          showToast('Please enter a valid email address');
+          return false;
+        }
+        if (password.length < 6) {
+          showToast('Password must be at least 6 characters');
+          return false;
+        }
+        if (users.some(u => u.email === emailNorm)) {
+          showToast('An account with this email already exists');
+          return false;
+        }
+        const user = { id: 'u-' + Date.now(), name: name.trim(), email: emailNorm, createdAt: new Date().toISOString() };
+        users.push({ ...user, password });
+        saveAuthUsers(users);
+        setCurrentUser(user);
+        setIsAuthOpen(false);
+        showToast(`Welcome to the archive, ${user.name.split(' ')[0]}!`);
+        return true;
+      };
+
+      const login = (email, password) => {
+        const emailNorm = email.trim().toLowerCase();
+        const users = loadAuthUsers();
+        const found = users.find(u => u.email === emailNorm && u.password === password);
+        if (!found) {
+          showToast('Invalid email or password');
+          return false;
+        }
+        const { password: _pw, ...user } = found;
+        setCurrentUser(user);
+        setIsAuthOpen(false);
+        showToast(`Welcome back, ${user.name.split(' ')[0]}!`);
+        return true;
+      };
+
+      const logout = () => {
+        setCurrentUser(null);
+        showToast('Signed out of your account');
+      };
+
       const subtotalINR = cart.reduce((sum, item) => sum + (item.priceINR * item.quantity), 0);
       const discountINR = (subtotalINR * discountPercent) / 100;
       const finalSubtotalINR = subtotalINR - discountINR;
@@ -563,7 +717,15 @@
           applyPromo,
           shippingRemainingINR,
           freeShippingThresholdINR,
-          cartCount
+          cartCount,
+          currentUser,
+          isAuthOpen,
+          setIsAuthOpen,
+          authView,
+          setAuthView,
+          signUp,
+          login,
+          logout
         }}>
           {children}
         </StoreContext.Provider>
@@ -590,41 +752,41 @@
       return <span ref={ref} className={`inline-flex items-center justify-center ${className}`} />;
     }
 
-    // --- ANNOUNCEMENT BAR ---
+    // --- ANNOUNCEMENT BAR (FADL STYLE: CLEAN BLACK BAR, WHITE TEXT) ---
     function AnnouncementBar() {
       const { shippingRemainingINR, formatPrice } = useStore();
       return (
-        <div className="bg-brand-black border-b border-brand-border text-[11px] font-mono tracking-widest text-brand-muted py-2 px-4 overflow-hidden relative z-40">
+        <div className="bg-black text-white text-[11px] font-medium tracking-[0.16em] uppercase py-2.5 px-4 overflow-hidden relative z-40 border-b border-black">
           <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">
             <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-ping inline-block"></span>
-              <strong className="text-brand-light">PUNK.IN DROP 01 LIVE</strong> — BASED IN DELHI, INDIA
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping inline-block"></span>
+              <strong>PUNK THRIFT STUDIO</strong> — CONTEMPORARY ARCHIVE · DELHI
             </span>
-            <span>•</span>
+            <span>·</span>
             <span>
               {shippingRemainingINR === 0 ? (
-                <strong className="text-brand-light">COMPLIMENTARY EXPRESS SHIPPING UNLOCKED ACROSS INDIA</strong>
+                <strong>COMPLIMENTARY EXPRESS SHIPPING UNLOCKED ACROSS INDIA</strong>
               ) : (
                 <>ADD {formatPrice(shippingRemainingINR)} FOR FREE EXPRESS DELIVERY ACROSS INDIA</>
               )}
             </span>
-            <span>•</span>
-            <span>PROMO CODE <span className="text-brand-light font-bold">PUNK10</span> FOR 10% OFF</span>
-            <span>•</span>
-            <span>200 – 340 GSM HEAVYWEIGHT INDIAN COMBED COTTON</span>
-            <span>•</span>
+            <span>·</span>
+            <span>USE CODE <span className="font-bold underline underline-offset-2">PUNK10</span> FOR 10% OFF FIRST ORDER</span>
+            <span>·</span>
+            <span>180 – 300 GSM PREMIUM INDIAN COMBED COTTON</span>
+            <span>·</span>
             <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-ping inline-block"></span>
-              <strong className="text-brand-light">PUNK.IN DROP 01 LIVE</strong> — BASED IN DELHI, INDIA
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping inline-block"></span>
+              <strong>DELHI DISPATCH IN 24 HOURS</strong> · CASH ON DELIVERY AVAILABLE
             </span>
-            <span>•</span>
+            <span>·</span>
             <span>ADD {formatPrice(shippingRemainingINR)} FOR FREE EXPRESS DELIVERY</span>
           </div>
         </div>
       );
     }
 
-    // --- HEADER COMPONENT ---
+    // --- HEADER COMPONENT (FADL MINIMALIST CONTEMPORARY LUXURY) ---
     function Header() {
       const { 
         cartCount, 
@@ -632,13 +794,22 @@
         setIsSearchOpen, 
         currency, 
         setCurrency, 
-        setIsSizeGuideOpen 
+        setIsSizeGuideOpen,
+        currentUser,
+        setIsAuthOpen,
+        setAuthView,
+        logout
       } = useStore();
       const [isScrolled, setIsScrolled] = useState(false);
       const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+      const openAuth = (view) => {
+        setAuthView(view);
+        setIsAuthOpen(true);
+      };
+
       useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 40);
+        const handleScroll = () => setIsScrolled(window.scrollY > 30);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
       }, []);
@@ -647,67 +818,98 @@
         setMobileMenuOpen(false);
         const el = document.getElementById(id);
         if (el) {
-          const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          const y = el.getBoundingClientRect().top + window.pageYOffset - 75;
           window.scrollTo({ top: y, behavior: 'smooth' });
         }
       };
 
       return (
-        <header className={`sticky top-0 z-30 transition-all duration-300 ${isScrolled ? 'glass-nav border-b border-brand-border/60 py-3.5 shadow-2xl' : 'bg-brand-black/90 py-5'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <header className={`sticky top-0 z-30 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-sm' : 'bg-white border-b border-neutral-200/80'}`}>
+          <div className="relative max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 lg:gap-6 h-14 lg:h-16">
             
-            {/* Left Nav */}
-            <nav className="hidden md:flex items-center gap-8 text-[12px] uppercase tracking-widest font-mono text-brand-muted">
-              <button onClick={() => scrollToSection('shop-section')} className="hover:text-brand-light transition-colors">Shop Archive</button>
-              <button onClick={() => scrollToSection('lookbook-section')} className="hover:text-brand-light transition-colors">Lookbook</button>
-              <button onClick={() => scrollToSection('drops-section')} className="hover:text-brand-light transition-colors flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-accent"></span>
-                Delhi Drops
+            {/* Left Nav (Clean uppercase luxury links) */}
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-[10px] xl:text-[11px] uppercase tracking-[0.16em] font-medium text-neutral-600 flex-1 min-w-0">
+              <button onClick={() => scrollToSection('shop-section')} className="hover:text-black transition-colors">Shop All</button>
+              <button onClick={() => scrollToSection('lookbook-section')} className="hover:text-black transition-colors">Lookbook</button>
+              <button onClick={() => scrollToSection('drops-section')} className="hover:text-black transition-colors flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-black"></span>
+                Next Drop
               </button>
-              <button onClick={() => scrollToSection('about-section')} className="hover:text-brand-light transition-colors">Manifesto</button>
+              <button onClick={() => scrollToSection('about-section')} className="hover:text-black transition-colors">Manifesto</button>
             </nav>
 
             {/* Mobile Menu Trigger */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-brand-light p-1 focus:outline-none"
+              className="lg:hidden text-black p-1 focus:outline-none"
               aria-label="Menu"
             >
               <Icon name={mobileMenuOpen ? "X" : "Menu"} size={22} />
             </button>
 
-            {/* Center Logo */}
-            <div className="flex flex-col items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <span className="font-editorial text-2xl sm:text-3xl font-black tracking-mega text-brand-light hover:text-brand-bone transition-colors">
-                PUNK.IN
+            {/* Center Logo - absolutely centered, never collides with controls */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <span className="font-sans text-[10px] min-[400px]:text-base min-[480px]:text-lg md:text-xl xl:text-2xl font-black tracking-[0.12em] min-[400px]:tracking-[0.18em] sm:tracking-[0.22em] text-black hover:opacity-75 transition-opacity whitespace-nowrap uppercase">
+                PUNK THRIFT STUDIO
               </span>
-              <span className="text-[9px] font-mono tracking-ultra text-brand-muted -mt-1 uppercase">
-                Thrift & Heavywear Studios // Delhi
+              <span className="hidden sm:block text-[8px] sm:text-[9px] font-medium tracking-[0.28em] text-neutral-400 -mt-0.5 uppercase">
+                Delhi · Contemporary Archive
               </span>
             </div>
 
             {/* Right Controls */}
-            <div className="flex items-center gap-3 sm:gap-5">
+            <div className="flex items-center gap-1.5 sm:gap-3 justify-self-end flex-1 justify-end">
               
-              {/* Currency Selector (INR Default) */}
-              <div className="relative group">
+              {/* Currency Selector (header only when there is room — lives in the menu below lg) */}
+              <div className="relative hidden lg:block">
                 <select 
                   value={currency} 
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="bg-brand-dark/95 text-brand-light text-[11px] font-mono uppercase tracking-wider py-1.5 px-2 rounded border border-brand-border hover:border-brand-muted focus:outline-none cursor-pointer"
+                  className="bg-white text-black text-[11px] font-medium uppercase tracking-wider py-1.5 px-2.5 rounded-none border border-neutral-300 hover:border-black focus:outline-none cursor-pointer transition-colors"
                 >
                   {Object.keys(CURRENCIES).map(curr => (
-                    <option key={curr} value={curr} className="bg-brand-dark text-brand-light">
-                      {curr} ({CURRENCIES[curr].symbol})
+                    <option key={curr} value={curr} className="bg-white text-black">
+                      {CURRENCIES[curr].symbol} {curr}
                     </option>
                   ))}
                 </select>
               </div>
 
+              {/* Account / Sign In Button */}
+              {currentUser ? (
+                <div className="flex items-center gap-2">
+                  <div
+                    className="hidden xl:flex items-center gap-1.5 border border-neutral-300 px-3 py-1.5 rounded-none text-[11px] font-bold uppercase tracking-wider text-black"
+                    title={currentUser.email}
+                  >
+                    <span className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[9px] font-bold">
+                      {currentUser.name.charAt(0).toUpperCase()}
+                    </span>
+                    <span className="max-w-[90px] truncate">{currentUser.name.split(' ')[0]}</span>
+                  </div>
+                  <button
+                    onClick={logout}
+                    className="text-[11px] uppercase tracking-wider text-neutral-500 hover:text-black transition-colors font-medium"
+                    title="Sign out"
+                  >
+                    <Icon name="LogOut" size={16} />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => openAuth('login')}
+                  className="flex items-center gap-1.5 text-neutral-700 hover:text-black transition-colors p-1.5"
+                  title="Sign in or create account"
+                >
+                  <Icon name="User" size={18} />
+                  <span className="hidden xl:inline text-[11px] font-medium uppercase tracking-wider">Sign In</span>
+                </button>
+              )}
+
               {/* Search Icon */}
               <button 
                 onClick={() => setIsSearchOpen(true)}
-                className="text-brand-muted hover:text-brand-light transition-colors p-1"
+                className="text-neutral-700 hover:text-black transition-colors p-1.5"
                 title="Search Catalogue"
               >
                 <Icon name="Search" size={19} />
@@ -716,20 +918,20 @@
               {/* Size Guide Trigger */}
               <button 
                 onClick={() => setIsSizeGuideOpen(true)}
-                className="hidden lg:flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-brand-muted hover:text-brand-light transition-colors border border-brand-border px-2.5 py-1 rounded hover:border-brand-muted/50"
+                className="hidden xl:flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-neutral-700 hover:text-black transition-colors border border-neutral-300 px-3 py-1 rounded-none hover:border-black"
               >
                 <Icon name="Ruler" size={13} />
                 <span>Size Guide</span>
               </button>
 
-              {/* Shopping Bag Button */}
+              {/* Shopping Bag Button (Crisp luxury black badge) */}
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className="relative bg-brand-light hover:bg-white text-brand-black px-3.5 py-1.5 rounded-full font-mono text-[12px] font-bold flex items-center gap-2 transition-all hover:scale-[1.03] active:scale-95 shadow-lg shadow-white/5"
+                className="relative bg-black hover:bg-neutral-800 text-white px-3 sm:px-4 py-2 rounded-none font-sans text-[11px] font-bold tracking-widest flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-95 shadow-sm"
               >
-                <Icon name="ShoppingBag" size={15} />
-                <span>BAG</span>
-                <span className="bg-brand-accent text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center font-bold">
+                <Icon name="ShoppingBag" size={14} />
+                <span className="hidden lg:inline">BAG</span>
+                <span className="bg-white text-black rounded-full w-4 h-4 text-[10px] flex items-center justify-center font-bold">
                   {cartCount}
                 </span>
               </button>
@@ -739,54 +941,81 @@
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden glass-nav border-b border-brand-border px-6 py-6 space-y-4 animate-fade-in text-sm font-mono tracking-widest uppercase">
-              <button onClick={() => scrollToSection('shop-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Shop Archive</button>
-              <button onClick={() => scrollToSection('lookbook-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Editorial Lookbook</button>
-              <button onClick={() => scrollToSection('drops-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40 flex items-center justify-between">
+            <div className="lg:hidden bg-white border-b border-neutral-200 px-6 py-6 space-y-4 animate-fade-in text-xs font-medium tracking-[0.18em] uppercase text-black">
+              {currentUser ? (
+                <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center text-[11px] font-bold">
+                      {currentUser.name.charAt(0).toUpperCase()}
+                    </span>
+                    <span className="text-[11px]">{currentUser.name}</span>
+                  </div>
+                  <button onClick={logout} className="flex items-center gap-1.5 text-[10px] text-neutral-500 hover:text-black">
+                    <Icon name="LogOut" size={13} />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => { setMobileMenuOpen(false); openAuth('login'); }}
+                  className="w-full flex items-center justify-between py-2.5 border-b border-neutral-100"
+                >
+                  <span className="flex items-center gap-2"><Icon name="User" size={15} /> Sign In / Register</span>
+                  <span className="text-[10px] bg-black text-white px-2 py-0.5 font-bold">MEMBERS</span>
+                </button>
+              )}
+              <button onClick={() => scrollToSection('shop-section')} className="block w-full text-left py-2.5 border-b border-neutral-100">Shop Archive</button>
+              <button onClick={() => scrollToSection('lookbook-section')} className="block w-full text-left py-2.5 border-b border-neutral-100">Editorial Lookbook</button>
+              <button onClick={() => scrollToSection('drops-section')} className="block w-full text-left py-2.5 border-b border-neutral-100 flex items-center justify-between">
                 <span>Next Delhi Drop</span>
-                <span className="text-[10px] bg-brand-accent/20 text-brand-accent px-2 py-0.5 rounded border border-brand-accent/30">COUNTDOWN</span>
+                <span className="text-[10px] bg-black text-white px-2 py-0.5 rounded-none font-bold">COUNTDOWN</span>
               </button>
-              <button onClick={() => scrollToSection('about-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Manifesto & Sourcing</button>
+              <button onClick={() => scrollToSection('about-section')} className="block w-full text-left py-2.5 border-b border-neutral-100">Manifesto & Sourcing</button>
+              <div className="pt-2">
+                <span className="block text-[10px] tracking-[0.2em] text-neutral-400 mb-2">Currency</span>
+                <select 
+                  value={currency} 
+                  onChange={(e) => setCurrency(e.target.value)}
+                  className="w-full bg-white text-black text-[11px] font-medium uppercase tracking-wider py-2.5 px-3 rounded-none border border-neutral-300 hover:border-black focus:outline-none cursor-pointer transition-colors"
+                >
+                  {Object.keys(CURRENCIES).map(curr => (
+                    <option key={curr} value={curr} className="bg-white text-black">
+                      {CURRENCIES[curr].symbol} {curr}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           )}
         </header>
       );
     }
 
-    // --- HERO SECTION ---
+    // --- HERO SECTION (FADL CONTEMPORARY LUXURY) ---
     function Hero() {
       return (
-        <section className="relative min-h-[88vh] flex items-center justify-center overflow-hidden border-b border-brand-border">
-          <div className="absolute inset-0 z-0">
-            <img 
-              src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2000&q=90" 
-              alt="PUNK THRIFT IN Campaign" 
-              className="w-full h-full object-cover object-center filter brightness-[0.38] contrast-125 scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-brand-black/60"></div>
-          </div>
+        <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-neutral-200 bg-[#FAFAFA]">
 
           <div className="relative z-10 max-w-5xl mx-auto px-6 text-center py-20">
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-brand-surface/90 border border-brand-border text-[11px] font-mono tracking-mega uppercase text-brand-muted mb-6 backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-brand-accent animate-ping"></span>
-              <span>DROP 01 // BATCH 01 // DELHI, INDIA</span>
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-none bg-white border border-neutral-300 text-[11px] font-medium tracking-[0.2em] uppercase text-neutral-800 mb-6 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-black animate-ping"></span>
+              <span>DROP 01 · BATCH 01 · DELHI, INDIA</span>
             </div>
 
-            <h1 className="font-editorial text-4xl sm:text-6xl md:text-8xl font-black tracking-widest text-brand-light uppercase leading-[1.05] mb-6">
+            {/* Main Headline */}
+            <h1 className="font-sans text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[0.16em] text-black uppercase leading-[1.06] mb-6">
               PUNK THRIFT<br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-light via-brand-bone to-brand-muted">
-                STUDIOS // IN
-              </span>
+              <span className="text-neutral-500 font-light">STUDIO</span>
             </h1>
 
-            <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-brand-muted font-light tracking-wide mb-10 leading-relaxed">
-              Curated heavyweight streetwear and archival thrift pieces. Crafted with 200–340 GSM Indian combed cotton and bespoke hardware. Designed & based in New Delhi.
+            <p className="max-w-2xl mx-auto text-sm sm:text-base text-neutral-600 font-normal tracking-wide mb-10 leading-relaxed">
+              Curated heavyweight contemporary streetwear and archival thrift pieces. Crafted with 180–300 GSM Indian combed cotton and bespoke hardware. Designed & based in New Delhi.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 font-mono text-xs tracking-widest uppercase">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-xs tracking-[0.18em] uppercase font-bold">
               <a 
                 href="#shop-section"
-                className="w-full sm:w-auto px-8 py-4 bg-brand-light text-brand-black font-bold rounded hover:bg-white transition-all transform hover:-translate-y-0.5 shadow-2xl flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-9 py-4 bg-black text-white rounded-none hover:bg-neutral-800 transition-all transform hover:-translate-y-0.5 shadow-md flex items-center justify-center gap-2"
               >
                 <span>EXPLORE CATALOGUE</span>
                 <Icon name="ArrowRight" size={15} />
@@ -794,29 +1023,29 @@
 
               <a 
                 href="#lookbook-section"
-                className="w-full sm:w-auto px-8 py-4 bg-brand-surface/80 hover:bg-brand-surface text-brand-light border border-brand-border rounded transition-all backdrop-blur-sm flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-9 py-4 bg-white hover:bg-neutral-50 text-black border border-neutral-300 hover:border-black rounded-none transition-all flex items-center justify-center gap-2 shadow-sm"
               >
                 <span>LOOKBOOK EDITORIAL</span>
                 <Icon name="Eye" size={15} />
               </a>
             </div>
 
-            <div className="mt-16 pt-8 border-t border-brand-border/60 grid grid-cols-2 md:grid-cols-4 gap-6 text-left max-w-3xl mx-auto font-mono text-[11px]">
+            <div className="mt-16 pt-8 border-t border-neutral-200 grid grid-cols-2 md:grid-cols-4 gap-6 text-left max-w-3xl mx-auto text-[11px] uppercase tracking-wider">
               <div>
-                <span className="block text-brand-muted uppercase">Fabric Specs</span>
-                <span className="text-brand-light font-bold text-sm">200 – 340 GSM</span>
+                <span className="block text-neutral-500 font-medium">Fabric Specs</span>
+                <span className="text-black font-bold text-sm">180 – 300 GSM</span>
               </div>
               <div>
-                <span className="block text-brand-muted uppercase">HQ Studio</span>
-                <span className="text-brand-light font-bold text-sm">Delhi, India</span>
+                <span className="block text-neutral-500 font-medium">HQ Studio</span>
+                <span className="text-black font-bold text-sm">Delhi, India</span>
               </div>
               <div>
-                <span className="block text-brand-muted uppercase">Drop Strategy</span>
-                <span className="text-brand-light font-bold text-sm">Limited Batches</span>
+                <span className="block text-neutral-500 font-medium">Drop Strategy</span>
+                <span className="text-black font-bold text-sm">Limited Batches</span>
               </div>
               <div>
-                <span className="block text-brand-muted uppercase">Shipping</span>
-                <span className="text-brand-light font-bold text-sm">Pan-India Express</span>
+                <span className="block text-neutral-500 font-medium">Shipping</span>
+                <span className="text-black font-bold text-sm">Pan-India Express</span>
               </div>
             </div>
           </div>
@@ -824,7 +1053,7 @@
       );
     }
 
-    // --- HORIZONTAL LOOKBOOK SECTION ---
+    // --- HORIZONTAL LOOKBOOK SECTION (FADL STYLE) ---
     function HorizontalLookbook() {
       const { setSelectedProduct, formatPrice } = useStore();
       const scrollRef = useRef(null);
@@ -870,36 +1099,36 @@
       };
 
       return (
-        <section id="lookbook-section" className="py-24 bg-brand-dark border-b border-brand-border relative overflow-hidden">
+        <section id="lookbook-section" className="py-24 bg-white border-b border-neutral-200 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-mega text-brand-accent mb-2">
+              <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-500 mb-2">
                 <Icon name="Compass" size={14} />
                 <span>Delhi Streetwear Campaign</span>
               </div>
-              <h2 className="font-editorial text-3xl sm:text-5xl font-bold tracking-widest text-brand-light uppercase">
+              <h2 className="font-sans text-3xl sm:text-4xl font-black tracking-[0.18em] text-black uppercase">
                 THE LOOKBOOK
               </h2>
-              <p className="text-brand-muted text-xs sm:text-sm font-light mt-2 max-w-xl">
-                Drag horizontally or use arrow buttons to swipe through Campaign Serie 01. Click hotspots on images to inspect garments.
+              <p className="text-neutral-500 text-xs sm:text-sm font-normal mt-2 max-w-xl">
+                Drag horizontally or use arrow buttons to swipe through Campaign Serie 01. Click hotspots on garments to view archive details.
               </p>
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="font-mono text-xs text-brand-muted">
-                <span className="text-brand-light font-bold">{String(activeIndex + 1).padStart(2, '0')}</span> / {String(LOOKBOOK_SLIDES.length).padStart(2, '0')}
+              <div className="text-xs text-neutral-500 font-medium tracking-wider">
+                <span className="text-black font-bold">{String(activeIndex + 1).padStart(2, '0')}</span> / {String(LOOKBOOK_SLIDES.length).padStart(2, '0')}
               </div>
               <div className="flex gap-2">
                 <button 
                   onClick={() => scrollByAmount('left')}
-                  className="w-10 h-10 rounded-full border border-brand-border bg-brand-surface hover:bg-brand-black flex items-center justify-center text-brand-light transition-all"
+                  className="w-10 h-10 rounded-full border border-neutral-300 bg-white hover:bg-black hover:text-white flex items-center justify-center text-black transition-all shadow-sm"
                   aria-label="Scroll left"
                 >
                   <Icon name="ArrowLeft" size={16} />
                 </button>
                 <button 
                   onClick={() => scrollByAmount('right')}
-                  className="w-10 h-10 rounded-full border border-brand-border bg-brand-surface hover:bg-brand-black flex items-center justify-center text-brand-light transition-all"
+                  className="w-10 h-10 rounded-full border border-neutral-300 bg-white hover:bg-black hover:text-white flex items-center justify-center text-black transition-all shadow-sm"
                   aria-label="Scroll right"
                 >
                   <Icon name="ArrowRight" size={16} />
@@ -922,64 +1151,80 @@
             {LOOKBOOK_SLIDES.map((slide) => (
               <div 
                 key={slide.id}
-                className="flex-shrink-0 w-[300px] sm:w-[380px] md:w-[460px] snap-center group relative rounded-lg overflow-hidden bg-brand-surface border border-brand-border hover:border-brand-muted/70 transition-all duration-300"
+                className="flex-shrink-0 w-[300px] sm:w-[380px] md:w-[460px] snap-center group relative rounded-none overflow-hidden bg-[#F5F5F5] border border-neutral-200 hover:border-black transition-all duration-300 shadow-sm"
               >
-                <div className="relative aspect-[3/4] overflow-hidden">
-                  <img 
-                    src={slide.image} 
-                    alt={slide.title}
-                    draggable="false"
-                    className="w-full h-full object-cover object-center filter grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                  />
-                  <div className="absolute inset-0 editorial-gradient opacity-90"></div>
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F5]">
+                  {slide.image ? (
+                    <>
+                      <img 
+                        src={slide.image} 
+                        alt={slide.title}
+                        draggable="false"
+                        className="w-full h-full object-cover object-center filter contrast-105 group-hover:scale-105 transition-all duration-700 ease-out"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    </>
+                  ) : (
+                    <div className="w-full h-full bg-[#F5F5F5] transition-colors group-hover:bg-[#EAEAEA]"></div>
+                  )}
 
-                  <div className="absolute top-4 left-4 z-10">
-                    <span className="font-mono text-[10px] uppercase tracking-widest bg-brand-black/80 backdrop-blur-md px-2.5 py-1 rounded text-brand-light border border-brand-border">
-                      {slide.season}
-                    </span>
-                  </div>
+                  {slide.season && (
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className={`text-[10px] uppercase tracking-[0.16em] px-3 py-1 font-bold border shadow-sm ${
+                        slide.image 
+                          ? 'bg-white/95 backdrop-blur-md text-black border-neutral-200' 
+                          : 'bg-white text-black border-neutral-300'
+                      }`}>
+                        {slide.season}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Hotspot */}
-                  <div 
-                    style={{ top: slide.hotspot.y, left: slide.hotspot.x }}
-                    className="absolute z-20 -translate-x-1/2 -translate-y-1/2 group/hotspot"
-                  >
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openHotspotProduct(slide.productId);
-                      }}
-                      className="relative w-8 h-8 rounded-full bg-brand-accent text-white flex items-center justify-center shadow-xl hover:scale-110 transition-transform"
-                      title="Shop this look"
+                  {slide.hotspot && slide.productId && (
+                    <div 
+                      style={{ top: slide.hotspot.y, left: slide.hotspot.x }}
+                      className="absolute z-20 -translate-x-1/2 -translate-y-1/2 group/hotspot"
                     >
-                      <span className="absolute inset-0 rounded-full bg-brand-accent animate-ping opacity-60"></span>
-                      <Icon name="Plus" size={14} className="relative z-10" />
-                    </button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openHotspotProduct(slide.productId);
+                        }}
+                        className="relative w-8 h-8 rounded-full bg-black text-white flex items-center justify-center shadow-xl hover:scale-110 transition-transform"
+                        title="Shop this look"
+                      >
+                        <span className="absolute inset-0 rounded-full bg-black animate-ping opacity-40"></span>
+                        <Icon name="Plus" size={14} className="relative z-10" />
+                      </button>
 
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 hidden group-hover/hotspot:flex flex-col w-52 p-3 bg-brand-black/95 backdrop-blur-xl border border-brand-border rounded shadow-2xl text-left pointer-events-none animate-fade-in z-30">
-                      <span className="text-[9px] font-mono uppercase tracking-wider text-brand-accent">Shop The Look</span>
-                      <span className="text-xs font-bold text-brand-light mt-0.5">{slide.productName}</span>
-                      <span className="text-[11px] font-mono text-brand-muted mt-1">{formatPrice(slide.productPriceINR)}</span>
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 hidden group-hover/hotspot:flex flex-col w-52 p-3.5 bg-white border border-neutral-200 rounded-none shadow-xl text-left pointer-events-none animate-fade-in z-30">
+                        <span className="text-[9px] uppercase tracking-[0.16em] font-semibold text-neutral-500">Shop The Look</span>
+                        <span className="text-xs font-bold text-black mt-0.5">{slide.productName}</span>
+                        <span className="text-[11px] text-neutral-600 mt-1 price-text font-bold">{formatPrice(slide.productPriceINR)}</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="absolute bottom-4 left-4 right-4 z-10 space-y-2">
-                    <h3 className="font-editorial text-lg sm:text-xl font-bold tracking-wider text-brand-light uppercase">
+                  <div className={`absolute bottom-4 left-4 right-4 z-10 space-y-2 ${slide.image ? 'text-white' : 'text-black'}`}>
+                    <h3 className={`font-sans text-lg sm:text-xl font-bold tracking-wider uppercase ${slide.image ? 'text-white' : 'text-black'}`}>
                       {slide.title}
                     </h3>
-                    <p className="text-xs font-light text-brand-bone/80 italic leading-relaxed">
+                    <p className={`text-xs font-normal italic leading-relaxed ${slide.image ? 'text-neutral-300' : 'text-neutral-600'}`}>
                       {slide.quote}
                     </p>
 
-                    <div className="pt-2 flex items-center justify-between border-t border-white/10">
-                      <button 
-                        onClick={() => openHotspotProduct(slide.productId)}
-                        className="text-[11px] font-mono uppercase tracking-widest text-brand-light hover:text-brand-accent flex items-center gap-1.5 transition-colors"
-                      >
-                        <span>Inspect Piece</span>
-                        <Icon name="ArrowUpRight" size={13} />
-                      </button>
-                      <span className="text-[10px] font-mono text-brand-muted uppercase">PUNK.IN</span>
+                    <div className={`pt-2 flex items-center justify-between border-t ${slide.image ? 'border-white/20' : 'border-neutral-300'}`}>
+                      {slide.productId ? (
+                        <button 
+                          onClick={() => openHotspotProduct(slide.productId)}
+                          className={`text-[11px] uppercase tracking-widest hover:underline flex items-center gap-1.5 transition-colors font-medium ${slide.image ? 'text-white' : 'text-black'}`}
+                        >
+                          <span>Inspect Piece</span>
+                          <Icon name="ArrowUpRight" size={13} />
+                        </button>
+                      ) : <div></div>}
+                      <span className={`text-[10px] uppercase tracking-widest font-medium ${slide.image ? 'text-neutral-400' : 'text-neutral-500'}`}>PUNK THRIFT STUDIO</span>
                     </div>
                   </div>
 
@@ -988,7 +1233,7 @@
             ))}
           </div>
 
-          <div className="text-center mt-2 text-[11px] font-mono tracking-widest text-brand-muted uppercase flex items-center justify-center gap-2">
+          <div className="text-center mt-2 text-[11px] tracking-widest text-neutral-400 uppercase flex items-center justify-center gap-2">
             <Icon name="MoveHorizontal" size={14} />
             <span>Swipe or drag horizontally to view full lookbook</span>
           </div>
@@ -996,7 +1241,7 @@
       );
     }
 
-    // --- PRODUCT CARD ---
+    // --- PRODUCT CARD (FADL CONTEMPORARY LUXURY) ---
     function ProductCard({ product }) {
       const { setSelectedProduct, formatPrice, toggleWishlist, wishlist, addToCart } = useStore();
       const [currentImgIndex, setCurrentImgIndex] = useState(0);
@@ -1008,31 +1253,33 @@
 
       return (
         <div 
-          className="group relative flex flex-col bg-brand-surface rounded border border-brand-border/80 overflow-hidden transition-all duration-300 hover:border-brand-muted/60 hover:shadow-2xl"
+          className="group relative flex flex-col bg-white rounded-none border border-neutral-200 overflow-hidden transition-all duration-300 hover:border-black hover:shadow-lg"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Image Container */}
           <div 
-            className="relative aspect-[3/4] bg-brand-dark overflow-hidden cursor-pointer"
+            className="relative aspect-[3/4] bg-neutral-100 overflow-hidden cursor-pointer"
             onClick={() => setSelectedProduct(product)}
           >
-            <img 
-              src={isHovered && product.images[1] ? product.images[1] : product.images[currentImgIndex]} 
-              alt={product.name}
-              className="w-full h-full object-cover object-center filter grayscale-[15%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out"
-              loading="lazy"
-            />
+            {product.images && product.images.length > 0 && (product.images[currentImgIndex] || product.images[0]) ? (
+              <img 
+                src={isHovered && product.images[1] ? product.images[1] : (product.images[currentImgIndex] || product.images[0])} 
+                alt={product.name}
+                className="w-full h-full object-cover object-center filter contrast-[1.03] group-hover:scale-105 transition-all duration-500 ease-out"
+                loading="lazy"
+              />
+            ) : (
+              <div className="w-full h-full bg-[#F5F5F5] transition-colors group-hover:bg-[#EAEAEA]"></div>
+            )}
 
-            {/* Badges */}
             <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
               {product.tags.map((tag, i) => (
                 <span 
                   key={i}
-                  className={`text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold ${
-                    tag === 'LIMITED DROP' || tag === 'DROP 01' ? 'bg-brand-accent text-white' :
-                    tag === 'SOLD OUT' ? 'bg-zinc-800 text-zinc-400' :
-                    'bg-brand-black/80 backdrop-blur-md text-brand-light border border-brand-border'
+                  className={`text-[9px] uppercase tracking-widest px-2.5 py-0.5 rounded-none font-bold shadow-sm ${
+                    tag === 'LIMITED DROP' || tag === 'DROP 01' ? 'bg-black text-white' :
+                    tag === 'SOLD OUT' ? 'bg-neutral-200 text-neutral-600' :
+                    'bg-white text-black border border-neutral-200'
                   }`}
                 >
                   {tag}
@@ -1040,30 +1287,27 @@
               ))}
             </div>
 
-            {/* Wishlist */}
             <button 
               onClick={(e) => {
                 e.stopPropagation();
                 toggleWishlist(product.id);
               }}
-              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-brand-black/70 backdrop-blur-md border border-brand-border flex items-center justify-center text-brand-light hover:text-brand-accent transition-all z-10"
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/95 backdrop-blur-md border border-neutral-200 flex items-center justify-center text-neutral-700 hover:text-black hover:border-black transition-all z-10 shadow-sm"
               title="Save to wishlist"
             >
               <Icon 
                 name="Heart" 
                 size={14} 
-                className={isWishlisted ? "text-brand-accent fill-brand-accent" : ""} 
+                className={isWishlisted ? "text-red-500 fill-red-500" : ""} 
               />
             </button>
 
-            {/* Fit Badge */}
             <div className="absolute bottom-3 left-3 z-10">
-              <span className="text-[10px] font-mono uppercase tracking-wider bg-brand-black/90 backdrop-blur-md text-brand-bone px-2 py-0.5 rounded border border-brand-border">
+              <span className="text-[10px] uppercase tracking-wider bg-white/95 backdrop-blur-md text-neutral-800 px-2.5 py-0.5 rounded-none border border-neutral-200 font-medium shadow-sm">
                 {product.fit} Cut
               </span>
             </div>
 
-            {/* Hover Quick Actions */}
             {product.inStock && (
               <div className="absolute inset-x-3 bottom-3 hidden group-hover:flex gap-1.5 z-20 animate-fade-in">
                 <button 
@@ -1071,7 +1315,7 @@
                     e.stopPropagation();
                     setSelectedProduct(product);
                   }}
-                  className="flex-1 bg-brand-light hover:bg-white text-brand-black font-mono text-[11px] font-bold py-2.5 px-3 rounded text-center tracking-wider uppercase flex items-center justify-center gap-1 shadow-lg"
+                  className="flex-1 bg-black hover:bg-neutral-800 text-white font-sans text-[11px] font-bold py-2.5 px-3 rounded-none text-center tracking-widest uppercase flex items-center justify-center gap-1 shadow-md transition-colors"
                 >
                   <Icon name="Eye" size={13} />
                   <span>Inspect</span>
@@ -1081,7 +1325,7 @@
                     e.stopPropagation();
                     addToCart(product, defaultSize, defaultColor);
                   }}
-                  className="bg-brand-black hover:bg-zinc-900 text-brand-light border border-brand-border font-mono text-[11px] py-2.5 px-3 rounded flex items-center justify-center"
+                  className="bg-white hover:bg-neutral-100 text-black border border-neutral-300 font-sans text-[11px] py-2.5 px-3 rounded-none flex items-center justify-center shadow-sm transition-colors"
                   title="Quick Add"
                 >
                   <Icon name="Plus" size={14} />
@@ -1090,62 +1334,70 @@
             )}
 
             {!product.inStock && (
-              <div className="absolute inset-0 bg-brand-black/60 backdrop-blur-[2px] flex items-center justify-center">
-                <span className="font-mono text-xs uppercase tracking-widest text-zinc-400 border border-zinc-700 bg-brand-black/80 px-3 py-1 rounded">
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] flex items-center justify-center">
+                <span className="text-xs uppercase tracking-widest text-neutral-700 border border-neutral-400 bg-white px-3.5 py-1.5 rounded-none font-bold shadow-sm">
                   BATCH SOLD OUT
                 </span>
               </div>
             )}
           </div>
 
-          {/* Info */}
-          <div className="p-4 flex flex-col flex-1 justify-between gap-3">
+          <div className="p-4 flex flex-col flex-1 justify-between gap-3 bg-white">
             <div>
               <div className="flex items-center gap-1.5 mb-2">
                 {product.colors.map((c, i) => (
                   <button 
                     key={i}
                     onClick={() => setCurrentImgIndex(c.imgIndex || 0)}
-                    className={`w-3.5 h-3.5 rounded-full border transition-all ${currentImgIndex === (c.imgIndex || 0) ? 'border-brand-accent scale-110' : 'border-zinc-700 hover:border-zinc-500'}`}
+                    className={`w-3.5 h-3.5 rounded-full border transition-all ${currentImgIndex === (c.imgIndex || 0) ? 'border-black scale-110 shadow-sm' : 'border-neutral-300 hover:border-neutral-500'}`}
                     style={{ backgroundColor: c.hex }}
                     title={c.name}
                   />
                 ))}
-                <span className="text-[10px] font-mono text-brand-muted ml-1 uppercase">
+                <span className="text-[10px] text-neutral-400 ml-1 uppercase font-medium">
                   {product.colors.length} {product.colors.length === 1 ? 'colorway' : 'colorways'}
                 </span>
               </div>
 
               <h3 
                 onClick={() => setSelectedProduct(product)}
-                className="font-medium text-sm text-brand-light group-hover:text-brand-bone cursor-pointer tracking-wide"
+                className="font-bold text-sm text-black group-hover:text-neutral-600 cursor-pointer tracking-wide uppercase transition-colors"
               >
                 {product.name}
               </h3>
-              <p className="text-[11px] font-mono text-brand-muted mt-0.5 truncate">
+              <p className="text-[11px] text-neutral-500 mt-0.5 truncate font-normal">
                 {product.tagline}
               </p>
             </div>
 
-            <div className="pt-2 border-t border-brand-border/60 flex items-center justify-between font-mono text-xs">
-              <span className="font-bold text-brand-light tracking-wider">
+            <div className="pt-2 border-t border-neutral-150 flex items-center justify-between text-xs">
+              <span className="font-bold text-black tracking-wider price-text text-sm">
                 {formatPrice(product.priceINR)}
               </span>
-              <div className="flex gap-1 text-[10px] text-brand-muted uppercase">
+              <div className="flex gap-1.5 text-[10px] text-neutral-500 uppercase font-medium">
                 {product.sizes.slice(0, 4).map((s, idx) => (
-                  <span key={idx} className={product.sizeStock[s] === 0 ? 'line-through opacity-40' : ''}>
+                  <span key={idx} className={product.sizeStock[s] === 0 ? 'line-through opacity-30' : ''}>
                     {s}
                   </span>
                 ))}
                 {product.sizes.length > 4 && <span>+{product.sizes.length - 4}</span>}
               </div>
             </div>
+
+            {/* View Details Button */}
+            <button
+              onClick={() => setSelectedProduct(product)}
+              className="mt-1 w-full py-2.5 rounded-none font-sans text-[11px] uppercase tracking-widest font-bold transition-all flex items-center justify-center gap-2 border border-neutral-300 text-neutral-800 hover:bg-black hover:text-white hover:border-black active:scale-98"
+            >
+              <Icon name="ArrowRight" size={13} />
+              <span>View Details</span>
+            </button>
           </div>
         </div>
       );
     }
 
-    // --- PRODUCT CATALOGUE (SHOP ALL) ---
+    // --- PRODUCT CATALOGUE (SHOP ALL - FADL STYLE) ---
     function ProductGrid() {
       const [selectedCategory, setSelectedCategory] = useState('ALL');
       const [selectedFit, setSelectedFit] = useState('ALL');
@@ -1172,33 +1424,33 @@
       return (
         <section id="shop-section" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-brand-border">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-neutral-200">
             <div>
-              <span className="text-[11px] font-mono uppercase tracking-mega text-brand-muted block mb-1">
-                Batch 01 / {filteredProducts.length} Heavywear Pieces
+              <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 block mb-1 font-medium">
+                Batch 01 / {filteredProducts.length} Curated Pieces
               </span>
-              <h2 className="font-editorial text-3xl sm:text-4xl font-bold tracking-widest text-brand-light uppercase">
+              <h2 className="font-sans text-3xl sm:text-4xl font-black tracking-[0.18em] text-black uppercase">
                 SHOP ARCHIVE
               </h2>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
-              <label className="flex items-center gap-2 text-brand-muted hover:text-brand-light cursor-pointer select-none">
+            <div className="flex flex-wrap items-center gap-4 text-xs">
+              <label className="flex items-center gap-2 text-neutral-600 hover:text-black cursor-pointer select-none font-medium">
                 <input 
                   type="checkbox" 
                   checked={inStockOnly} 
                   onChange={(e) => setInStockOnly(e.target.checked)}
-                  className="rounded bg-brand-dark border-brand-border text-brand-accent focus:ring-0 w-3.5 h-3.5"
+                  className="rounded-none border-neutral-300 text-black focus:ring-0 w-3.5 h-3.5"
                 />
                 <span>In-Stock Only</span>
               </label>
 
-              <div className="flex items-center gap-2">
-                <span className="text-brand-muted">Sort:</span>
+              <div className="flex items-center gap-2 font-medium">
+                <span className="text-neutral-500">Sort:</span>
                 <select 
                   value={sortBy} 
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-brand-surface text-brand-light text-xs font-mono py-1.5 px-3 rounded border border-brand-border focus:outline-none cursor-pointer"
+                  className="bg-white text-black text-xs py-1.5 px-3 rounded-none border border-neutral-300 hover:border-black focus:outline-none cursor-pointer transition-colors"
                 >
                   <option value="FEATURED">Featured Pieces</option>
                   <option value="PRICE_LOW">Price: Low to High</option>
@@ -1210,16 +1462,16 @@
           </div>
 
           {/* Filter Pills */}
-          <div className="py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-b border-brand-border/60">
+          <div className="py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-b border-neutral-200/80">
             <div className="flex flex-wrap gap-2">
               {categories.map(cat => (
                 <button 
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`text-xs font-mono uppercase tracking-wider py-1.5 px-3.5 rounded transition-all ${
+                  className={`text-xs uppercase tracking-wider py-1.5 px-4 rounded-none transition-all font-medium ${
                     selectedCategory === cat 
-                      ? 'bg-brand-light text-brand-black font-bold shadow-md' 
-                      : 'bg-brand-surface text-brand-muted hover:text-brand-light border border-brand-border/80'
+                      ? 'bg-black text-white font-bold shadow-sm' 
+                      : 'bg-white text-neutral-600 hover:text-black border border-neutral-200 hover:border-black'
                   }`}
                 >
                   {cat}
@@ -1227,17 +1479,17 @@
               ))}
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono">
-              <span className="text-brand-muted text-[11px] uppercase">Silhouette Cut:</span>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-neutral-500 text-[11px] uppercase font-medium">Silhouette:</span>
               <div className="flex gap-1.5">
                 {fits.map(f => (
                   <button 
                     key={f}
                     onClick={() => setSelectedFit(f)}
-                    className={`text-[11px] uppercase py-1 px-2.5 rounded transition-colors ${
+                    className={`text-[11px] uppercase py-1 px-3 rounded-none transition-colors font-medium ${
                       selectedFit === f 
-                        ? 'bg-brand-zinc text-brand-light border border-brand-muted' 
-                        : 'text-brand-muted hover:text-brand-light border border-transparent'
+                        ? 'bg-neutral-100 text-black border border-black' 
+                        : 'text-neutral-500 hover:text-black border border-transparent'
                     }`}
                   >
                     {f}
@@ -1255,12 +1507,12 @@
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-brand-surface/40 rounded border border-brand-border mt-8">
-              <Icon name="Inbox" size={36} className="text-brand-muted mx-auto mb-3" />
-              <p className="font-mono text-sm text-brand-light">No pieces match current criteria.</p>
+            <div className="text-center py-20 bg-white rounded-none border border-neutral-200 mt-8 shadow-sm">
+              <Icon name="Inbox" size={36} className="text-neutral-400 mx-auto mb-3" />
+              <p className="text-sm text-neutral-700 font-medium">No pieces match current criteria.</p>
               <button 
                 onClick={() => { setSelectedCategory('ALL'); setSelectedFit('ALL'); setInStockOnly(false); }}
-                className="mt-4 text-xs font-mono uppercase tracking-widest text-brand-accent hover:underline"
+                className="mt-4 text-xs uppercase tracking-widest text-black hover:underline font-bold"
               >
                 Reset All Filters
               </button>
@@ -1271,7 +1523,7 @@
       );
     }
 
-    // --- PRODUCT DETAIL MODAL (WITH SWIPE / PREV / NEXT BUTTONS) ---
+    // --- PRODUCT DETAIL MODAL (FADL CONTEMPORARY LUXURY) ---
     function ProductDetailModal() {
       const { selectedProduct, setSelectedProduct, formatPrice, addToCart, setIsSizeGuideOpen } = useStore();
       if (!selectedProduct) return null;
@@ -1288,16 +1540,26 @@
         setActiveImgIndex(color.imgIndex || 0);
       };
 
+      // Reset / Undo selections back to defaults
+      const handleResetSelection = () => {
+        setSelectedColor(selectedProduct.colors[0]);
+        setSelectedSize(selectedProduct.sizes[0]);
+        setActiveImgIndex(selectedProduct.colors[0].imgIndex || 0);
+        setQuantity(1);
+      };
+
       // SWIPE / SLIDE BUTTONS: PREVIOUS & NEXT IMAGE
-      const totalImages = selectedProduct.images.length;
+      const totalImages = selectedProduct.images ? selectedProduct.images.length : 0;
 
       const handlePrevImage = (e) => {
         e && e.stopPropagation();
+        if (totalImages <= 1) return;
         setActiveImgIndex((prev) => (prev === 0 ? totalImages - 1 : prev - 1));
       };
 
       const handleNextImage = (e) => {
         e && e.stopPropagation();
+        if (totalImages <= 1) return;
         setActiveImgIndex((prev) => (prev === totalImages - 1 ? 0 : prev + 1));
       };
 
@@ -1315,122 +1577,162 @@
       const currentStockForSize = selectedProduct.sizeStock[selectedSize] || 0;
 
       return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-brand-black/85 backdrop-blur-xl overflow-y-auto">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-md overflow-y-auto"
+          onClick={() => setSelectedProduct(null)}
+        >
           <div 
-            className="relative w-full max-w-5xl bg-brand-dark border border-brand-border rounded-lg shadow-2xl overflow-hidden animate-fade-in my-8 text-brand-light"
+            className="relative w-full max-w-5xl bg-white border border-neutral-200 rounded-none shadow-2xl overflow-hidden animate-fade-in my-8 text-black"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
-            <button 
-              onClick={() => setSelectedProduct(null)}
-              className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-brand-black/80 border border-brand-border text-brand-muted hover:text-brand-light flex items-center justify-center transition-colors"
-            >
-              <Icon name="X" size={18} />
-            </button>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
+            {/* Top Navigation Bar inside Modal */}
+            <div className="bg-neutral-50 px-4 sm:px-6 py-3.5 border-b border-neutral-200 flex items-center justify-between">
               
-              {/* Left Column: Image Gallery WITH SWIPE / PREV / NEXT BUTTONS */}
-              <div className="lg:col-span-7 bg-brand-black p-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-brand-border">
+              {/* Back to Catalogue Button */}
+              <button 
+                onClick={() => setSelectedProduct(null)}
+                className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-neutral-700 hover:text-black bg-white px-3.5 py-2 rounded-none border border-neutral-300 hover:border-black transition-all active:scale-95 shadow-sm"
+                title="Back to Catalog"
+              >
+                <Icon name="ArrowLeft" size={14} />
+                <span>Back to Catalogue</span>
+              </button>
+
+              <div className="flex items-center gap-3">
+                {/* Reset / Undo Option */}
+                <button 
+                  onClick={handleResetSelection}
+                  className="hidden sm:flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-semibold text-neutral-500 hover:text-black transition-colors"
+                  title="Reset color and size"
+                >
+                  <Icon name="RotateCcw" size={12} />
+                  <span>Reset</span>
+                </button>
+
+                {/* Close 'X' Button */}
+                <button 
+                  onClick={() => setSelectedProduct(null)}
+                  className="w-8 h-8 rounded-full bg-white border border-neutral-300 text-neutral-600 hover:text-black hover:border-black flex items-center justify-center transition-colors shadow-sm"
+                  title="Close (Esc)"
+                >
+                  <Icon name="X" size={16} />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+              
+              {/* Left Column: Image Gallery */}
+              <div className="lg:col-span-7 bg-neutral-50 p-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-neutral-200">
                 
-                {/* Main Large Image Frame with SWIPE CONTROLS */}
-                <div className="relative aspect-[4/5] rounded overflow-hidden bg-brand-surface mb-4 group select-none">
-                  <img 
-                    src={selectedProduct.images[activeImgIndex] || selectedProduct.images[0]} 
-                    alt={selectedProduct.name} 
-                    className="w-full h-full object-cover object-center filter contrast-105 transition-all duration-300"
-                  />
+                {/* Main Large Image Frame */}
+                <div className="relative aspect-[4/5] rounded-none overflow-hidden bg-[#F5F5F5] mb-4 group select-none shadow-sm border border-neutral-200/80">
+                  {totalImages > 0 ? (
+                    <img 
+                      src={selectedProduct.images[activeImgIndex] || selectedProduct.images[0]} 
+                      alt={selectedProduct.name} 
+                      className="w-full h-full object-cover object-center filter contrast-[1.02] transition-all duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[#F5F5F5] flex items-center justify-center" />
+                  )}
 
                   {/* Cut Badge */}
                   <div className="absolute top-3 left-3 z-20">
-                    <span className="text-[10px] font-mono uppercase tracking-widest bg-brand-black/90 px-2.5 py-1 rounded text-brand-light border border-brand-border">
+                    <span className="text-[10px] uppercase tracking-widest bg-white/95 px-3 py-1 rounded-none text-black border border-neutral-300 font-bold shadow-sm">
                       {selectedProduct.fit} Cut
                     </span>
                   </div>
 
                   {/* Image Counter Badge */}
-                  <div className="absolute top-3 right-3 z-20">
-                    <span className="text-[10px] font-mono bg-brand-black/80 backdrop-blur-md px-2 py-0.5 rounded text-brand-light border border-brand-border">
-                      {activeImgIndex + 1} / {totalImages}
-                    </span>
-                  </div>
+                  {totalImages > 1 && (
+                    <div className="absolute top-3 right-3 z-20">
+                      <span className="text-[10px] bg-white/95 backdrop-blur-md px-2.5 py-0.5 rounded-none text-black border border-neutral-300 font-medium">
+                        {activeImgIndex + 1} / {totalImages}
+                      </span>
+                    </div>
+                  )}
 
-                  {/* ⬅️ PREV SWIPE BUTTON */}
-                  <button 
-                    onClick={handlePrevImage}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-brand-black/80 hover:bg-brand-black text-brand-light border border-brand-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-xl"
-                    title="Previous Image (Left Arrow)"
-                  >
-                    <Icon name="ChevronLeft" size={20} />
-                  </button>
+                  {/* PREV & NEXT SWIPE BUTTONS */}
+                  {totalImages > 1 && (
+                    <>
+                      <button 
+                        onClick={handlePrevImage}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 hover:bg-black hover:text-white text-black border border-neutral-300 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-md"
+                        title="Previous Image (Left Arrow)"
+                      >
+                        <Icon name="ChevronLeft" size={20} />
+                      </button>
 
-                  {/* ➡️ NEXT SWIPE BUTTON */}
-                  <button 
-                    onClick={handleNextImage}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-brand-black/80 hover:bg-brand-black text-brand-light border border-brand-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-xl"
-                    title="Next Image (Right Arrow)"
-                  >
-                    <Icon name="ChevronRight" size={20} />
-                  </button>
+                      <button 
+                        onClick={handleNextImage}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 hover:bg-black hover:text-white text-black border border-neutral-300 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-md"
+                        title="Next Image (Right Arrow)"
+                      >
+                        <Icon name="ChevronRight" size={20} />
+                      </button>
 
-                  {/* Swipe / Slide Prompt Overlay */}
-                  <div className="absolute bottom-3 inset-x-0 flex justify-center z-20 pointer-events-none">
-                    <span className="text-[10px] font-mono bg-brand-black/80 backdrop-blur-md px-3 py-1 rounded-full text-brand-muted border border-brand-border/60 flex items-center gap-1.5">
-                      <Icon name="MoveHorizontal" size={12} />
-                      <span>Use &lt; &gt; or Click buttons to change photos</span>
-                    </span>
-                  </div>
+                      <div className="absolute bottom-3 inset-x-0 flex justify-center z-20 pointer-events-none">
+                        <span className="text-[10px] bg-white/90 backdrop-blur-md px-3 py-1 rounded-none text-neutral-600 border border-neutral-200 flex items-center gap-1.5 shadow-sm font-medium">
+                          <Icon name="MoveHorizontal" size={12} />
+                          <span>Use &lt; &gt; buttons to change photo</span>
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Horizontal Thumbnails */}
-                <div className="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
-                  {selectedProduct.images.map((img, idx) => (
-                    <button 
-                      key={idx}
-                      onClick={() => setActiveImgIndex(idx)}
-                      className={`relative w-20 h-24 flex-shrink-0 rounded overflow-hidden border-2 transition-all ${
-                        activeImgIndex === idx ? 'border-brand-accent scale-95' : 'border-brand-border opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={img} alt="thumb" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
+                {totalImages > 1 && (
+                  <div className="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
+                    {selectedProduct.images.map((img, idx) => (
+                      <button 
+                        key={idx}
+                        onClick={() => setActiveImgIndex(idx)}
+                        className={`relative w-20 h-24 flex-shrink-0 rounded-none overflow-hidden border-2 transition-all ${
+                          activeImgIndex === idx ? 'border-black scale-95 shadow-sm' : 'border-neutral-200 opacity-60 hover:opacity-100'
+                        }`}
+                      >
+                        <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Right Column: Garment Specs, Sizing & Add to Bag */}
-              <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-brand-dark">
+              <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-white">
                 
                 <div>
-                  <div className="flex items-center justify-between text-xs font-mono text-brand-muted mb-2">
-                    <span className="uppercase tracking-widest">{selectedProduct.category}</span>
-                    <div className="flex items-center gap-1 text-brand-accent">
-                      <Icon name="Star" size={13} className="fill-brand-accent" />
-                      <span>{selectedProduct.rating} ({selectedProduct.reviewsCount} reviews)</span>
+                  <div className="flex items-center justify-between text-xs font-semibold text-neutral-500 mb-2 uppercase tracking-widest">
+                    <span>{selectedProduct.category}</span>
+                    <div className="flex items-center gap-1 text-black">
+                      <Icon name="Star" size={13} className="fill-black" />
+                      <span>{selectedProduct.rating} ({selectedProduct.reviewsCount} review)</span>
                     </div>
                   </div>
 
-                  <h2 className="font-editorial text-2xl sm:text-3xl font-bold tracking-wider uppercase text-brand-light">
+                  <h2 className="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight uppercase text-black">
                     {selectedProduct.name}
                   </h2>
-                  <p className="text-xs font-mono text-brand-muted mt-1">
+                  <p className="text-xs text-neutral-500 mt-1 font-normal">
                     {selectedProduct.tagline}
                   </p>
 
-                  <div className="mt-4 pb-4 border-b border-brand-border flex items-baseline justify-between">
-                    <span className="text-2xl font-mono font-bold tracking-wider text-brand-light">
+                  <div className="mt-4 pb-4 border-b border-neutral-200 flex items-baseline justify-between">
+                    <span className="text-2xl font-bold tracking-wider text-black price-text">
                       {formatPrice(selectedProduct.priceINR)}
                     </span>
-                    <span className="text-[11px] font-mono text-brand-muted">
-                      GST Included • Free Delhi Dispatch
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">
+                      GST Included · Delhi Dispatch
                     </span>
                   </div>
 
                   {/* Colorway Selection */}
                   <div className="mt-6">
-                    <div className="flex items-center justify-between text-xs font-mono mb-2">
-                      <span className="text-brand-muted uppercase">Colorway:</span>
-                      <span className="text-brand-light font-bold">{selectedColor.name}</span>
+                    <div className="flex items-center justify-between text-xs mb-2">
+                      <span className="text-neutral-500 uppercase font-medium">Colorway:</span>
+                      <span className="text-black font-bold uppercase">{selectedColor.name}</span>
                     </div>
                     <div className="flex gap-2.5">
                       {selectedProduct.colors.map((col, i) => (
@@ -1438,7 +1740,7 @@
                           key={i}
                           onClick={() => handleColorSelect(col)}
                           className={`w-8 h-8 rounded-full border-2 transition-all flex items-center justify-center ${
-                            selectedColor.name === col.name ? 'border-brand-accent scale-110' : 'border-zinc-700 hover:border-zinc-400'
+                            selectedColor.name === col.name ? 'border-black scale-110 shadow-sm' : 'border-neutral-300 hover:border-neutral-500'
                           }`}
                           style={{ backgroundColor: col.hex }}
                           title={col.name}
@@ -1453,14 +1755,14 @@
 
                   {/* Size Selection */}
                   <div className="mt-6">
-                    <div className="flex items-center justify-between text-xs font-mono mb-2">
-                      <span className="text-brand-muted uppercase">Select Size:</span>
+                    <div className="flex items-center justify-between text-xs mb-2 font-medium">
+                      <span className="text-neutral-500 uppercase">Select Size:</span>
                       <button 
                         onClick={() => setIsSizeGuideOpen(true)}
-                        className="text-brand-accent hover:underline flex items-center gap-1 text-[11px]"
+                        className="text-black hover:underline flex items-center gap-1 text-[11px] font-semibold"
                       >
                         <Icon name="Ruler" size={12} />
-                        <span>Size Chart & Fit Advisor</span>
+                        <span>Size Chart & Fit Guide</span>
                       </button>
                     </div>
 
@@ -1473,47 +1775,47 @@
                             key={sz}
                             disabled={isSoldOut}
                             onClick={() => setSelectedSize(sz)}
-                            className={`py-2.5 text-xs font-mono rounded border transition-all relative ${
+                            className={`py-2.5 text-xs rounded-none border transition-all relative font-bold ${
                               isSoldOut 
-                                ? 'bg-brand-surface/30 border-brand-border/40 text-zinc-600 cursor-not-allowed line-through' 
+                                ? 'bg-neutral-100 border-neutral-200 text-neutral-400 cursor-not-allowed line-through' 
                                 : selectedSize === sz 
-                                  ? 'bg-brand-light text-brand-black font-bold border-white' 
-                                  : 'bg-brand-surface text-brand-light border-brand-border hover:border-brand-muted'
+                                  ? 'bg-black text-white border-black shadow-sm' 
+                                  : 'bg-white text-black border-neutral-300 hover:border-black'
                             }`}
                           >
                             {sz}
                             {stock > 0 && stock <= 3 && (
-                              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-brand-accent"></span>
+                              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-black"></span>
                             )}
                           </button>
                         );
                       })}
                     </div>
 
-                    <div className="mt-2 text-[11px] font-mono text-brand-muted">
+                    <div className="mt-2 text-[11px] text-neutral-500 font-medium">
                       {currentStockForSize === 0 ? (
-                        <span className="text-red-400">Sold out in size {selectedSize}. Next batch dropping soon.</span>
+                        <span className="text-red-600">Sold out in size {selectedSize}. Next batch dropping soon.</span>
                       ) : currentStockForSize <= 3 ? (
-                        <span className="text-brand-accent font-bold">Only {currentStockForSize} left in stock for size {selectedSize}</span>
+                        <span className="text-black font-bold">Only {currentStockForSize} left in stock for size {selectedSize}</span>
                       ) : (
-                        <span className="text-green-400">In Stock — Dispatched within 24 Hours from Delhi</span>
+                        <span className="text-neutral-700">In Stock — Dispatched within 24 Hours from Delhi</span>
                       )}
                     </div>
                   </div>
 
                   {/* Quantity and Add to Bag */}
-                  <div className="mt-6 pt-6 border-t border-brand-border flex gap-3">
-                    <div className="flex items-center border border-brand-border rounded bg-brand-surface">
+                  <div className="mt-6 pt-6 border-t border-neutral-200 flex gap-3">
+                    <div className="flex items-center border border-neutral-300 rounded-none bg-neutral-50">
                       <button 
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="px-3 py-2 text-brand-muted hover:text-brand-light"
+                        className="px-3.5 py-2 text-neutral-600 hover:text-black font-bold"
                       >
                         -
                       </button>
-                      <span className="px-2 font-mono text-xs">{quantity}</span>
+                      <span className="px-2 text-xs font-bold text-black">{quantity}</span>
                       <button 
                         onClick={() => setQuantity(quantity + 1)}
-                        className="px-3 py-2 text-brand-muted hover:text-brand-light"
+                        className="px-3.5 py-2 text-neutral-600 hover:text-black font-bold"
                       >
                         +
                       </button>
@@ -1525,41 +1827,47 @@
                         addToCart(selectedProduct, selectedSize, selectedColor, quantity);
                         setSelectedProduct(null);
                       }}
-                      className={`flex-1 py-3.5 px-6 rounded font-mono text-xs font-bold tracking-widest uppercase transition-all shadow-xl flex items-center justify-center gap-2 ${
+                      className={`flex-1 py-4 px-6 rounded-none font-sans text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-md flex items-center justify-center gap-2 ${
                         currentStockForSize === 0 
-                          ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' 
-                          : 'bg-brand-accent hover:bg-brand-accentHover text-white active:scale-95'
+                          ? 'bg-neutral-200 text-neutral-400 cursor-not-allowed' 
+                          : 'bg-black hover:bg-neutral-800 text-white active:scale-98'
                       }`}
                     >
                       <Icon name="ShoppingBag" size={15} />
-                      <span>{currentStockForSize === 0 ? 'Sold Out' : `Add To Bag • ${formatPrice(selectedProduct.priceINR * quantity)}`}</span>
+                      {currentStockForSize === 0
+                        ? <span>Sold Out</span>
+                        : <span className="flex items-center gap-1.5">
+                            <span>Add To Bag ·</span>
+                            <span className="price-text">{formatPrice(selectedProduct.priceINR * quantity)}</span>
+                          </span>
+                      }
                     </button>
                   </div>
 
                   {/* Tabs: Specifications & Care */}
-                  <div className="mt-8 border-t border-brand-border pt-4">
-                    <div className="flex gap-6 border-b border-brand-border/60 pb-2 text-xs font-mono uppercase tracking-wider">
+                  <div className="mt-8 border-t border-neutral-200 pt-4">
+                    <div className="flex gap-6 border-b border-neutral-200 pb-2 text-xs uppercase tracking-wider font-semibold">
                       <button 
                         onClick={() => setActiveTab('DETAILS')}
-                        className={`pb-1 transition-colors ${activeTab === 'DETAILS' ? 'text-brand-light border-b-2 border-brand-accent' : 'text-brand-muted hover:text-brand-light'}`}
+                        className={`pb-1 transition-colors ${activeTab === 'DETAILS' ? 'text-black border-b-2 border-black font-bold' : 'text-neutral-400 hover:text-black'}`}
                       >
                         Garment Specs
                       </button>
                       <button 
                         onClick={() => setActiveTab('CARE')}
-                        className={`pb-1 transition-colors ${activeTab === 'CARE' ? 'text-brand-light border-b-2 border-brand-accent' : 'text-brand-muted hover:text-brand-light'}`}
+                        className={`pb-1 transition-colors ${activeTab === 'CARE' ? 'text-black border-b-2 border-black font-bold' : 'text-neutral-400 hover:text-black'}`}
                       >
                         Fabric & Care
                       </button>
                       <button 
                         onClick={() => setActiveTab('FIT')}
-                        className={`pb-1 transition-colors ${activeTab === 'FIT' ? 'text-brand-light border-b-2 border-brand-accent' : 'text-brand-muted hover:text-brand-light'}`}
+                        className={`pb-1 transition-colors ${activeTab === 'FIT' ? 'text-black border-b-2 border-black font-bold' : 'text-neutral-400 hover:text-black'}`}
                       >
                         Fit Advice
                       </button>
                     </div>
 
-                    <div className="pt-3 text-xs text-brand-bone/80 font-light leading-relaxed">
+                    <div className="pt-3 text-xs text-neutral-600 font-normal leading-relaxed">
                       {activeTab === 'DETAILS' && (
                         <ul className="space-y-1.5 list-disc list-inside">
                           {selectedProduct.details.map((d, i) => (
@@ -1586,7 +1894,7 @@
       );
     }
 
-    // --- SLIDE-OVER CART DRAWER ---
+    // --- SLIDE-OVER CART DRAWER (FADL CONTEMPORARY LUXURY) ---
     function CartDrawer() {
       const { 
         isCartOpen, 
@@ -1601,7 +1909,10 @@
         discountPercent,
         applyPromo,
         shippingRemainingINR,
-        freeShippingThresholdINR
+        freeShippingThresholdINR,
+        currentUser,
+        setIsAuthOpen,
+        setAuthView
       } = useStore();
 
       const [inputCode, setInputCode] = useState('');
@@ -1613,6 +1924,11 @@
       const shippingProgress = Math.min(100, Math.round(((freeShippingThresholdINR - shippingRemainingINR) / freeShippingThresholdINR) * 100));
 
       const handleCheckout = () => {
+        if (!currentUser) {
+          setAuthView('login');
+          setIsAuthOpen(true);
+          return;
+        }
         setIsCheckingOut(true);
         setTimeout(() => {
           setIsCheckingOut(false);
@@ -1621,113 +1937,117 @@
       };
 
       return (
-        <div className="fixed inset-0 z-50 overflow-hidden bg-brand-black/80 backdrop-blur-sm animate-fade-in flex justify-end">
+        <div className="fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-sm animate-fade-in flex justify-end">
           <div 
-            className="w-full max-w-md bg-brand-dark border-l border-brand-border h-full flex flex-col justify-between shadow-2xl animate-fade-in text-brand-light"
+            className="w-full max-w-md bg-white border-l border-neutral-200 h-full flex flex-col justify-between shadow-2xl animate-fade-in text-black"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-brand-border flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Icon name="ShoppingBag" size={18} className="text-brand-accent" />
-                <h3 className="font-editorial text-lg font-bold tracking-widest uppercase">
+            <div className="p-6 border-b border-neutral-200 flex items-center justify-between bg-white">
+              <div className="flex items-center gap-2.5">
+                <Icon name="ShoppingBag" size={18} className="text-black" />
+                <h3 className="font-sans text-sm sm:text-base font-extrabold tracking-[0.16em] uppercase text-black">
                   Your Archive Bag ({cart.reduce((s, i) => s + i.quantity, 0)})
                 </h3>
               </div>
               <button 
                 onClick={() => { setIsCartOpen(false); setCheckoutSuccess(false); }}
-                className="w-8 h-8 rounded-full border border-brand-border hover:border-brand-muted flex items-center justify-center text-brand-muted hover:text-brand-light"
+                className="w-8 h-8 rounded-full border border-neutral-300 hover:border-black flex items-center justify-center text-neutral-600 hover:text-black transition-colors"
               >
                 <Icon name="X" size={16} />
               </button>
             </div>
 
             {/* Free Shipping Milestone */}
-            <div className="bg-brand-surface px-6 py-3 border-b border-brand-border text-xs font-mono">
-              <div className="flex justify-between items-center mb-1.5 text-[11px]">
-                <span className="text-brand-muted uppercase">Free Pan-India Express Shipping</span>
-                <span className="font-bold text-brand-light">
+            <div className="bg-neutral-50 px-6 py-3.5 border-b border-neutral-200 text-xs">
+              <div className="flex justify-between items-center mb-1.5 text-[11px] uppercase tracking-wider font-medium">
+                <span className="text-neutral-500">Free Pan-India Express Shipping</span>
+                <span className="font-bold text-black price-text">
                   {shippingRemainingINR === 0 ? 'UNLOCKED' : `${formatPrice(shippingRemainingINR)} remaining`}
                 </span>
               </div>
-              <div className="w-full h-1.5 bg-brand-dark rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-brand-accent transition-all duration-500 rounded-full"
+                  className="h-full bg-black transition-all duration-500 rounded-full"
                   style={{ width: `${shippingProgress}%` }}
                 ></div>
               </div>
             </div>
 
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
               {checkoutSuccess ? (
                 <div className="text-center py-16 space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 rounded-full bg-neutral-100 text-black border border-neutral-300 flex items-center justify-center mx-auto">
                     <Icon name="CheckCircle" size={32} />
                   </div>
-                  <h4 className="font-editorial text-xl font-bold uppercase tracking-wider text-brand-light">
-                    Order Dispatched Simulation
+                  <h4 className="font-sans text-lg font-bold uppercase tracking-wider text-black">
+                    Order Placed Successfully
                   </h4>
-                  <p className="text-xs font-mono text-brand-muted max-w-xs mx-auto">
-                    Thank you for ordering with PUNK.IN. Order confirmation sent via WhatsApp/SMS.
+                  <p className="text-xs text-neutral-500 max-w-xs mx-auto">
+                    Thank you for ordering with PUNK THRIFT STUDIO. Order confirmation sent via WhatsApp/SMS.
                   </p>
                   <button 
                     onClick={() => { setIsCartOpen(false); setCheckoutSuccess(false); }}
-                    className="mt-4 px-6 py-2.5 bg-brand-light text-brand-black font-mono text-xs font-bold rounded uppercase tracking-wider"
+                    className="mt-4 px-6 py-3 bg-black text-white font-sans text-xs font-bold rounded-none uppercase tracking-wider hover:bg-neutral-800 transition-colors shadow-sm"
                   >
                     Continue Browsing
                   </button>
                 </div>
               ) : cart.length === 0 ? (
                 <div className="text-center py-20 space-y-3">
-                  <Icon name="ShoppingBag" size={36} className="text-brand-muted mx-auto stroke-1" />
-                  <p className="font-mono text-sm text-brand-light uppercase">Your bag is empty</p>
-                  <p className="text-xs font-mono text-brand-muted">Explore Drop 01 to add archival streetwear.</p>
+                  <Icon name="ShoppingBag" size={36} className="text-neutral-400 mx-auto stroke-1" />
+                  <p className="text-sm font-bold text-black uppercase tracking-wider">Your bag is empty</p>
+                  <p className="text-xs text-neutral-500">Explore Drop 01 to add archival streetwear pieces.</p>
                   <button 
                     onClick={() => setIsCartOpen(false)}
-                    className="mt-4 px-6 py-2 bg-brand-surface border border-brand-border text-brand-light font-mono text-xs uppercase tracking-wider rounded hover:border-brand-muted"
+                    className="mt-4 px-6 py-2.5 bg-black text-white text-xs uppercase tracking-wider rounded-none hover:bg-neutral-800 transition-colors font-bold shadow-sm"
                   >
                     Explore Catalogue
                   </button>
                 </div>
               ) : (
                 cart.map(item => (
-                  <div key={item.key} className="flex gap-4 p-3 bg-brand-surface rounded border border-brand-border/70">
-                    <img src={item.image} alt={item.name} className="w-20 h-24 object-cover rounded bg-brand-dark" />
+                  <div key={item.key} className="flex gap-4 p-3.5 bg-neutral-50 rounded-none border border-neutral-200">
+                    {item.image ? (
+                      <img src={item.image} alt={item.name} className="w-20 h-24 object-cover rounded-none bg-neutral-100 flex-shrink-0" />
+                    ) : (
+                      <div className="w-20 h-24 bg-[#F5F5F5] border border-neutral-200 flex items-center justify-center flex-shrink-0" />
+                    )}
                     
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
                         <div className="flex justify-between items-start">
-                          <h4 className="text-xs font-bold text-brand-light">{item.name}</h4>
+                          <h4 className="text-xs font-bold text-black uppercase tracking-wide">{item.name}</h4>
                           <button 
                             onClick={() => removeFromCart(item.key)}
-                            className="text-brand-muted hover:text-brand-accent p-0.5"
+                            className="text-neutral-400 hover:text-black p-0.5 transition-colors"
                             title="Remove"
                           >
                             <Icon name="Trash2" size={13} />
                           </button>
                         </div>
-                        <p className="text-[11px] font-mono text-brand-muted mt-0.5">
-                          Size: <span className="text-brand-light font-bold">{item.size}</span> • Color: {item.color.name}
+                        <p className="text-[11px] text-neutral-500 mt-0.5">
+                          Size: <span className="text-black font-bold">{item.size}</span> · Color: {item.color.name}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-brand-border/40 font-mono text-xs">
-                        <div className="flex items-center border border-brand-border rounded bg-brand-dark">
+                      <div className="flex items-center justify-between pt-2 border-t border-neutral-200 text-xs">
+                        <div className="flex items-center border border-neutral-300 rounded-none bg-white">
                           <button 
                             onClick={() => updateQuantity(item.key, -1)}
-                            className="px-2 py-0.5 text-brand-muted hover:text-brand-light"
+                            className="px-2.5 py-0.5 text-neutral-600 hover:text-black font-bold"
                           >
                             -
                           </button>
-                          <span className="px-2 text-[11px]">{item.quantity}</span>
+                          <span className="px-2 text-[11px] font-bold text-black">{item.quantity}</span>
                           <button 
                             onClick={() => updateQuantity(item.key, 1)}
-                            className="px-2 py-0.5 text-brand-muted hover:text-brand-light"
+                            className="px-2.5 py-0.5 text-neutral-600 hover:text-black font-bold"
                           >
                             +
                           </button>
                         </div>
-                        <span className="font-bold text-brand-light">
+                        <span className="font-bold text-black price-text">
                           {formatPrice(item.priceINR * item.quantity)}
                         </span>
                       </div>
@@ -1739,51 +2059,51 @@
 
             {/* Cart Footer */}
             {cart.length > 0 && !checkoutSuccess && (
-              <div className="p-6 bg-brand-surface border-t border-brand-border space-y-4">
+              <div className="p-6 bg-neutral-50 border-t border-neutral-200 space-y-4">
                 <div className="flex gap-2">
                   <input 
                     type="text" 
                     placeholder="PROMO CODE (e.g. PUNK10)" 
                     value={inputCode}
                     onChange={(e) => setInputCode(e.target.value)}
-                    className="flex-1 bg-brand-dark border border-brand-border rounded px-3 py-2 text-xs font-mono uppercase text-brand-light focus:outline-none focus:border-brand-muted"
+                    className="flex-1 bg-white border border-neutral-300 rounded-none px-3.5 py-2 text-xs uppercase text-black focus:outline-none focus:border-black"
                   />
                   <button 
                     onClick={() => applyPromo(inputCode)}
-                    className="px-4 py-2 bg-brand-zinc text-brand-light font-mono text-xs uppercase tracking-wider rounded hover:bg-zinc-700 transition-colors"
+                    className="px-4 py-2 bg-neutral-200 text-black text-xs uppercase tracking-wider rounded-none hover:bg-black hover:text-white transition-colors font-semibold"
                   >
                     Apply
                   </button>
                 </div>
 
-                <div className="space-y-1.5 font-mono text-xs border-t border-brand-border/60 pt-3">
-                  <div className="flex justify-between text-brand-muted">
+                <div className="space-y-1.5 text-xs border-t border-neutral-200 pt-3">
+                  <div className="flex justify-between text-neutral-600">
                     <span>Subtotal</span>
-                    <span>{formatPrice(subtotalINR)}</span>
+                    <span className="price-text font-medium">{formatPrice(subtotalINR)}</span>
                   </div>
 
                   {discountPercent > 0 && (
-                    <div className="flex justify-between text-brand-accent">
+                    <div className="flex justify-between text-black font-semibold">
                       <span>VIP Discount ({discountPercent}%)</span>
-                      <span>-{formatPrice(discountINR)}</span>
+                      <span className="price-text">-{formatPrice(discountINR)}</span>
                     </div>
                   )}
 
-                  <div className="flex justify-between text-brand-muted">
+                  <div className="flex justify-between text-neutral-600">
                     <span>Express Pan-India Shipping</span>
-                    <span>{shippingRemainingINR === 0 ? 'FREE' : formatPrice(150)}</span>
+                    <span className="price-text font-medium">{shippingRemainingINR === 0 ? 'FREE' : formatPrice(150)}</span>
                   </div>
 
-                  <div className="flex justify-between text-sm font-bold text-brand-light pt-2 border-t border-brand-border/60">
+                  <div className="flex justify-between text-sm font-bold text-black pt-2 border-t border-neutral-200">
                     <span>Estimated Total (INR)</span>
-                    <span>{formatPrice(finalSubtotalINR + (shippingRemainingINR === 0 ? 0 : 150))}</span>
+                    <span className="price-text">{formatPrice(finalSubtotalINR + (shippingRemainingINR === 0 ? 0 : 150))}</span>
                   </div>
                 </div>
 
                 <button 
                   onClick={handleCheckout}
                   disabled={isCheckingOut}
-                  className="w-full py-4 bg-brand-accent hover:bg-brand-accentHover text-white font-mono text-xs font-bold tracking-widest uppercase rounded transition-all shadow-xl flex items-center justify-center gap-2 active:scale-98"
+                  className="w-full py-4 bg-black hover:bg-neutral-800 text-white font-sans text-xs font-bold tracking-[0.2em] uppercase rounded-none transition-all shadow-md flex items-center justify-center gap-2 active:scale-98"
                 >
                   {isCheckingOut ? (
                     <>
@@ -1793,14 +2113,28 @@
                   ) : (
                     <>
                       <Icon name="Lock" size={14} />
-                      <span>Proceed to Checkout • {formatPrice(finalSubtotalINR + (shippingRemainingINR === 0 ? 0 : 150))}</span>
+                      <span className="flex items-center gap-1.5">
+                        <span>Proceed to Checkout ·</span>
+                        <span className="price-text">{formatPrice(finalSubtotalINR + (shippingRemainingINR === 0 ? 0 : 150))}</span>
+                      </span>
                     </>
                   )}
                 </button>
 
-                <div className="text-[10px] font-mono text-brand-muted text-center flex items-center justify-center gap-2">
+                {!currentUser && (
+                  <button
+                    onClick={() => { setAuthView('login'); setIsAuthOpen(true); }}
+                    className="w-full py-3 border border-black bg-white hover:bg-black hover:text-white text-black font-sans text-[11px] font-bold tracking-[0.2em] uppercase rounded-none transition-all flex items-center justify-center gap-2"
+                  >
+                    <Icon name="User" size={13} />
+                    <span>Sign in to place your order</span>
+                    <Icon name="ArrowRight" size={13} />
+                  </button>
+                )}
+
+                <div className="text-[10px] text-neutral-500 text-center flex items-center justify-center gap-2 font-medium">
                   <Icon name="ShieldCheck" size={12} />
-                  <span>UPI / Cards / NetBanking Supported • 7-Day Easy Returns</span>
+                  <span>UPI / Cards / NetBanking Supported · 7-Day Easy Returns</span>
                 </div>
               </div>
             )}
@@ -1810,11 +2144,9 @@
       );
     }
 
-    // --- DROP COUNTDOWN ---
+    // --- DROP COUNTDOWN (FADL CONTEMPORARY LUXURY) ---
     function DropCountdown() {
       const [timeLeft, setTimeLeft] = useState({ days: 3, hours: 14, minutes: 22, seconds: 40 });
-      const [email, setEmail] = useState('');
-      const [signedUp, setSignedUp] = useState(false);
 
       useEffect(() => {
         const timer = setInterval(() => {
@@ -1829,67 +2161,37 @@
         return () => clearInterval(timer);
       }, []);
 
-      const handleSignup = (e) => {
-        e.preventDefault();
-        if (email) setSignedUp(true);
-      };
-
       return (
-        <section id="drops-section" className="py-24 bg-brand-surface/70 border-b border-brand-border relative overflow-hidden">
+        <section id="drops-section" className="py-24 bg-white border-b border-neutral-200 relative overflow-hidden">
           <div className="max-w-5xl mx-auto px-6 text-center">
             
-            <span className="text-[11px] font-mono uppercase tracking-mega text-brand-accent block mb-2">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-500 block mb-2">
               Next Drop Scheduled
             </span>
-            <h2 className="font-editorial text-3xl sm:text-5xl font-bold tracking-widest text-brand-light uppercase mb-4">
-              DROP 02 // DELHI UNDERGROUND
+            <h2 className="font-sans text-3xl sm:text-5xl font-black tracking-[0.16em] text-black uppercase mb-4">
+              DROP 02 DELHI UNDERGROUND
             </h2>
-            <p className="max-w-xl mx-auto text-xs sm:text-sm font-light text-brand-muted mb-12">
-              Limited to 100 numbered pieces. Heavyweight 340 GSM French Terry hoodies and curated vintage thrift outerwear.
+            <p className="max-w-xl mx-auto text-xs sm:text-sm font-normal text-neutral-500 mb-12">
+              Strictly limited to 100 numbered pieces. Heavyweight 340 GSM French Terry hoodies and curated vintage thrift outerwear.
             </p>
 
-            <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-lg mx-auto font-mono mb-12">
+            {/* Countdown Clock Grid */}
+            <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-lg mx-auto font-sans">
               {[
                 { label: 'DAYS', val: timeLeft.days },
                 { label: 'HOURS', val: timeLeft.hours },
                 { label: 'MINUTES', val: timeLeft.minutes },
                 { label: 'SECONDS', val: timeLeft.seconds }
               ].map((item, idx) => (
-                <div key={idx} className="bg-brand-dark p-4 rounded border border-brand-border shadow-xl">
-                  <span className="text-2xl sm:text-4xl font-bold text-brand-light block">
+                <div key={idx} className="bg-neutral-50 p-5 rounded-none border border-neutral-200 shadow-sm text-center">
+                  <span className="text-2xl sm:text-4xl font-extrabold text-black block tracking-tight">
                     {String(item.val).padStart(2, '0')}
                   </span>
-                  <span className="text-[9px] sm:text-[10px] uppercase text-brand-muted tracking-widest mt-1 block">
+                  <span className="text-[9px] sm:text-[10px] uppercase text-neutral-500 tracking-[0.2em] mt-1.5 block font-semibold">
                     {item.label}
                   </span>
                 </div>
               ))}
-            </div>
-
-            <div className="max-w-md mx-auto">
-              {signedUp ? (
-                <div className="p-4 bg-brand-dark rounded border border-green-500/40 text-green-400 font-mono text-xs flex items-center justify-center gap-2">
-                  <Icon name="Check" size={15} />
-                  <span>VIP Access Confirmed. Password sent 1 hour prior to drop.</span>
-                </div>
-              ) : (
-                <form onSubmit={handleSignup} className="flex gap-2">
-                  <input 
-                    type="email" 
-                    required
-                    placeholder="ENTER EMAIL FOR 1-HR EARLY ACCESS" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 bg-brand-dark border border-brand-border rounded px-4 py-3 text-xs font-mono text-brand-light focus:outline-none focus:border-brand-muted placeholder:text-brand-muted/70"
-                  />
-                  <button 
-                    type="submit"
-                    className="px-6 py-3 bg-brand-light hover:bg-white text-brand-black font-mono text-xs font-bold uppercase tracking-wider rounded transition-all"
-                  >
-                    Join VIP
-                  </button>
-                </form>
-              )}
             </div>
 
           </div>
@@ -1897,56 +2199,48 @@
       );
     }
 
-    // --- BRAND STORY / MANIFESTO ---
+    // --- BRAND STORY / MANIFESTO (FADL CONTEMPORARY LUXURY) ---
     function BrandStory() {
       return (
-        <section id="about-section" className="py-24 bg-brand-black border-b border-brand-border">
+        <section id="about-section" className="py-24 bg-[#FAFAFA] border-b border-neutral-200">
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             <div className="lg:col-span-6 space-y-6">
-              <span className="text-[11px] font-mono uppercase tracking-mega text-brand-muted block">
-                Brand Manifesto & Sourcing // Delhi, India
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-500 block">
+                Brand Manifesto & Sourcing · Delhi, India
               </span>
-              <h2 className="font-editorial text-3xl sm:text-5xl font-bold tracking-widest text-brand-light uppercase leading-tight">
+              <h2 className="font-sans text-3xl sm:text-5xl font-black tracking-[0.15em] text-black uppercase leading-tight">
                 AUTHENTIC HEAVYWEAR. NO COMPROMISE.
               </h2>
-              <p className="text-brand-muted text-sm sm:text-base leading-relaxed font-light">
-                PUNK.in is built in New Delhi with a clear obsession: delivering substantial, authentic heavyweight streetwear and curated archival thrift pieces that stand the test of time.
+              <p className="text-neutral-600 text-sm sm:text-base leading-relaxed font-normal">
+                PUNK THRIFT STUDIO is built in New Delhi with a clear obsession: delivering substantial, authentic heavyweight streetwear and curated archival thrift pieces that stand the test of time.
               </p>
-              <p className="text-brand-muted text-sm sm:text-base leading-relaxed font-light">
-                We craft our garments from 200–340 GSM Indian combed cotton. Every batch is produced in limited numbers to eliminate deadstock and guarantee exclusivity for our community.
+              <p className="text-neutral-600 text-sm sm:text-base leading-relaxed font-normal">
+                We craft our garments from 180–300 GSM Indian combed cotton. Every batch is produced in limited numbers to eliminate deadstock and guarantee exclusivity for our community.
               </p>
 
-              <div className="pt-4 grid grid-cols-3 gap-4 border-t border-brand-border font-mono text-xs">
+              <div className="pt-6 grid grid-cols-3 gap-4 border-t border-neutral-200 text-xs">
                 <div>
-                  <span className="text-brand-light font-bold block text-base">200–340 GSM</span>
-                  <span className="text-brand-muted text-[10px] uppercase">Custom Knit Cotton</span>
+                  <span className="text-black font-bold block text-base">180–300 GSM</span>
+                  <span className="text-neutral-500 text-[10px] uppercase font-semibold tracking-wider">Custom Knit Cotton</span>
                 </div>
                 <div>
-                  <span className="text-brand-light font-bold block text-base">DELHI HQ</span>
-                  <span className="text-brand-muted text-[10px] uppercase">Designed & Milled</span>
+                  <span className="text-black font-bold block text-base">DELHI HQ</span>
+                  <span className="text-neutral-500 text-[10px] uppercase font-semibold tracking-wider">Designed & Milled</span>
                 </div>
                 <div>
-                  <span className="text-brand-light font-bold block text-base">LIMITED RUNS</span>
-                  <span className="text-brand-muted text-[10px] uppercase">100 Pieces / Drop</span>
+                  <span className="text-black font-bold block text-base">LIMITED RUNS</span>
+                  <span className="text-neutral-500 text-[10px] uppercase font-semibold tracking-wider">100 Pieces / Drop</span>
                 </div>
               </div>
             </div>
 
             <div className="lg:col-span-6 grid grid-cols-2 gap-4">
-              <div className="aspect-[3/4] rounded overflow-hidden bg-brand-surface border border-brand-border">
-                <img 
-                  src="https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=85" 
-                  alt="Studio craft" 
-                  className="w-full h-full object-cover filter grayscale contrast-125"
-                />
+              <div className="aspect-[3/4] rounded-none overflow-hidden bg-[#F5F5F5] border border-neutral-200 shadow-sm">
+                <img src="/images/tee-brown-centipede.jpg" alt="Vintage Brown Centipede Spine Tee — studio archive" className="w-full h-full object-cover object-center" loading="lazy" />
               </div>
-              <div className="aspect-[3/4] rounded overflow-hidden bg-brand-surface border border-brand-border mt-8">
-                <img 
-                  src="https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=85" 
-                  alt="Fabric details" 
-                  className="w-full h-full object-cover filter grayscale contrast-125"
-                />
+              <div className="aspect-[3/4] rounded-none overflow-hidden bg-[#F5F5F5] border border-neutral-200 shadow-sm mt-8">
+                <img src="/images/tee-skull-tribal-detail.webp" alt="Hand-airbrushed skull tribal print detail" className="w-full h-full object-cover object-center" loading="lazy" />
               </div>
             </div>
 
@@ -1976,91 +2270,91 @@
       ];
 
       return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-black/85 backdrop-blur-xl animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div 
-            className="w-full max-w-2xl bg-brand-dark border border-brand-border rounded-lg shadow-2xl p-6 sm:p-8 text-brand-light relative max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-2xl bg-white border border-neutral-200 shadow-2xl p-6 sm:p-8 text-black relative max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button 
               onClick={() => setIsSizeGuideOpen(false)}
-              className="absolute top-4 right-4 text-brand-muted hover:text-brand-light p-1"
+              className="absolute top-4 right-4 text-neutral-400 hover:text-black p-1 transition-colors"
             >
               <Icon name="X" size={18} />
             </button>
 
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-brand-accent mb-1">
+            <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-500 mb-1">
               <Icon name="Ruler" size={14} />
               <span>Universal Sizing Guide</span>
             </div>
-            <h3 className="font-editorial text-2xl font-bold tracking-widest uppercase mb-4">
-              PUNK.IN SIZE & FIT CALCULATOR
+            <h3 className="text-xl font-bold tracking-[0.14em] uppercase mb-4 text-black">
+              PUNK STUDIOS SIZE & FIT CALCULATOR
             </h3>
 
-            <div className="bg-brand-surface p-4 rounded border border-brand-border mb-6">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-brand-muted block mb-3">
+            <div className="bg-neutral-50 p-5 border border-neutral-200 mb-6">
+              <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-neutral-500 block mb-3 font-semibold">
                 Smart Size Predictor (Tailored for Indian Streetwear Cuts)
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
                 <div>
-                  <label className="block text-brand-muted mb-1">Your Height: {heightVal} cm</label>
+                  <label className="block text-neutral-600 mb-1">Your Height: <span className="text-black font-semibold">{heightVal} cm</span></label>
                   <input 
                     type="range" min="150" max="205" value={heightVal} 
                     onChange={(e) => setHeightVal(Number(e.target.value))}
-                    className="w-full accent-brand-accent cursor-pointer"
+                    className="w-full accent-black cursor-pointer"
                   />
                 </div>
                 <div>
-                  <label className="block text-brand-muted mb-1">Your Weight: {weightVal} kg</label>
+                  <label className="block text-neutral-600 mb-1">Your Weight: <span className="text-black font-semibold">{weightVal} kg</span></label>
                   <input 
                     type="range" min="45" max="115" value={weightVal} 
                     onChange={(e) => setWeightVal(Number(e.target.value))}
-                    className="w-full accent-brand-accent cursor-pointer"
+                    className="w-full accent-black cursor-pointer"
                   />
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-brand-border flex items-center justify-between text-xs font-mono">
-                <span className="text-brand-muted">Recommended Standard Size:</span>
-                <span className="text-sm font-bold text-brand-accent bg-brand-dark px-3 py-1 rounded border border-brand-accent/30">
+              <div className="mt-4 pt-3 border-t border-neutral-200 flex items-center justify-between text-xs font-mono">
+                <span className="text-neutral-500 uppercase tracking-wider text-[11px]">Recommended Size:</span>
+                <span className="text-xs font-bold text-white bg-black px-3 py-1 uppercase tracking-wider">
                   SIZE {recommendedSize} (Boxy Relaxed Fit)
                 </span>
               </div>
             </div>
 
             <div className="flex justify-between items-center mb-3">
-              <span className="text-xs font-mono uppercase tracking-wider text-brand-muted">Garment Dimensions</span>
-              <div className="flex border border-brand-border rounded overflow-hidden text-xs font-mono">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">Garment Dimensions</span>
+              <div className="flex border border-neutral-200 overflow-hidden text-xs font-mono">
                 <button 
                   onClick={() => setUnit('IN')}
-                  className={`px-3 py-1 ${unit === 'IN' ? 'bg-brand-light text-brand-black font-bold' : 'text-brand-muted hover:text-brand-light'}`}
+                  className={`px-3 py-1 transition-colors ${unit === 'IN' ? 'bg-black text-white font-semibold' : 'text-neutral-600 hover:text-black'}`}
                 >
                   Inches
                 </button>
                 <button 
                   onClick={() => setUnit('CM')}
-                  className={`px-3 py-1 ${unit === 'CM' ? 'bg-brand-light text-brand-black font-bold' : 'text-brand-muted hover:text-brand-light'}`}
+                  className={`px-3 py-1 transition-colors ${unit === 'CM' ? 'bg-black text-white font-semibold' : 'text-neutral-600 hover:text-black'}`}
                 >
                   Centimeters
                 </button>
               </div>
             </div>
 
-            <div className="overflow-x-auto border border-brand-border rounded">
+            <div className="overflow-x-auto border border-neutral-200">
               <table className="w-full text-xs font-mono text-left">
-                <thead className="bg-brand-surface text-brand-muted uppercase text-[10px] tracking-wider border-b border-brand-border">
+                <thead className="bg-neutral-100 text-neutral-600 uppercase text-[10px] tracking-wider border-b border-neutral-200">
                   <tr>
-                    <th className="py-2.5 px-4">Size</th>
-                    <th className="py-2.5 px-4">Chest Width</th>
-                    <th className="py-2.5 px-4">Body Length</th>
-                    <th className="py-2.5 px-4">Sleeve Length</th>
+                    <th className="py-2.5 px-4 font-semibold">Size</th>
+                    <th className="py-2.5 px-4 font-semibold">Chest Width</th>
+                    <th className="py-2.5 px-4 font-semibold">Body Length</th>
+                    <th className="py-2.5 px-4 font-semibold">Sleeve Length</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-brand-border">
+                <tbody className="divide-y divide-neutral-100">
                   {chartData.map((row, idx) => (
-                    <tr key={idx} className="hover:bg-brand-surface/50">
-                      <td className="py-2.5 px-4 font-bold text-brand-light">{row.size}</td>
-                      <td className="py-2.5 px-4 text-brand-bone">{unit === 'IN' ? `${row.chestIN}"` : `${row.chestCM} cm`}</td>
-                      <td className="py-2.5 px-4 text-brand-bone">{unit === 'IN' ? `${row.lengthIN}"` : `${row.lengthCM} cm`}</td>
-                      <td className="py-2.5 px-4 text-brand-bone">{unit === 'IN' ? `${row.sleeveIN}"` : `${row.sleeveCM} cm`}</td>
+                    <tr key={idx} className="hover:bg-neutral-50">
+                      <td className="py-2.5 px-4 font-bold text-black">{row.size}</td>
+                      <td className="py-2.5 px-4 text-neutral-700">{unit === 'IN' ? `${row.chestIN}"` : `${row.chestCM} cm`}</td>
+                      <td className="py-2.5 px-4 text-neutral-700">{unit === 'IN' ? `${row.lengthIN}"` : `${row.lengthCM} cm`}</td>
+                      <td className="py-2.5 px-4 text-neutral-700">{unit === 'IN' ? `${row.sleeveIN}"` : `${row.sleeveCM} cm`}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -2090,23 +2384,23 @@
       );
 
       return (
-        <div className="fixed inset-0 z-50 bg-brand-black/90 backdrop-blur-md p-4 sm:p-8 animate-fade-in flex flex-col items-center">
+        <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur-md p-6 sm:p-12 animate-fade-in flex flex-col items-center">
           <div className="w-full max-w-3xl">
-            <div className="flex items-center justify-between border-b border-brand-muted/40 pb-4 mb-8">
+            <div className="flex items-center justify-between border-b-2 border-black pb-4 mb-8">
               <div className="flex items-center gap-3 flex-1">
-                <Icon name="Search" size={24} className="text-brand-muted" />
+                <Icon name="Search" size={24} className="text-black" />
                 <input 
                   ref={inputRef}
                   type="text" 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="SEARCH GARMENTS, GSM WEIGHT, CUT, COLORWAYS..."
-                  className="w-full bg-transparent text-xl sm:text-2xl font-editorial text-brand-light placeholder:text-brand-muted/50 focus:outline-none uppercase tracking-wider"
+                  placeholder="SEARCH GARMENTS, GSM WEIGHT, CUT..."
+                  className="w-full bg-transparent text-xl sm:text-2xl font-sans font-medium text-black placeholder:text-neutral-400 focus:outline-none uppercase tracking-wider"
                 />
               </div>
               <button 
                 onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
-                className="text-brand-muted hover:text-brand-light p-2"
+                className="text-neutral-500 hover:text-black p-2 transition-colors"
               >
                 <Icon name="X" size={24} />
               </button>
@@ -2114,14 +2408,14 @@
 
             <div className="overflow-y-auto max-h-[70vh] space-y-4">
               {searchQuery.trim() === '' ? (
-                <div className="text-xs font-mono text-brand-muted space-y-2">
-                  <span className="uppercase tracking-widest block mb-2">Suggested:</span>
+                <div className="text-xs font-mono text-neutral-500 space-y-2">
+                  <span className="uppercase tracking-widest block mb-2 text-[11px] font-semibold text-neutral-700">Popular Searches:</span>
                   <div className="flex flex-wrap gap-2">
-                    {['340 GSM Hoodie', '240 GSM Tee', 'Parachute Pants', 'Leather Bag', 'Delhi Drop'].map((tag, i) => (
+                    {['340 GSM Hoodie', '240 GSM Tee', 'Centipede Spine', 'Gothic Graphic', 'Parachute Pants', 'Delhi Drop'].map((tag, i) => (
                       <button 
                         key={i}
                         onClick={() => setSearchQuery(tag)}
-                        className="bg-brand-surface px-3 py-1.5 rounded border border-brand-border hover:border-brand-muted text-brand-bone"
+                        className="bg-neutral-100 px-3.5 py-2 border border-neutral-200 hover:border-black text-neutral-800 text-xs font-sans tracking-wide uppercase transition-colors"
                       >
                         {tag}
                       </button>
@@ -2137,19 +2431,23 @@
                         setSelectedProduct(prod);
                         setIsSearchOpen(false);
                       }}
-                      className="flex gap-4 p-3 bg-brand-surface rounded border border-brand-border hover:border-brand-muted cursor-pointer transition-colors"
+                      className="flex gap-4 p-3 bg-white border border-neutral-200 hover:border-black cursor-pointer transition-colors"
                     >
-                      <img src={prod.images[0]} alt={prod.name} className="w-16 h-20 object-cover rounded bg-brand-dark" />
+                      {prod.images && prod.images.length > 0 ? (
+                        <img src={prod.images[0]} alt={prod.name} className="w-16 h-20 object-cover bg-neutral-100 flex-shrink-0" />
+                      ) : (
+                        <div className="w-16 h-20 bg-[#F5F5F5] border border-neutral-200 flex items-center justify-center flex-shrink-0" />
+                      )}
                       <div className="flex flex-col justify-center">
-                        <span className="text-[10px] font-mono uppercase text-brand-accent">{prod.category} • {prod.fit}</span>
-                        <h4 className="text-sm font-bold text-brand-light">{prod.name}</h4>
-                        <span className="text-xs font-mono text-brand-muted mt-1">{formatPrice(prod.priceINR)}</span>
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500">{prod.category} • {prod.fit}</span>
+                        <h4 className="text-xs font-bold text-black uppercase tracking-wide mt-0.5">{prod.name}</h4>
+                        <span className="text-xs font-bold text-black mt-1 price-text">{formatPrice(prod.priceINR)}</span>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-center py-12 font-mono text-xs text-brand-muted">
+                <p className="text-center py-12 font-mono text-xs text-neutral-500">
                   No matching garments located for "{searchQuery}".
                 </p>
               )}
@@ -2160,56 +2458,266 @@
       );
     }
 
-    // --- FOOTER ---
+    // --- CLEAN CONTEMPORARY LUXURY FOOTER ---
     function Footer() {
+      const { setIsAuthOpen, setAuthView } = useStore();
       return (
-        <footer className="bg-brand-black border-t border-brand-border py-16 text-brand-muted font-mono text-xs">
-          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
-            <div className="space-y-3">
-              <span className="font-editorial text-2xl font-black tracking-mega text-brand-light block">
-                PUNK.IN
-              </span>
-              <p className="text-[11px] leading-relaxed text-brand-muted max-w-xs">
-                Heavyweight streetwear and archival thrift studios based in New Delhi, India. Milled with 200–340 GSM Indian combed cotton.
-              </p>
-              <div className="pt-2 text-[10px] text-brand-zinc">
-                © 2026 PUNK THRIFT STUDIOS (PUNK.IN). NEW DELHI, INDIA.
+        <footer className="bg-white border-t border-neutral-200 pt-16 pb-12 text-neutral-600 font-sans text-xs">
+          <div className="max-w-7xl mx-auto px-6 sm:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12">
+              
+              {/* Col 1: Brand Info */}
+              <div className="space-y-4">
+                <span className="text-lg font-bold tracking-[0.2em] text-black uppercase block">
+                  PUNK THRIFT STUDIO
+                </span>
+                <p className="text-[12px] leading-relaxed text-neutral-500 max-w-sm">
+                  Heavyweight contemporary streetwear and archival thrift curation based in New Delhi, India. Milled with 200–340 GSM Indian combed cotton and custom hardware.
+                </p>
+                <div className="pt-1 text-[11px] text-neutral-400 font-mono">
+                  NEW DELHI, INDIA • EST. 2026
+                </div>
               </div>
+
+              {/* Col 2: Directory */}
+              <div className="space-y-3 uppercase tracking-wider text-[11px]">
+                <span className="text-black font-bold tracking-[0.16em] block mb-4">Catalogue</span>
+                <a href="#shop-section" className="block text-neutral-600 hover:text-black transition-colors">Shop Batch 01</a>
+                <a href="#lookbook-section" className="block text-neutral-600 hover:text-black transition-colors">Delhi Lookbook</a>
+                <a href="#drops-section" className="block text-neutral-600 hover:text-black transition-colors">Drop Countdown</a>
+                <a href="#about-section" className="block text-neutral-600 hover:text-black transition-colors">Sourcing Manifesto</a>
+                <button onClick={() => { setAuthView('login'); setIsAuthOpen(true); }} className="block text-neutral-600 hover:text-black transition-colors uppercase tracking-wider text-[11px]">Member Sign In</button>
+              </div>
+
+              {/* Col 3: Customer Service */}
+              <div className="space-y-3 uppercase tracking-wider text-[11px]">
+                <span className="text-black font-bold tracking-[0.16em] block mb-4">Customer Care</span>
+                <span className="block text-neutral-600">Pan-India Express Delivery (Bluedart/Delhivery)</span>
+                <span className="block text-neutral-600">UPI / Cards / NetBanking Accepted</span>
+                <span className="block text-neutral-600">7-Day Easy Size Exchanges</span>
+                <span className="block text-neutral-600">Delhi Studio Concierge: support@punkstudios.in</span>
+              </div>
+
             </div>
 
-            <div className="space-y-2 uppercase tracking-wider text-[11px]">
-              <span className="text-brand-light font-bold block mb-3">Catalogue</span>
-              <a href="#shop-section" className="block hover:text-brand-light transition-colors">Shop Batch 01</a>
-              <a href="#lookbook-section" className="block hover:text-brand-light transition-colors">Delhi Lookbook</a>
-              <a href="#drops-section" className="block hover:text-brand-light transition-colors">Drop Countdown</a>
-              <a href="#about-section" className="block hover:text-brand-light transition-colors">Sourcing Manifesto</a>
-            </div>
-
-            <div className="space-y-2 uppercase tracking-wider text-[11px]">
-              <span className="text-brand-light font-bold block mb-3">Customer Care</span>
-              <a href="#" className="block hover:text-brand-light transition-colors">Pan-India Express Delivery</a>
-              <a href="#" className="block hover:text-brand-light transition-colors">UPI & NetBanking</a>
-              <a href="#" className="block hover:text-brand-light transition-colors">7-Day Easy Returns</a>
-              <a href="#" className="block hover:text-brand-light transition-colors">Delhi Studio Concierge</a>
-            </div>
-
-            <div className="space-y-3">
-              <span className="text-brand-light font-bold block uppercase tracking-wider text-[11px]">Creator & GitHub</span>
-              <p className="text-[11px] leading-relaxed">
-                Repository linked to <strong className="text-brand-light">PUNK.in</strong> on GitHub.
-              </p>
-              <a 
-                href="https://github.com/piyushpant-rgb/PUNK.in" 
-                target="_blank" 
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-2 bg-brand-surface hover:bg-brand-zinc text-brand-light border border-brand-border rounded text-[11px] font-bold uppercase transition-colors"
-              >
-                <Icon name="Github" size={14} />
-                <span>github.com/piyushpant-rgb/PUNK.in</span>
-              </a>
+            <div className="border-t border-neutral-100 pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-400 uppercase tracking-widest gap-4">
+              <span>© 2026 PUNK THRIFT STUDIO. ALL RIGHTS RESERVED.</span>
+              <div className="flex gap-6">
+                <a href="#" className="hover:text-black transition-colors">Privacy</a>
+                <a href="#" className="hover:text-black transition-colors">Terms of Service</a>
+                <a href="#" className="hover:text-black transition-colors">Shipping Policy</a>
+              </div>
             </div>
           </div>
         </footer>
+      );
+    }
+
+    // --- AUTH MODAL (LOGIN / SIGN UP) ---
+    function AuthModal() {
+      const { isAuthOpen, setIsAuthOpen, authView, setAuthView, login, signUp } = useStore();
+      const [name, setName] = useState('');
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [showPassword, setShowPassword] = useState(false);
+      const [error, setError] = useState('');
+      const [isSubmitting, setIsSubmitting] = useState(false);
+
+      useEffect(() => {
+        if (isAuthOpen) {
+          setError('');
+          setPassword('');
+          setShowPassword(false);
+        }
+      }, [isAuthOpen, authView]);
+
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (e.key === 'Escape' && isAuthOpen) setIsAuthOpen(false);
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+      }, [isAuthOpen]);
+
+      if (!isAuthOpen) return null;
+
+      const isSignup = authView === 'signup';
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        setError('');
+        if (!email.trim() || !password) {
+          setError('Please enter your email and password.');
+          return;
+        }
+        if (isSignup && !name.trim()) {
+          setError('Please enter your full name.');
+          return;
+        }
+        setIsSubmitting(true);
+        setTimeout(() => {
+          const ok = isSignup ? signUp(name, email, password) : login(email, password);
+          setIsSubmitting(false);
+          if (!ok) {
+            setError(isSignup
+              ? 'Could not create account — check the details and try again.'
+              : 'Invalid email or password. New here? Create an account below.');
+          } else {
+            setName(''); setEmail(''); setPassword('');
+          }
+        }, 600);
+      };
+
+      return (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fade-in overflow-y-auto"
+          onClick={() => setIsAuthOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-4xl bg-white border border-neutral-200 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 my-8 text-black animate-fade-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Left Brand Panel */}
+            <div className="hidden lg:flex flex-col justify-between bg-black text-white p-10">
+              <div>
+                <span className="text-2xl font-black tracking-[0.22em] uppercase block">PUNK THRIFT</span>
+                <span className="text-[10px] tracking-[0.3em] text-neutral-400 uppercase">Studio · Delhi Archive</span>
+              </div>
+              <div className="space-y-5">
+                <h3 className="font-sans text-3xl font-black tracking-[0.14em] uppercase leading-tight">
+                  MEMBERS<br />GET FIRST<br />ACCESS.
+                </h3>
+                <ul className="space-y-3 text-[11px] uppercase tracking-[0.16em] text-neutral-300">
+                  {['Early access to every drop', 'Order history & tracking', 'Member-only pricing codes', 'Wishlist saved to your account'].map((perk, i) => (
+                    <li key={i} className="flex items-center gap-2.5">
+                      <Icon name="Check" size={13} className="text-white" />
+                      <span>{perk}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <span className="text-[10px] text-neutral-500 uppercase tracking-[0.2em]">EST. 2026 · NEW DELHI, INDIA</span>
+            </div>
+
+            {/* Right Form Panel */}
+            <div className="p-6 sm:p-10 flex flex-col justify-center bg-white">
+              <button
+                onClick={() => setIsAuthOpen(false)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full border border-neutral-300 text-neutral-500 hover:text-black hover:border-black flex items-center justify-center transition-colors"
+                title="Close (Esc)"
+              >
+                <Icon name="X" size={15} />
+              </button>
+
+              <span className="text-[10px] font-mono uppercase tracking-[0.24em] text-neutral-500 mb-1.5">
+                {isSignup ? 'Join The Archive' : 'Member Access'}
+              </span>
+              <h3 className="font-sans text-2xl font-black tracking-[0.14em] uppercase mb-1">
+                {isSignup ? 'CREATE ACCOUNT' : 'SIGN IN'}
+              </h3>
+              <p className="text-xs text-neutral-500 mb-7">
+                {isSignup
+                  ? 'One-of-one drops sell out fast. Members shop 24 hours early.'
+                  : 'Welcome back to the archive. Sign in to continue.'}
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {isSignup && (
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-[0.18em] text-neutral-500 font-semibold mb-1.5">Full Name</label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Your name"
+                      className="w-full border border-neutral-300 rounded-none px-3.5 py-3 text-sm text-black placeholder:text-neutral-400 focus:outline-none focus:border-black transition-colors bg-white"
+                      autoComplete="name"
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-[10px] uppercase tracking-[0.18em] text-neutral-500 font-semibold mb-1.5">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full border border-neutral-300 rounded-none px-3.5 py-3 text-sm text-black placeholder:text-neutral-400 focus:outline-none focus:border-black transition-colors bg-white"
+                    autoComplete="email"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase tracking-[0.18em] text-neutral-500 font-semibold mb-1.5">Password</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder={isSignup ? 'Minimum 6 characters' : 'Your password'}
+                      className="w-full border border-neutral-300 rounded-none px-3.5 py-3 pr-11 text-sm text-black placeholder:text-neutral-400 focus:outline-none focus:border-black transition-colors bg-white"
+                      autoComplete={isSignup ? 'new-password' : 'current-password'}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black transition-colors"
+                      title={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      <Icon name={showPassword ? 'EyeOff' : 'Eye'} size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                {error && (
+                  <div className="flex items-center gap-2 text-[11px] text-red-600 font-semibold uppercase tracking-wider bg-red-50 border border-red-200 px-3 py-2.5">
+                    <Icon name="AlertCircle" size={13} />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`w-full py-3.5 rounded-none font-sans text-xs font-bold tracking-[0.22em] uppercase transition-all flex items-center justify-center gap-2 shadow-sm ${
+                    isSubmitting ? 'bg-neutral-300 text-neutral-500 cursor-wait' : 'bg-black hover:bg-neutral-800 text-white active:scale-98'
+                  }`}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Icon name="Loader2" size={15} className="animate-spin" />
+                      <span>{isSignup ? 'Creating Account...' : 'Signing In...'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Icon name={isSignup ? 'UserPlus' : 'LogIn'} size={14} />
+                      <span>{isSignup ? 'Create Account' : 'Sign In'}</span>
+                    </>
+                  )}
+                </button>
+              </form>
+
+              <div className="mt-6 pt-5 border-t border-neutral-200 text-center text-xs">
+                {isSignup ? (
+                  <span className="text-neutral-500">
+                    Already a member?{' '}
+                    <button onClick={() => setAuthView('login')} className="text-black font-bold uppercase tracking-wider hover:underline">Sign In</button>
+                  </span>
+                ) : (
+                  <span className="text-neutral-500">
+                    New to PUNK THRIFT STUDIO?{' '}
+                    <button onClick={() => setAuthView('signup')} className="text-black font-bold uppercase tracking-wider hover:underline">Create an account</button>
+                  </span>
+                )}
+              </div>
+
+              <p className="mt-4 text-[10px] text-neutral-400 text-center leading-relaxed">
+                Demo storefront — accounts are stored only on this device.
+              </p>
+            </div>
+          </div>
+        </div>
       );
     }
 
@@ -2218,10 +2726,10 @@
       const { toastMessage } = useStore();
 
       return (
-        <div className="min-h-screen flex flex-col bg-brand-black text-brand-light">
+        <div className="min-h-screen flex flex-col bg-white text-[#0A0A0A] font-sans antialiased selection:bg-black selection:text-white">
           {toastMessage && (
-            <div className="fixed bottom-6 right-6 z-50 bg-brand-surface border border-brand-border text-brand-light px-4 py-3 rounded shadow-2xl font-mono text-xs flex items-center gap-3 animate-fade-in">
-              <span className="w-2 h-2 rounded-full bg-brand-accent"></span>
+            <div className="fixed bottom-6 right-6 z-50 bg-black text-white px-5 py-3 shadow-2xl font-sans text-xs uppercase tracking-wider flex items-center gap-3 animate-fade-in border border-neutral-800">
+              <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
               <span>{toastMessage}</span>
             </div>
           )}
@@ -2243,6 +2751,7 @@
           <CartDrawer />
           <SizeGuideModal />
           <SearchModal />
+          <AuthModal />
         </div>
       );
     }

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Check } from 'lucide-react';
 
 export function DropCountdown() {
-  const [timeLeft, setTimeLeft] = useState({ days: 4, hours: 16, minutes: 42, seconds: 18 });
-  const [email, setEmail] = useState('');
-  const [signedUp, setSignedUp] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ days: 3, hours: 14, minutes: 22, seconds: 40 });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -19,27 +16,22 @@ export function DropCountdown() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    if (email) setSignedUp(true);
-  };
-
   return (
     <section id="drops-section" className="py-24 bg-brand-surface/70 border-b border-brand-border relative overflow-hidden">
       <div className="max-w-5xl mx-auto px-6 text-center">
         
         <span className="text-[11px] font-mono uppercase tracking-mega text-brand-accent block mb-2">
-          Next Archive Release
+          Next Drop Scheduled
         </span>
         <h2 className="font-editorial text-3xl sm:text-5xl font-bold tracking-widest text-brand-light uppercase mb-4">
-          DROP 02 // MONOCHROME MONOLITH
+          DROP 02 // DELHI UNDERGROUND
         </h2>
         <p className="max-w-xl mx-auto text-xs sm:text-sm font-light text-brand-muted mb-12">
-          Strictly limited to 150 pieces worldwide. Heavyweight Japanese Melton wool outerwear, technical trousers, and raw silver accessories.
+          Strictly limited to 100 numbered pieces. Heavyweight 340 GSM French Terry hoodies and curated vintage thrift outerwear.
         </p>
 
         {/* Countdown Clock Grid */}
-        <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-lg mx-auto font-mono mb-12">
+        <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-lg mx-auto font-mono">
           {[
             { label: 'DAYS', val: timeLeft.days },
             { label: 'HOURS', val: timeLeft.hours },
@@ -55,33 +47,6 @@ export function DropCountdown() {
               </span>
             </div>
           ))}
-        </div>
-
-        {/* VIP Early Access Sign Up Form */}
-        <div className="max-w-md mx-auto">
-          {signedUp ? (
-            <div className="p-4 bg-brand-dark rounded border border-green-500/40 text-green-400 font-mono text-xs flex items-center justify-center gap-2">
-              <Check size={15} />
-              <span>VIP Access Confirmed. Password sent 1 hour prior to drop.</span>
-            </div>
-          ) : (
-            <form onSubmit={handleSignup} className="flex gap-2">
-              <input 
-                type="email" 
-                required
-                placeholder="ENTER EMAIL FOR 1-HR EARLY ACCESS" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-brand-dark border border-brand-border rounded px-4 py-3 text-xs font-mono text-brand-light focus:outline-none focus:border-brand-muted placeholder:text-brand-muted/70"
-              />
-              <button 
-                type="submit"
-                className="px-6 py-3 bg-brand-light hover:bg-white text-brand-black font-mono text-xs font-bold uppercase tracking-wider rounded transition-all"
-              >
-                Join VIP
-              </button>
-            </form>
-          )}
         </div>
 
       </div>

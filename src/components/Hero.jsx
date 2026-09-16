@@ -7,7 +7,7 @@ export function Hero() {
       <div className="absolute inset-0 z-0">
         <img 
           src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2000&q=90" 
-          alt="PUNK THRIFT IN Campaign" 
+          alt="PUNK STUDIOS Campaign" 
           className="w-full h-full object-cover object-center filter brightness-[0.38] contrast-125 scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-brand-black/60"></div>
@@ -19,10 +19,11 @@ export function Hero() {
           <span>DROP 01 // BATCH 01 // DELHI, INDIA</span>
         </div>
 
+        {/* Clean Headline without '// IN' */}
         <h1 className="font-editorial text-4xl sm:text-6xl md:text-8xl font-black tracking-widest text-brand-light uppercase leading-[1.05] mb-6">
           PUNK THRIFT<br/>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-light via-brand-bone to-brand-muted">
-            STUDIOS // IN
+            STUDIOS
           </span>
         </h1>
 
