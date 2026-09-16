@@ -1,35 +1,31 @@
-import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
+import {v2 as cloudinary} from "cloudinary"
+import fs from "fs"
 
-// Configure Cloudinary. If missing, it won't crash immediately but will use dummy values
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'mock_name',
-  api_key: process.env.CLOUDINARY_API_KEY || 'mock_key',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'mock_secret',
+
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
 const uploadOnCloudinary = async (localFilePath) => {
-  try {
-    if (!localFilePath) return null;
-    
-    // Mock upload if Cloudinary is not configured yet
-    if (!process.env.CLOUDINARY_CLOUD_NAME) {
-      console.log("⚠️ Cloudinary not configured in .env. Mocking upload for testing.");
-      if (fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
-      return { secure_url: "https://via.placeholder.com/150" };
+    try {
+        if (!localFilePath) return null
+        //upload the file on cloudinary
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: "auto"
+        })
+        // file has been uploaded successfull
+        //console.log("file is uploaded on cloudinary ", response.url);
+        fs.unlinkSync(localFilePath)
+        return response;
+
+    } catch (error) {
+        fs.unlinkSync(localFilePath) // remove the locally saved temporary file as the upload operation got failed
+        return null;
     }
+}
 
-    const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto",
-    });
-    
-    if (fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
-    return response;
-  } catch (error) {
-    if (fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
-    console.error("Cloudinary Error:", error);
-    return null;
-  }
-};
 
-export { uploadOnCloudinary };
+
+export {uploadOnCloudinary}

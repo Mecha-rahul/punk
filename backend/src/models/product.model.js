@@ -22,11 +22,10 @@ const productSchema = new Schema(
       type: String,
       required: [true, "Category is required"],
       trim: true,
-      // e.g. "t-shirts", "hoodies", "accessories"
     },
     sizes: {
       type: [String],
-      enum: ["XS", "S", "M", "L", "XL", "XXL"],
+      enum: [ "S", "M", "L", ],
       default: [],
     },
     stock: {
@@ -36,8 +35,6 @@ const productSchema = new Schema(
       default: 0,
     },
     images: {
-      // Array of Cloudinary secure_url strings
-      // e.g. ["https://res.cloudinary.com/void-studios/..."]
       type: [String],
       default: [],
     },
@@ -45,9 +42,7 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
-// Attach aggregate paginate plugin so you can use .aggregatePaginate()
-// on aggregation pipelines — great for filtering + sorting + paginating
-// products without multiple round-trips.
+
 productSchema.plugin(mongooseAggregatePaginate);
 
 export const Product = mongoose.model("Product", productSchema);

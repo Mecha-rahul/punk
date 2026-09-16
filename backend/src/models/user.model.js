@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import jwt from "jsonwebtoken";   // ✅ fixed: was "jasonwebtoken"
+import jwt from "jsonwebtoken";   
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
@@ -26,18 +26,9 @@ const userSchema = new mongoose.Schema(
       index: true,
     },
     avtaar: {
-      type: String, // cloudinary url
+      type: String, 
       required: true,
     },
-    coverImage: {
-      type: String, // cloudinary url
-    },
-    watchHistory: [
-      {
-        type: mongoose.Schema.Types.ObjectId, // ✅ fixed: was Mongoose.Schema.types
-        ref: "Video",
-      },
-    ],
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -49,7 +40,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ fixed: isModified() not modified(); added await; added return guard
+
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
@@ -59,7 +50,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-// ✅ fixed: added return; reads expiry from process.env
+
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -75,7 +66,7 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
-// ✅ fixed: added return; reads expiry from process.env
+
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
