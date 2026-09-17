@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BRAND, FOOTER_LINKS } from '../content/content'
-import { InstagramIcon, PinterestIcon, WhatsAppIcon } from './Icons'
+import { InstagramIcon, WhatsAppIcon } from './Icons'
 import { useStore } from '../context/StoreContext'
 
 // Dark charcoal footer — anchors the pastel page and matches the
@@ -17,7 +17,7 @@ export default function Footer() {
     setEmail('')
   }
 
-  const socialIcons = { Instagram: InstagramIcon, Pinterest: PinterestIcon, WhatsApp: WhatsAppIcon }
+  const socialIcons = { Instagram: InstagramIcon, WhatsApp: WhatsAppIcon }
 
   return (
     <footer className="bg-ink text-bg-primary">

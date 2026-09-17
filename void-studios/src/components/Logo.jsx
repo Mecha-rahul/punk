@@ -20,11 +20,6 @@ export default function Logo({ className = '' }) {
       <span className="font-wordmark text-[26px] leading-none tracking-[-0.01em] text-ink sm:text-[30px]">
         AKUMA
       </span>
-
-      {/* subtle kanji nod — hidden on tiny screens */}
-      <span className="hidden self-start pl-1 pt-1 text-[10px] font-light tracking-[0.3em] text-ink-soft md:inline">
-        悪魔
-      </span>
     </Link>
   )
 }

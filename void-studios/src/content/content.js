@@ -64,7 +64,6 @@ export const FOOTER_LINKS = {
   ],
   social: [
     { label: 'Instagram', href: '#' },
-    { label: 'Pinterest', href: '#' },
     { label: 'WhatsApp', href: '#' },
   ],
 }

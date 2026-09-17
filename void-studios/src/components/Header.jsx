@@ -51,8 +51,20 @@ export default function Header() {
       {/* ---- main bar ---- */}
       <div className="border-b border-line-soft bg-bg-primary">
         <div className="ak-shell flex h-16 items-center justify-between gap-4">
-          {/* LEFT: desktop nav / hamburger */}
-          <nav className="hidden lg:block">
+          {/* LEFT: wordmark + nav (hamburger takes over on mobile) */}
+          <div className="flex items-center gap-4 lg:gap-8">
+            <button
+              type="button"
+              className={iconBtn + ' -ml-2 lg:hidden'}
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+            >
+              <MenuIcon />
+            </button>
+
+            <Logo className="shrink-0" />
+
+            <nav className="hidden lg:block">
             <ul className="flex items-center gap-7">
               {NAV_LINKS.map((item) =>
                 item.children ? (
@@ -100,20 +112,7 @@ export default function Header() {
                 ),
               )}
             </ul>
-          </nav>
-
-          <button
-            type="button"
-            className={iconBtn + ' lg:hidden'}
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
-          >
-            <MenuIcon />
-          </button>
-
-          {/* CENTER: wordmark */}
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <Logo />
+            </nav>
           </div>
 
           {/* RIGHT: icon group */}
