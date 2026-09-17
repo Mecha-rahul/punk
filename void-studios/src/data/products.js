@@ -24,7 +24,7 @@ export const PRODUCTS = [
     images: [img('oni-blank-tee-1'), img('oni-blank-tee-2')],
     sizes: teeSizes,
     colors: ['Bone', 'Ink'],
-    description: 'Heavyweight 260 GSM boxy tee with tonal 悪魔 kanji at the back neck.',
+    description: 'Heavyweight 260 GSM boxy tee with tonal back-neck embroidery.',
     care: 'Cold machine wash. Do not bleach. Dry flat.',
     inStock: true,
     collections: ['new-arrivals'],

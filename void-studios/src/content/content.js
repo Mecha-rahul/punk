@@ -5,8 +5,7 @@
 
 export const BRAND = {
   name: 'AKUMA',
-  meaning: '悪魔',
-  tagline: 'Bold luxury streetwear. Limited drops. No restocks.',
+  tagline: 'Bold streetwear. Limited drops. No restocks.',
   footerBlurb:
     'AKUMA is a luxury streetwear label built on heavyweight fabric, restricted drops and archive-minded design.',
   copyright: '© 2026 AKUMA',
@@ -32,7 +31,7 @@ export const MARQUEE_SECONDARY = [
   'LIMITED UNITS PER DROP',
   '240–460 GSM HEAVYWEIGHT',
   'MADE IN INDIA',
-  'AKUMA 悪魔',
+  'AKUMA',
 ]
 
 // Hero slideshow — placeholder media slots; swap srcs when campaign
