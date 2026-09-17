@@ -1,6 +1,5 @@
 // Multi-column info band (GENRAGE-style) — quick reassurance links.
 const COLS = [
-  { title: 'Ships in 48 Hours', copy: 'Dispatched from the Delhi studio within two working days.' },
   { title: 'Easy 7-Day Exchange', copy: 'Size not right? Exchange within a week, no questions.' },
   { title: 'Talk to Us', copy: 'DM on Instagram or WhatsApp — a human replies, not a bot.' },
 ]
