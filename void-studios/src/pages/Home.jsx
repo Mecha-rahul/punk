@@ -6,7 +6,6 @@ import ProductGrid from '../components/ProductGrid'
 import VideoSection from '../components/VideoSection'
 import EditorialSplit from '../components/EditorialSplit'
 import FeaturedProduct from '../components/FeaturedProduct'
-import ReviewsCarousel from '../components/ReviewsCarousel'
 import InfoColumns from '../components/InfoColumns'
 import { HOME_SECTIONS, PRODUCTS, findProduct } from '../data/products'
 import { FEATURED_PRODUCT_ID } from '../content/content'
@@ -100,10 +99,7 @@ export default function Home() {
       {/* 10 — featured product spotlight */}
       <FeaturedProduct productId={FEATURED_PRODUCT_ID} />
 
-      {/* 11 — reviews */}
-      <ReviewsCarousel />
-
-      {/* 12 — info columns */}
+      {/* 11 — info columns */}
       <InfoColumns />
     </>
   )
