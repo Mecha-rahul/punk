@@ -17,7 +17,7 @@ export default function Logo({ className = '' }) {
       {/* ---- LogoIcon slot (future brand mark) ---- */}
       <span className="hidden h-8 w-8 place-items-center" data-logo-icon-slot />
 
-      <span className="font-wordmark text-[26px] leading-none tracking-[-0.01em] text-ink sm:text-[30px]">
+      <span className="font-wordmark text-[26px] leading-none tracking-[-0.01em] text-ink sm:text-[30px] nav:text-[24px]">
         AKUMA
       </span>
     </Link>

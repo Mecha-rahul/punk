@@ -10,7 +10,7 @@ import { NAV_LINKS } from '../content/content'
 import { useStore } from '../context/StoreContext'
 
 const iconBtn =
-  'relative inline-flex h-10 w-10 items-center justify-center text-ink transition-opacity hover:opacity-60'
+  'relative inline-flex h-10 w-9 items-center justify-center text-ink transition-opacity hover:opacity-60 lg:w-10'
 
 function CountBadge({ count }) {
   if (!count) return null
@@ -65,13 +65,13 @@ export default function Header() {
             <Logo className="shrink-0" />
 
             <nav className="hidden nav:block">
-            <ul className="flex items-center gap-4 lg:gap-7">
+            <ul className="flex items-center gap-3 lg:gap-7">
               {NAV_LINKS.map((item) =>
                 item.children ? (
-                  <li key={item.label} className="group flex items-stretch">
+                  <li key={item.label} className="nav-group group flex items-stretch">
                     <button
                       type="button"
-                      className="flex h-full items-center gap-1 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink transition-all duration-200 group-hover:text-accent"
+                      className="flex h-full items-center gap-1 whitespace-nowrap px-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink transition-all duration-200 group-hover:text-accent lg:px-3"
                     >
                       {item.label}
                       <ChevronDownIcon size={13} className="transition-transform duration-200 group-hover:rotate-180" />
@@ -129,7 +129,7 @@ export default function Header() {
                     <NavLink
                       to={item.to}
                       className={({ isActive }) =>
-                        `text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors ${
+                        `whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors ${
                           item.pill
                             ? 'rounded-full border border-accent/60 bg-accent/10 px-3 py-1.5 text-accent hover:bg-accent/20'
                             : item.dot
@@ -174,6 +174,9 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      {/* page dim behind the mega-menu — fades in when any nav group is hovered */}
+      <div className="ak-nav-overlay pointer-events-none absolute inset-x-0 top-full hidden h-screen bg-ink/25 opacity-0 transition-opacity duration-300 nav:block" aria-hidden="true" />
 
       {/* ---- mobile drawer ---- */}
       {mobileOpen && (

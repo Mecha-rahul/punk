@@ -6,7 +6,7 @@ export default {
       screens: {
         sm: '640px',
         md: '768px',
-        nav: '840px', // full nav row fits from here up (compact spacing below lg)
+        nav: '920px', // full nav row fits from here up (compact spacing below lg)
         lg: '1024px',
         xl: '1280px',
       },

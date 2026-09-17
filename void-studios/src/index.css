@@ -55,6 +55,11 @@
   }
 }
 
+/* nav hover 'pop' — page dims while a mega-menu group is hovered */
+header:has(.nav-group:hover) .ak-nav-overlay {
+  opacity: 1;
+}
+
 /* seamless marquee loop — track holds content twice, shifts by half */
 @keyframes ak-marquee-scroll {
   from { transform: translateX(0); }
