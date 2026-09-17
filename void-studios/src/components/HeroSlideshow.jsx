@@ -47,7 +47,7 @@ export default function HeroSlideshow({ autoplay = 5000 }) {
 
         {/* --- minimal overlay content --- */}
         <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.42em] text-ink/80">{slide.tagline}</p>
+          <p className="bg-ink px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.42em] text-bg-primary">{slide.tagline}</p>
           <h1 className="font-wordmark text-5xl leading-none tracking-[-0.01em] text-ink sm:text-7xl">
             AKUMA
           </h1>
