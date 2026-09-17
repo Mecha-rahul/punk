@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom'
 import { BRAND, FOOTER_LINKS } from '../content/content'
 import { InstagramIcon, WhatsAppIcon } from './Icons'
 
-// Dark charcoal footer — anchors the pastel page and matches the
-// "luxury but warm" palette (--text-primary bg, --bg-primary text).
+// Dark charcoal footer — anchors the pastel page (--text-primary bg, --bg-primary text).
 export default function Footer() {
   const socialIcons = { Instagram: InstagramIcon, WhatsApp: WhatsAppIcon }
 

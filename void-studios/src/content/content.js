@@ -7,7 +7,7 @@ export const BRAND = {
   name: 'AKUMA',
   tagline: 'Bold streetwear. Limited drops. No restocks.',
   footerBlurb:
-    'AKUMA is a luxury streetwear label built on heavyweight fabric, restricted drops and archive-minded design.',
+    'AKUMA is a streetwear label built on heavyweight fabric, restricted drops and archive-minded design.',
   copyright: '© 2026 AKUMA',
   madeIn: 'Made in India',
 }
