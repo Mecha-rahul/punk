@@ -1,133 +1,223 @@
-import React, { useState, useEffect } from 'react';
-import { useStore } from '../context/StoreContext';
-import { CURRENCIES } from '../data/products';
-import { ShoppingBag, Search, Menu, X, Ruler } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import AnnouncementBar from './AnnouncementBar'
+import Logo from './Logo'
+import SearchOverlay from './SearchOverlay'
+import {
+  SearchIcon, UserIcon, HeartIcon, BagIcon, MenuIcon, CloseIcon, ChevronDownIcon,
+} from './Icons'
+import { NAV_LINKS } from '../content/content'
+import { useStore } from '../context/StoreContext'
 
-export function Header() {
-  const { 
-    cartCount, 
-    setIsCartOpen, 
-    setIsSearchOpen, 
-    currency, 
-    setCurrency, 
-    setIsSizeGuideOpen 
-  } = useStore();
-  
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const iconBtn =
+  'relative inline-flex h-10 w-10 items-center justify-center text-ink transition-opacity hover:opacity-60'
 
+function CountBadge({ count }) {
+  if (!count) return null
+  return (
+    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center bg-accent px-1 text-[9px] font-bold leading-none text-white">
+      {count}
+    </span>
+  )
+}
+
+export default function Header() {
+  const { user, cartCount, wishlist, setCartOpen } = useStore()
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [openGroup, setOpenGroup] = useState(null) // mobile accordion: which dropdown is expanded
+  const navigate = useNavigate()
+  const headerRef = useRef(null)
+
+  // close overlays on navigation
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    setMobileOpen(false)
+    setSearchOpen(false)
+    setOpenGroup(null)
+  }, [navigate])
 
-  const scrollToSection = (id) => {
-    setMobileMenuOpen(false);
-    const el = document.getElementById(id);
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.pageYOffset - 80;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+  // lock body scroll while the mobile drawer is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
     }
-  };
+  }, [mobileOpen])
 
   return (
-    <header className={`sticky top-0 z-30 transition-all duration-300 ${isScrolled ? 'glass-nav border-b border-brand-border/60 py-3.5 shadow-2xl' : 'bg-brand-black/90 py-5'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        
-        {/* Left Nav */}
-        <nav className="hidden md:flex items-center gap-8 text-[12px] uppercase tracking-widest font-mono text-brand-muted">
-          <button onClick={() => scrollToSection('shop-section')} className="hover:text-brand-light transition-colors">Shop Archive</button>
-          <button onClick={() => scrollToSection('lookbook-section')} className="hover:text-brand-light transition-colors">Lookbook</button>
-          <button onClick={() => scrollToSection('drops-section')} className="hover:text-brand-light transition-colors flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-accent"></span>
-            Delhi Drops
+    <header ref={headerRef} className="sticky top-0 z-50">
+      <AnnouncementBar />
+
+      {/* ---- main bar ---- */}
+      <div className="border-b border-line-soft bg-bg-primary">
+        <div className="ak-shell flex h-16 items-center justify-between gap-4">
+          {/* LEFT: desktop nav / hamburger */}
+          <nav className="hidden lg:block">
+            <ul className="flex items-center gap-7">
+              {NAV_LINKS.map((item) =>
+                item.children ? (
+                  <li key={item.label} className="group relative">
+                    <button
+                      type="button"
+                      className="flex items-center gap-1 py-6 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink transition-colors group-hover:text-accent"
+                    >
+                      {item.label}
+                      <ChevronDownIcon size={13} className="transition-transform group-hover:rotate-180" />
+                    </button>
+                    {/* dropdown panel */}
+                    <div className="invisible absolute left-0 top-full z-50 w-56 border border-line-soft bg-bg-primary opacity-0 shadow-xl transition-all duration-150 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 translate-y-1">
+                      <ul className="py-2">
+                        {item.children.map((child) => (
+                          <li key={child.to}>
+                            <Link
+                              to={child.to}
+                              className="block px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-ink hover:bg-bg-secondary hover:underline hover:decoration-accent hover:underline-offset-4"
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </li>
+                ) : (
+                  <li key={item.label}>
+                    <NavLink
+                      to={item.to}
+                      className={({ isActive }) =>
+                        `text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors hover:text-accent ${
+                          item.accent
+                            ? 'text-accent'
+                            : isActive
+                              ? 'underline decoration-accent underline-offset-8'
+                              : 'text-ink'
+                        }`
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                ),
+              )}
+            </ul>
+          </nav>
+
+          <button
+            type="button"
+            className={iconBtn + ' lg:hidden'}
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
+          >
+            <MenuIcon />
           </button>
-          <button onClick={() => scrollToSection('about-section')} className="hover:text-brand-light transition-colors">Manifesto</button>
-        </nav>
 
-        {/* Mobile Menu Trigger */}
-        <button 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden text-brand-light p-1 focus:outline-none"
-          aria-label="Menu"
-        >
-          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-
-        {/* Center Logo -> PUNK STUDIOS */}
-        <div className="flex flex-col items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <span className="font-editorial text-2xl sm:text-3xl font-black tracking-mega text-brand-light hover:text-brand-bone transition-colors">
-            PUNK STUDIOS
-          </span>
-          <span className="text-[9px] font-mono tracking-ultra text-brand-muted -mt-1 uppercase">
-            Heavywear & Thrift Archive // Delhi
-          </span>
-        </div>
-
-        {/* Right Controls */}
-        <div className="flex items-center gap-3 sm:gap-5">
-          
-          {/* Currency Selector (INR Default) */}
-          <div className="relative group">
-            <select 
-              value={currency} 
-              onChange={(e) => setCurrency(e.target.value)}
-              className="bg-brand-dark/95 text-brand-light text-[11px] font-mono uppercase tracking-wider py-1.5 px-2 rounded border border-brand-border hover:border-brand-muted focus:outline-none cursor-pointer"
-            >
-              {Object.keys(CURRENCIES).map(curr => (
-                <option key={curr} value={curr} className="bg-brand-dark text-brand-light">
-                  {curr} ({CURRENCIES[curr].symbol})
-                </option>
-              ))}
-            </select>
+          {/* CENTER: wordmark */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <Logo />
           </div>
 
-          {/* Search Icon */}
-          <button 
-            onClick={() => setIsSearchOpen(true)}
-            className="text-brand-muted hover:text-brand-light transition-colors p-1"
-            title="Search Catalogue"
-          >
-            <Search size={19} />
-          </button>
-
-          {/* Size Guide Trigger */}
-          <button 
-            onClick={() => setIsSizeGuideOpen(true)}
-            className="hidden lg:flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-brand-muted hover:text-brand-light transition-colors border border-brand-border px-2.5 py-1 rounded hover:border-brand-muted/50"
-          >
-            <Ruler size={13} />
-            <span>Size Guide</span>
-          </button>
-
-          {/* Shopping Bag Button */}
-          <button 
-            onClick={() => setIsCartOpen(true)}
-            className="relative bg-brand-light hover:bg-white text-brand-black px-3.5 py-1.5 rounded-full font-mono text-[12px] font-bold flex items-center gap-2 transition-all hover:scale-[1.03] active:scale-95 shadow-lg shadow-white/5"
-          >
-            <ShoppingBag size={15} />
-            <span>BAG</span>
-            <span className="bg-brand-accent text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center font-bold">
-              {cartCount}
-            </span>
-          </button>
-
+          {/* RIGHT: icon group */}
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            <button type="button" className={iconBtn} onClick={() => setSearchOpen(true)} aria-label="Search">
+              <SearchIcon />
+            </button>
+            <Link
+              to={user ? '/account' : '/login'}
+              className={iconBtn}
+              aria-label={user ? 'Account' : 'Login'}
+              title={user ? `Hi, ${user.name}` : 'Login'}
+            >
+              <UserIcon />
+            </Link>
+            <Link to="/wishlist" className={iconBtn} aria-label="Wishlist">
+              <HeartIcon />
+              <CountBadge count={wishlist.length} />
+            </Link>
+            <button type="button" className={iconBtn} onClick={() => setCartOpen(true)} aria-label="Bag">
+              <BagIcon />
+              <CountBadge count={cartCount} />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden glass-nav border-b border-brand-border px-6 py-6 space-y-4 animate-fade-in text-sm font-mono tracking-widest uppercase">
-          <button onClick={() => scrollToSection('shop-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Shop Archive</button>
-          <button onClick={() => scrollToSection('lookbook-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Editorial Lookbook</button>
-          <button onClick={() => scrollToSection('drops-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40 flex items-center justify-between">
-            <span>Next Delhi Drop</span>
-            <span className="text-[10px] bg-brand-accent/20 text-brand-accent px-2 py-0.5 rounded border border-brand-accent/30">COUNTDOWN</span>
-          </button>
-          <button onClick={() => scrollToSection('about-section')} className="block w-full text-left py-2 text-brand-light border-b border-brand-border/40">Manifesto & Sourcing</button>
+      {/* ---- mobile drawer ---- */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-[70] lg:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
+          <div className="absolute inset-y-0 left-0 flex w-[86%] max-w-sm flex-col bg-bg-primary shadow-2xl">
+            <div className="flex items-center justify-between border-b border-line-soft px-5 py-4">
+              <Logo />
+              <button type="button" onClick={() => setMobileOpen(false)} aria-label="Close menu" className="p-1">
+                <CloseIcon />
+              </button>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto px-5 py-4">
+              <ul className="divide-y divide-line-soft">
+                {NAV_LINKS.map((item) =>
+                  item.children ? (
+                    <li key={item.label} className="py-1">
+                      <button
+                        type="button"
+                        onClick={() => setOpenGroup(openGroup === item.label ? null : item.label)}
+                        className="flex w-full items-center justify-between py-3 text-[12px] font-semibold uppercase tracking-[0.2em]"
+                        aria-expanded={openGroup === item.label}
+                      >
+                        {item.label}
+                        <ChevronDownIcon
+                          size={15}
+                          className={`transition-transform ${openGroup === item.label ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+                      {openGroup === item.label && (
+                        <ul className="pb-3 pl-3">
+                          {item.children.map((child) => (
+                            <li key={child.to}>
+                              <Link
+                                to={child.to}
+                                className="block py-2 text-[12px] uppercase tracking-[0.14em] text-ink-soft"
+                              >
+                                {child.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ) : (
+                    <li key={item.label} className="py-1">
+                      <Link
+                        to={item.to}
+                        className={`block py-3 text-[12px] font-semibold uppercase tracking-[0.2em] ${
+                          item.accent ? 'text-accent' : ''
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </nav>
+
+            <div className="border-t border-line-soft px-5 py-4 text-[11px] uppercase tracking-[0.18em] text-ink-soft">
+              {user ? (
+                <Link to="/account" className="block py-1">
+                  Hi, {user.name} — Account
+                </Link>
+              ) : (
+                <div className="flex gap-5">
+                  <Link to="/login" className="py-1">Sign In</Link>
+                  <Link to="/register" className="py-1">Create Account</Link>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
+
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
-  );
+  )
 }

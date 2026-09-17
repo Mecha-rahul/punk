@@ -1,226 +1,106 @@
-import React, { useState } from 'react';
-import { useStore } from '../context/StoreContext';
-import { ShoppingBag, X, CheckCircle, Trash2, Loader2, Lock, ShieldCheck } from 'lucide-react';
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { useStore } from '../context/StoreContext'
+import ProductImage from './ProductImage'
+import { CloseIcon, PlusIcon, MinusIcon, TrashIcon, BagIcon } from './Icons'
 
-export function CartDrawer() {
-  const { 
-    isCartOpen, 
-    setIsCartOpen, 
-    cart, 
-    removeFromCart, 
-    updateQuantity, 
-    formatPrice,
-    subtotalINR,
-    discountINR,
-    finalSubtotalINR,
-    discountPercent,
-    applyPromo,
-    shippingRemainingINR,
-    freeShippingThresholdINR
-  } = useStore();
+const fmt = (n) => `₹${n.toLocaleString('en-IN')}`
 
-  const [inputCode, setInputCode] = useState('');
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+// Slide-out mini cart — condensed line items, links to the full /cart page.
+export default function CartDrawer() {
+  const { cartOpen, setCartOpen, cartLines, cartSubtotal, updateQty, removeLine } = useStore()
 
-  if (!isCartOpen) return null;
+  // lock scroll while open
+  useEffect(() => {
+    document.body.style.overflow = cartOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [cartOpen])
 
-  const shippingProgress = Math.min(100, Math.round(((freeShippingThresholdINR - shippingRemainingINR) / freeShippingThresholdINR) * 100));
-
-  const handleCheckout = () => {
-    setIsCheckingOut(true);
-    setTimeout(() => {
-      setIsCheckingOut(false);
-      setCheckoutSuccess(true);
-    }, 1600);
-  };
+  if (!cartOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-brand-black/80 backdrop-blur-sm animate-fade-in flex justify-end">
-      <div 
-        className="w-full max-w-md bg-brand-dark border-l border-brand-border h-full flex flex-col justify-between shadow-2xl animate-fade-in text-brand-light"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="p-6 border-b border-brand-border flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ShoppingBag size={18} className="text-brand-accent" />
-            <h3 className="font-editorial text-lg font-bold tracking-widest uppercase">
-              Your Archive Bag ({cart.reduce((s, i) => s + i.quantity, 0)})
-            </h3>
-          </div>
-          <button 
-            onClick={() => { setIsCartOpen(false); setCheckoutSuccess(false); }}
-            className="w-8 h-8 rounded-full border border-brand-border hover:border-brand-muted flex items-center justify-center text-brand-muted hover:text-brand-light"
-          >
-            <X size={16} />
+    <div className="fixed inset-0 z-[75]">
+      <div className="absolute inset-0 bg-black/40" onClick={() => setCartOpen(false)} />
+      <aside className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-bg-primary shadow-2xl">
+        <div className="flex items-center justify-between border-b border-line-soft px-6 py-5">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.24em]">Your Bag ({cartLines.length})</p>
+          <button type="button" onClick={() => setCartOpen(false)} aria-label="Close bag" className="p-1 hover:opacity-60">
+            <CloseIcon />
           </button>
         </div>
 
-        {/* Free Shipping Milestone */}
-        <div className="bg-brand-surface px-6 py-3 border-b border-brand-border text-xs font-mono">
-          <div className="flex justify-between items-center mb-1.5 text-[11px]">
-            <span className="text-brand-muted uppercase">Free Pan-India Express Shipping</span>
-            <span className="font-bold text-brand-light">
-              {shippingRemainingINR === 0 ? 'UNLOCKED' : `${formatPrice(shippingRemainingINR)} remaining`}
-            </span>
+        {cartLines.length === 0 ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
+            <BagIcon size={44} className="text-ink-soft/50" />
+            <p className="text-sm text-ink-soft">Your bag is empty.</p>
+            <Link to="/new-arrivals" onClick={() => setCartOpen(false)} className="ak-btn-dark">
+              Shop New Arrivals
+            </Link>
           </div>
-          <div className="w-full h-1.5 bg-brand-dark rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-brand-accent transition-all duration-500 rounded-full"
-              style={{ width: `${shippingProgress}%` }}
-            ></div>
-          </div>
-        </div>
+        ) : (
+          <>
+            <ul className="flex-1 divide-y divide-line-soft overflow-y-auto px-6">
+              {cartLines.map((l) => (
+                <li key={`${l.productId}-${l.size}-${l.color}`} className="flex gap-4 py-4">
+                  <Link to={`/product/${l.productId}`} onClick={() => setCartOpen(false)} className="w-20 shrink-0">
+                    <div className="aspect-[4/5] bg-white">
+                      <ProductImage src={l.product.images[0]} alt={l.product.name} className="h-full w-full object-cover" />
+                    </div>
+                  </Link>
+                  <div className="flex flex-1 flex-col">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-[13px] font-medium">{l.product.name}</p>
+                        <p className="mt-0.5 text-[10px] uppercase tracking-[0.18em] text-ink-soft">
+                          {l.color} / Size {l.size}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeLine(l.productId, l.size, l.color)}
+                        aria-label={`Remove ${l.product.name}`}
+                        className="p-1 text-ink-soft hover:text-accent"
+                      >
+                        <TrashIcon size={15} />
+                      </button>
+                    </div>
+                    <div className="mt-auto flex items-center justify-between pt-3">
+                      <div className="flex items-center border border-line-soft">
+                        <button type="button" onClick={() => updateQty(l.productId, l.size, l.color, l.qty - 1)} aria-label="Decrease quantity" className="p-1.5 hover:bg-bg-secondary">
+                          <MinusIcon size={13} />
+                        </button>
+                        <span className="w-8 text-center text-xs">{l.qty}</span>
+                        <button type="button" onClick={() => updateQty(l.productId, l.size, l.color, l.qty + 1)} aria-label="Increase quantity" className="p-1.5 hover:bg-bg-secondary">
+                          <PlusIcon size={13} />
+                        </button>
+                      </div>
+                      <p className="text-[13px] font-medium">{fmt((l.product.salePrice ?? l.product.price) * l.qty)}</p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
 
-        {/* Cart Items */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {checkoutSuccess ? (
-            <div className="text-center py-16 space-y-4">
-              <div className="w-16 h-16 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 flex items-center justify-center mx-auto">
-                <CheckCircle size={32} />
+            <div className="border-t border-line-soft px-6 py-5">
+              <div className="flex items-center justify-between text-sm">
+                <span className="uppercase tracking-[0.18em] text-ink-soft text-[11px]">Subtotal</span>
+                <span className="font-semibold">{fmt(cartSubtotal)}</span>
               </div>
-              <h4 className="font-editorial text-xl font-bold uppercase tracking-wider text-brand-light">
-                Order Dispatched Simulation
-              </h4>
-              <p className="text-xs font-mono text-brand-muted max-w-xs mx-auto">
-                Thank you for ordering with PUNK.IN. Order confirmation sent via WhatsApp/SMS.
+              <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-ink-soft/70">
+                Shipping & taxes calculated at checkout
               </p>
-              <button 
-                onClick={() => { setIsCartOpen(false); setCheckoutSuccess(false); }}
-                className="mt-4 px-6 py-2.5 bg-brand-light text-brand-black font-mono text-xs font-bold rounded uppercase tracking-wider"
-              >
-                Continue Browsing
-              </button>
+              <Link to="/cart" onClick={() => setCartOpen(false)} className="ak-btn-dark mt-4 w-full">
+                View Bag
+              </Link>
+              <Link to="/checkout" onClick={() => setCartOpen(false)} className="ak-btn-outline mt-2 w-full">
+                Checkout
+              </Link>
             </div>
-          ) : cart.length === 0 ? (
-            <div className="text-center py-20 space-y-3">
-              <ShoppingBag size={36} className="text-brand-muted mx-auto stroke-1" />
-              <p className="font-mono text-sm text-brand-light uppercase">Your bag is empty</p>
-              <p className="text-xs font-mono text-brand-muted">Explore Drop 01 to add archival streetwear.</p>
-              <button 
-                onClick={() => setIsCartOpen(false)}
-                className="mt-4 px-6 py-2 bg-brand-surface border border-brand-border text-brand-light font-mono text-xs uppercase tracking-wider rounded hover:border-brand-muted"
-              >
-                Explore Catalogue
-              </button>
-            </div>
-          ) : (
-            cart.map(item => (
-              <div key={item.key} className="flex gap-4 p-3 bg-brand-surface rounded border border-brand-border/70">
-                <img src={item.image} alt={item.name} className="w-20 h-24 object-cover rounded bg-brand-dark" />
-                
-                <div className="flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex justify-between items-start">
-                      <h4 className="text-xs font-bold text-brand-light">{item.name}</h4>
-                      <button 
-                        onClick={() => removeFromCart(item.key)}
-                        className="text-brand-muted hover:text-brand-accent p-0.5"
-                        title="Remove"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-                    <p className="text-[11px] font-mono text-brand-muted mt-0.5">
-                      Size: <span className="text-brand-light font-bold">{item.size}</span> • Color: {item.color.name}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2 border-t border-brand-border/40 font-mono text-xs">
-                    <div className="flex items-center border border-brand-border rounded bg-brand-dark">
-                      <button 
-                        onClick={() => updateQuantity(item.key, -1)}
-                        className="px-2 py-0.5 text-brand-muted hover:text-brand-light"
-                      >
-                        -
-                      </button>
-                      <span className="px-2 text-[11px]">{item.quantity}</span>
-                      <button 
-                        onClick={() => updateQuantity(item.key, 1)}
-                        className="px-2 py-0.5 text-brand-muted hover:text-brand-light"
-                      >
-                        +
-                      </button>
-                    </div>
-                    <span className="font-bold text-brand-light">
-                      {formatPrice(item.priceINR * item.quantity)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Cart Footer */}
-        {cart.length > 0 && !checkoutSuccess && (
-          <div className="p-6 bg-brand-surface border-t border-brand-border space-y-4">
-            <div className="flex gap-2">
-              <input 
-                type="text" 
-                placeholder="PROMO CODE (e.g. PUNK10)" 
-                value={inputCode}
-                onChange={(e) => setInputCode(e.target.value)}
-                className="flex-1 bg-brand-dark border border-brand-border rounded px-3 py-2 text-xs font-mono uppercase text-brand-light focus:outline-none focus:border-brand-muted"
-              />
-              <button 
-                onClick={() => applyPromo(inputCode)}
-                className="px-4 py-2 bg-brand-zinc text-brand-light font-mono text-xs uppercase tracking-wider rounded hover:bg-zinc-700 transition-colors"
-              >
-                Apply
-              </button>
-            </div>
-
-            <div className="space-y-1.5 font-mono text-xs border-t border-brand-border/60 pt-3">
-              <div className="flex justify-between text-brand-muted">
-                <span>Subtotal</span>
-                <span>{formatPrice(subtotalINR)}</span>
-              </div>
-
-              {discountPercent > 0 && (
-                <div className="flex justify-between text-brand-accent">
-                  <span>VIP Discount ({discountPercent}%)</span>
-                  <span>-{formatPrice(discountINR)}</span>
-                </div>
-              )}
-
-              <div className="flex justify-between text-brand-muted">
-                <span>Express Pan-India Shipping</span>
-                <span>{shippingRemainingINR === 0 ? 'FREE' : formatPrice(150)}</span>
-              </div>
-
-              <div className="flex justify-between text-sm font-bold text-brand-light pt-2 border-t border-brand-border/60">
-                <span>Estimated Total (INR)</span>
-                <span>{formatPrice(finalSubtotalINR + (shippingRemainingINR === 0 ? 0 : 150))}</span>
-              </div>
-            </div>
-
-            <button 
-              onClick={handleCheckout}
-              disabled={isCheckingOut}
-              className="w-full py-4 bg-brand-accent hover:bg-brand-accentHover text-white font-mono text-xs font-bold tracking-widest uppercase rounded transition-all shadow-xl flex items-center justify-center gap-2 active:scale-98"
-            >
-              {isCheckingOut ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  <span>Processing Order...</span>
-                </>
-              ) : (
-                <>
-                  <Lock size={14} />
-                  <span>Proceed to Checkout • {formatPrice(finalSubtotalINR + (shippingRemainingINR === 0 ? 0 : 150))}</span>
-                </>
-              )}
-            </button>
-
-            <div className="text-[10px] font-mono text-brand-muted text-center flex items-center justify-center gap-2">
-              <ShieldCheck size={12} />
-              <span>UPI / Cards / NetBanking Supported • 7-Day Easy Returns</span>
-            </div>
-          </div>
+          </>
         )}
-
-      </div>
+      </aside>
     </div>
-  );
+  )
 }
