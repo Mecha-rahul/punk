@@ -49,7 +49,7 @@ export default function Header() {
       <AnnouncementBar />
 
       {/* ---- main bar ---- */}
-      <div className="border-b border-line-soft bg-bg-primary">
+      <div className="relative border-b border-line-soft bg-bg-primary">
         <div className="ak-shell flex h-16 items-center justify-between gap-4">
           {/* LEFT: wordmark + nav (hamburger takes over on mobile) */}
           <div className="flex items-center gap-4 lg:gap-8">
@@ -68,28 +68,60 @@ export default function Header() {
             <ul className="flex items-center gap-4 lg:gap-7">
               {NAV_LINKS.map((item) =>
                 item.children ? (
-                  <li key={item.label} className="group relative">
+                  <li key={item.label} className="group flex items-stretch">
                     <button
                       type="button"
-                      className="flex items-center gap-1 py-6 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink transition-colors group-hover:text-accent"
+                      className="flex h-full items-center gap-1 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink transition-all duration-200 group-hover:text-accent"
                     >
                       {item.label}
-                      <ChevronDownIcon size={13} className="transition-transform group-hover:rotate-180" />
+                      <ChevronDownIcon size={13} className="transition-transform duration-200 group-hover:rotate-180" />
                     </button>
-                    {/* dropdown panel */}
-                    <div className="invisible absolute left-0 top-full z-50 w-56 border border-line-soft bg-bg-primary opacity-0 shadow-xl transition-all duration-150 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 translate-y-1">
-                      <ul className="py-2">
-                        {item.children.map((child) => (
-                          <li key={child.to}>
+
+                    {/* full-width mega-menu — opens under the whole bar on hover */}
+                    <div className="invisible absolute left-0 top-full w-full translate-y-1 border-b border-line-soft bg-bg-primary opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                      <div className="ak-shell grid grid-cols-[1fr_280px] gap-10 py-8">
+                        {/* links */}
+                        <div>
+                          <ul className="grid max-w-md grid-cols-2 gap-x-8 gap-y-1">
+                            {item.children.map((child) => (
+                              <li key={child.to}>
+                                <Link
+                                  to={child.to}
+                                  className="group/link flex items-center justify-between border-b border-line-soft/60 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink transition-colors hover:text-accent"
+                                >
+                                  {child.label}
+                                  <span className="text-accent opacity-0 transition-opacity group-hover/link:opacity-100">→</span>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                          {item.viewAll && (
                             <Link
-                              to={child.to}
-                              className="block px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-ink hover:bg-bg-secondary hover:underline hover:decoration-accent hover:underline-offset-4"
+                              to={item.viewAll}
+                              className="mt-5 inline-block text-[11px] font-bold uppercase tracking-[0.22em] text-accent underline underline-offset-8 hover:opacity-70"
                             >
-                              {child.label}
+                              View All
                             </Link>
-                          </li>
-                        ))}
-                      </ul>
+                          )}
+                        </div>
+
+                        {/* promo tile — swap img when campaign art is ready */}
+                        {item.promo && (
+                          <Link to={item.viewAll ?? '/new-arrivals'} className="group/promo block">
+                            <div className="aspect-[4/3] overflow-hidden bg-bg-secondary">
+                              <img
+                                src={item.promo.img}
+                                alt=""
+                                onError={(e) => (e.currentTarget.style.display = 'none')}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover/promo:scale-105"
+                              />
+                            </div>
+                            <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.2em] text-ink group-hover/promo:text-accent">
+                              {item.promo.title}
+                            </p>
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </li>
                 ) : (
@@ -145,7 +177,7 @@ export default function Header() {
 
       {/* ---- mobile drawer ---- */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-[70] lg:hidden">
+        <div className="fixed inset-0 z-[70] nav:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
           <div className="absolute inset-y-0 left-0 flex w-[86%] max-w-sm flex-col bg-bg-primary shadow-2xl">
             <div className="flex items-center justify-between border-b border-line-soft px-5 py-4">

@@ -21,6 +21,41 @@ export const ANNOUNCEMENTS = [
 
 export const TRUST_BADGES = ['SHIPS FAST', 'LIMITED DROPS', 'NO RESTOCKS']
 
+// Scrolling marquee strips (GENRAGE-style architecture, AKUMA copy)
+export const MARQUEE_PRIMARY = [
+  'SHIPS UNDER 48 HOURS',
+  'NO RESTOCKS',
+  'FREE SHIPPING ABOVE ₹5,000',
+  'NEW DROP LIVE NOW',
+]
+export const MARQUEE_SECONDARY = [
+  'LIMITED UNITS PER DROP',
+  '240–460 GSM HEAVYWEIGHT',
+  'MADE IN INDIA',
+  'AKUMA 悪魔',
+]
+
+// Hero slideshow — placeholder media slots; swap srcs when campaign
+// assets exist. Slide transition style is intentionally simple for now
+// (owner will specify the final animation treatment later).
+export const HERO_SLIDES = [
+  { type: 'image', src: '/assets/hero/slide-1.jpg', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
+  { type: 'image', src: '/assets/hero/slide-2.jpg', tagline: 'Heavyweight. Limited. Gone Forever.', cta: 'Shop Hoodies', to: '/tops/hoodies' },
+  { type: 'image', src: '/assets/hero/slide-3.jpg', tagline: '悪魔 — Bold Luxury Streetwear', cta: 'Shop All', to: '/new-arrivals' },
+]
+
+// Mock reviews — replace with real reviews once backend lands
+export const REVIEWS = [
+  { name: 'Arjun M.', location: 'Delhi', product: 'Shinigami Hoodie', rating: 5, text: 'The fleece is unreal — heavier than anything I own. Fits boxy exactly as shown.' },
+  { name: 'Sana K.', location: 'Mumbai', product: 'Kanji Logo Tee', rating: 5, text: 'Wash it ten times, print still sits perfect. You can feel the quality immediately.' },
+  { name: 'Rohit V.', location: 'Bengaluru', product: 'Ronin Cargo Pant', rating: 4, text: 'Wide leg done right. Sizing chart was accurate, shipping took two days.' },
+  { name: 'Meher S.', location: 'Hyderabad', product: 'Kuro Straight Jean', rating: 5, text: 'The denim has real weight to it. Best jeans I have bought from an Indian brand.' },
+  { name: 'Kabir N.', location: 'Pune', product: 'Oni Cap', rating: 5, text: 'Clean embroidery, no cheap details. Bought a second one for my brother.' },
+]
+
+// Single-product spotlight section
+export const FEATURED_PRODUCT_ID = 'ak-004'
+
 // Header nav — structure drives the desktop dropdowns and the mobile accordion.
 export const NAV_LINKS = [
   { label: 'NEW ARRIVALS', to: '/new-arrivals' },
@@ -33,6 +68,8 @@ export const NAV_LINKS = [
       { label: 'FULL SLEEVE T-SHIRT', to: '/tops/full-sleeve' },
       { label: 'TANK TOPS', to: '/tops/tank-tops' },
     ],
+    viewAll: '/tops',
+    promo: { title: 'The Hoodie Edit', img: '/assets/mega/hoodies.jpg' },
   },
   {
     label: 'BOTTOMS',
@@ -41,6 +78,8 @@ export const NAV_LINKS = [
       { label: 'JEANS', to: '/bottoms/jeans' },
       { label: 'SHORTS', to: '/bottoms/shorts' },
     ],
+    viewAll: '/bottoms',
+    promo: { title: 'Denim & Cargos', img: '/assets/mega/bottoms.jpg' },
   },
   { label: 'BASICS', to: '/basics' },
   { label: 'ACCESSORIES', to: '/accessories' },

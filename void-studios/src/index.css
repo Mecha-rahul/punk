@@ -55,6 +55,15 @@
   }
 }
 
+/* seamless marquee loop — track holds content twice, shifts by half */
+@keyframes ak-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ak-marquee {
+  animation: ak-marquee-scroll 28s linear infinite;
+}
+
 /* thin scrollbar to match the minimal look */
 * {
   scrollbar-width: thin;
