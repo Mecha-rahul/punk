@@ -22,7 +22,6 @@ export const TRUST_BADGES = ['SHIPS FAST', 'LIMITED DROPS', 'NO RESTOCKS']
 
 // Scrolling marquee strips (GENRAGE-style architecture, AKUMA copy)
 export const MARQUEE_PRIMARY = [
-  'SHIPS UNDER 48 HOURS',
   'NO RESTOCKS',
   'FREE SHIPPING ABOVE ₹5,000',
   'NEW DROP LIVE NOW',
