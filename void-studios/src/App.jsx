@@ -29,6 +29,7 @@ export default function App() {
 
           {/* one reusable listing page drives every collection route */}
           <Route path="/new-arrivals" element={<CategoryPage mode="collection" id="new-arrivals" />} />
+          <Route path="/basics" element={<CategoryPage mode="collection" id="basics" />} />
           <Route path="/sale" element={<CategoryPage mode="collection" id="sale" />} />
           <Route path="/tops" element={<CategoryPage mode="category" id="tops" />} />
           <Route path="/tops/:subcategory" element={<CategoryPage mode="subcategory" id="tops" />} />

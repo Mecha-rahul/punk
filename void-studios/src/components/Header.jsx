@@ -55,7 +55,7 @@ export default function Header() {
           <div className="flex items-center gap-4 lg:gap-8">
             <button
               type="button"
-              className={iconBtn + ' -ml-2 lg:hidden'}
+              className={iconBtn + ' -ml-2 nav:hidden'}
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
             >
@@ -64,8 +64,8 @@ export default function Header() {
 
             <Logo className="shrink-0" />
 
-            <nav className="hidden lg:block">
-            <ul className="flex items-center gap-7">
+            <nav className="hidden nav:block">
+            <ul className="flex items-center gap-4 lg:gap-7">
               {NAV_LINKS.map((item) =>
                 item.children ? (
                   <li key={item.label} className="group relative">
@@ -93,19 +93,22 @@ export default function Header() {
                     </div>
                   </li>
                 ) : (
-                  <li key={item.label}>
+                  <li key={item.label} className="flex items-center">
                     <NavLink
                       to={item.to}
                       className={({ isActive }) =>
-                        `text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors hover:text-accent ${
-                          item.accent
-                            ? 'text-accent'
-                            : isActive
-                              ? 'underline decoration-accent underline-offset-8'
-                              : 'text-ink'
+                        `text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors ${
+                          item.pill
+                            ? 'rounded-full border border-accent/60 bg-accent/10 px-3 py-1.5 text-accent hover:bg-accent/20'
+                            : item.dot
+                              ? 'flex items-center gap-2 text-ink hover:text-accent'
+                              : isActive
+                                ? 'underline decoration-accent underline-offset-8 text-ink'
+                                : 'text-ink hover:text-accent'
                         }`
                       }
                     >
+                      {item.dot && <span className="h-2 w-2 rounded-full bg-accent" aria-hidden="true" />}
                       {item.label}
                     </NavLink>
                   </li>
@@ -188,10 +191,11 @@ export default function Header() {
                     <li key={item.label} className="py-1">
                       <Link
                         to={item.to}
-                        className={`block py-3 text-[12px] font-semibold uppercase tracking-[0.2em] ${
-                          item.accent ? 'text-accent' : ''
+                        className={`flex items-center gap-2 py-3 text-[12px] font-semibold uppercase tracking-[0.2em] ${
+                          item.pill ? 'text-accent' : 'text-ink'
                         }`}
                       >
+                        {item.dot && <span className="h-2 w-2 rounded-full bg-accent" aria-hidden="true" />}
                         {item.label}
                       </Link>
                     </li>

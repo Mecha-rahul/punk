@@ -42,8 +42,10 @@ export const NAV_LINKS = [
       { label: 'SHORTS', to: '/bottoms/shorts' },
     ],
   },
+  { label: 'BASICS', to: '/basics' },
   { label: 'ACCESSORIES', to: '/accessories' },
-  { label: 'SALE', to: '/sale', accent: true },
+  { label: 'CLEARANCE', to: '/sale', dot: true },
+  { label: 'SALE', to: '/sale', pill: true },
 ]
 
 export const FOOTER_LINKS = {

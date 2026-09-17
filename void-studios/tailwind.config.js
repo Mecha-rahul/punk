@@ -3,6 +3,13 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      screens: {
+        sm: '640px',
+        md: '768px',
+        nav: '840px', // full nav row fits from here up (compact spacing below lg)
+        lg: '1024px',
+        xl: '1280px',
+      },
       colors: {
         // Palette is mirrored from CSS variables in src/index.css — keep both in sync.
         'bg-primary': '#F1EDE7',

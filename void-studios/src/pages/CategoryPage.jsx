@@ -23,7 +23,7 @@ export default function CategoryPage({ mode, id }) {
 
   const { title, crumbs, products } = useMemo(() => {
     if (mode === 'collection') {
-      const titles = { 'new-arrivals': 'New Arrivals', sale: 'Sale' }
+      const titles = { 'new-arrivals': 'New Arrivals', sale: 'Sale', basics: 'Basics' }
       return {
         title: titles[id],
         crumbs: [{ label: 'Home', to: '/' }, { label: titles[id] }],
