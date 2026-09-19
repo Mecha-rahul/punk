@@ -14,7 +14,11 @@ app.use(
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || true,
+    // Comma-separated allow-list in production (e.g. the Vercel frontend);
+    // unset/true in dev so curl, Postman and mobile clients all work.
+    origin: process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim())
+      : true,
     credentials: true, // JWT cookies
   })
 );
