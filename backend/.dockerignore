@@ -1,0 +1,6 @@
+# Never bake secrets or local junk into the Railway image
+node_modules
+.env
+.env.*
+!.env.example
+*.log
