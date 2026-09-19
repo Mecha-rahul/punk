@@ -8,16 +8,26 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', terms: false })
   const [error, setError] = useState('')
 
-  const submit = (e) => {
+  const [busy, setBusy] = useState(false)
+
+  const submit = async (e) => {
     e.preventDefault()
     if (!form.name.trim()) return setError('Enter your name.')
     if (!/^\S+@\S+\.\S+$/.test(form.email)) return setError('Enter a valid email address.')
-    if (form.password.length < 6) return setError('Password must be at least 6 characters.')
+    if (form.password.length < 8) return setError('Password must be at least 8 characters.')
     if (form.password !== form.confirm) return setError('Passwords don’t match.')
     if (!form.terms) return setError('Please accept the terms to continue.')
-    register(form.name.trim(), form.email)
-    toast(`Welcome to AKUMA, ${form.name.split(' ')[0]}`)
-    navigate('/')
+    setBusy(true)
+    setError('')
+    try {
+      await register(form.name.trim(), form.email, form.password)
+      toast(`Welcome to AKUMA, ${form.name.split(' ')[0]}`)
+      navigate('/')
+    } catch (err) {
+      setError(err.message || 'Could not create your account.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   const field = (id, label, type, extra = {}) => (
@@ -61,7 +71,9 @@ export default function RegisterPage() {
 
             {error && <p className="text-[12px] font-medium text-accent">{error}</p>}
 
-            <button type="submit" className="ak-btn-dark w-full">Create Account</button>
+            <button type="submit" disabled={busy} className="ak-btn-dark w-full disabled:opacity-50">
+              {busy ? 'Creating account…' : 'Create Account'}
+            </button>
           </form>
 
           <p className="mt-6 text-center text-[12px] text-ink-soft">

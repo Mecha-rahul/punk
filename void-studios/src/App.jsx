@@ -1,9 +1,11 @@
+import { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import CartDrawer from './components/CartDrawer'
 import ToastStack from './components/ToastStack'
 import ScrollToTop from './components/ScrollToTop'
+import { useStore } from './context/StoreContext'
 
 import Home from './pages/Home'
 import CategoryPage from './pages/CategoryPage'
@@ -19,6 +21,13 @@ import SearchPage from './pages/SearchPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
+  // Kick the catalog load once at boot — direct visits to /product/:id
+  // and /category routes need the catalog before first render resolves.
+  const { boot, apiLive } = useStore()
+  useEffect(() => {
+    boot()
+  }, [boot])
+
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
@@ -28,14 +37,14 @@ export default function App() {
           <Route path="/" element={<Home />} />
 
           {/* one reusable listing page drives every collection route */}
-          <Route path="/new-arrivals" element={<CategoryPage mode="collection" id="new-arrivals" />} />
-          <Route path="/basics" element={<CategoryPage mode="collection" id="basics" />} />
-          <Route path="/sale" element={<CategoryPage mode="collection" id="sale" />} />
-          <Route path="/tops" element={<CategoryPage mode="category" id="tops" />} />
-          <Route path="/tops/:subcategory" element={<CategoryPage mode="subcategory" id="tops" />} />
-          <Route path="/bottoms" element={<CategoryPage mode="category" id="bottoms" />} />
-          <Route path="/bottoms/:subcategory" element={<CategoryPage mode="subcategory" id="bottoms" />} />
-          <Route path="/accessories" element={<CategoryPage mode="category" id="accessories" />} />
+          <Route path="/new-arrivals" element={<CategoryPage mode="collection" id="new-arrivals" apiLive={apiLive} />} />
+          <Route path="/basics" element={<CategoryPage mode="collection" id="basics" apiLive={apiLive} />} />
+          <Route path="/sale" element={<CategoryPage mode="collection" id="sale" apiLive={apiLive} />} />
+          <Route path="/tops" element={<CategoryPage mode="category" id="tops" apiLive={apiLive} />} />
+          <Route path="/tops/:subcategory" element={<CategoryPage mode="subcategory" id="tops" apiLive={apiLive} />} />
+          <Route path="/bottoms" element={<CategoryPage mode="category" id="bottoms" apiLive={apiLive} />} />
+          <Route path="/bottoms/:subcategory" element={<CategoryPage mode="subcategory" id="bottoms" apiLive={apiLive} />} />
+          <Route path="/accessories" element={<CategoryPage mode="category" id="accessories" apiLive={apiLive} />} />
 
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
