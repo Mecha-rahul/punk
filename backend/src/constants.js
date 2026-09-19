@@ -47,10 +47,19 @@ export const FREE_SHIPPING_THRESHOLD = 999; // in currency units, post-discount
 export const SHIPPING_FEE = 49;
 
 // ─── Auth cookies ────────────────────────────────────────────────────────────
+// Production default is `sameSite: "none"` (+ secure, forced below) because the
+// frontend (Vercel) and backend (Railway/Render) live on different sites —
+// "strict"/"lax" cookies are never sent on cross-site fetches, which would
+// silently break login. Set COOKIE_SAMESITE=lax if both share one site later.
+const sameSite =
+  process.env.COOKIE_SAMESITE ||
+  (process.env.NODE_ENV === "production" ? "none" : "strict");
+
 export const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production", // localhost dev sends over http
-  sameSite: "strict",
+  // Cross-site cookies REQUIRE Secure; localhost dev sends over http.
+  secure: process.env.NODE_ENV === "production" || sameSite === "none",
+  sameSite,
 };
 
 export const PASSWORD_RESET_TOKEN_TTL_MS = 15 * 60 * 1000;
