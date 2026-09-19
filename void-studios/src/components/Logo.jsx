@@ -1,31 +1,38 @@
 import { Link } from 'react-router-dom'
 
 /**
- * AKUMA wordmark.
- * - The <LogoIcon /> slot below is intentionally empty: drop the real
- *   brand mark (SVG/img) there when it's supplied.
- * - Wordmark font is controlled by tailwind's `font-wordmark`
- *   (Anton → Archivo Black fallback). Swap fonts in tailwind.config.js.
- * - `inverted` flips the wordmark to light — used when the header bar
- *   goes black on hover (genrage-style).
+ * AKUMA brand logo (image wordmark).
+ * - Default state renders logo-black.png. That source PNG has a baked-in
+ *   white background, so it's blended with `multiply` — the white melts
+ *   into the cream header and only the dark artwork shows.
+ * - `inverted` (header hover → black bar) renders logo-white.png, whose
+ *   baked-in black background is blended away with `screen` — black
+ *   disappears against the dark bar AND the gradient bleed below it, so
+ *   the mark's background reads as the bar melting downward. The mark
+ *   also swells slightly and sinks toward the gradient on hover.
+ *
+ * Sizes deliberately exceed the bar height on desktop for the default
+ * (black) mark: the PNG carries baked-in whitespace that `multiply`
+ * renders invisible, so an 80px image still paints as a tasteful,
+ * readable mark instead of a giant block.
  */
 export default function Logo({ className = '', inverted = false }) {
   return (
     <Link
       to="/"
       aria-label="AKUMA — home"
-      className={`inline-flex items-center gap-2 ${className}`}
+      className={`inline-flex items-center ${className}`}
     >
-      {/* ---- LogoIcon slot (future brand mark) ---- */}
-      <span className="hidden h-8 w-8 place-items-center" data-logo-icon-slot />
-
-      <span
-        className={`font-wordmark text-[26px] leading-none tracking-[-0.01em] sm:text-[30px] nav:text-[24px] ${
-          inverted ? 'text-bg-primary' : 'text-ink'
+      <img
+        src={inverted ? '/assets/brand/logo-white.png' : '/assets/brand/logo-black.png'}
+        alt="AKUMA"
+        className={`w-auto -my-1 transition-all duration-300 ${
+          inverted
+            ? 'h-10 sm:h-12 nav:h-14 mix-blend-screen scale-110 origin-left translate-y-1'
+            : 'h-12 sm:h-16 nav:h-20 mix-blend-multiply'
         }`}
-      >
-        AKUMA
-      </span>
+        draggable="false"
+      />
     </Link>
   )
 }
