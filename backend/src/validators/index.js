@@ -152,6 +152,7 @@ export const createProductSchema = z.object({
     basePrice: z.coerce.number().min(0, "basePrice must be >= 0"),
     variants: z.array(variantSchema).min(1, "at least one variant is required"),
     isFeatured: z.boolean().optional(),
+    collections: z.array(z.string().trim().toLowerCase()).optional(),
   }),
 });
 
@@ -165,6 +166,7 @@ export const updateProductSchema = z.object({
       brand: objectId.optional(),
       basePrice: z.coerce.number().min(0).optional(),
       isFeatured: z.boolean().optional(),
+      collections: z.array(z.string().trim().toLowerCase()).optional(),
       variants: z.array(variantSchema).min(1).optional(),
     })
     .strip(),
