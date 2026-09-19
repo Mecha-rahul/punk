@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log*
+.env
+.env.*
+!.env.example
+public/temp/*
+scripts/.memory-mongo-uri
+.git
+Dockerfile
+.dockerignore
