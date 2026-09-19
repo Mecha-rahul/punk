@@ -10,6 +10,11 @@ import { Link } from 'react-router-dom'
  *   disappears against the dark bar AND the gradient bleed below it, so
  *   the mark's background reads as the bar melting downward. The mark
  *   also swells slightly and sinks toward the gradient on hover.
+ *
+ * Sizes deliberately exceed the bar height on desktop for the default
+ * (black) mark: the PNG carries baked-in whitespace that `multiply`
+ * renders invisible, so an 80px image still paints as a tasteful,
+ * readable mark instead of a giant block.
  */
 export default function Logo({ className = '', inverted = false }) {
   return (
@@ -21,10 +26,10 @@ export default function Logo({ className = '', inverted = false }) {
       <img
         src={inverted ? '/assets/brand/logo-white.png' : '/assets/brand/logo-black.png'}
         alt="AKUMA"
-        className={`h-10 w-auto sm:h-12 nav:h-14 -my-1 transition-all duration-300 ${
+        className={`w-auto -my-1 transition-all duration-300 ${
           inverted
-            ? 'mix-blend-screen scale-110 origin-left translate-y-1'
-            : 'mix-blend-multiply'
+            ? 'h-10 sm:h-12 nav:h-14 mix-blend-screen scale-110 origin-left translate-y-1'
+            : 'h-12 sm:h-16 nav:h-20 mix-blend-multiply'
         }`}
         draggable="false"
       />
