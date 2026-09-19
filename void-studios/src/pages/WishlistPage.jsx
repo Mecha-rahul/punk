@@ -1,12 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
-import { findProduct } from '../data/products'
 import ProductCard from '../components/ProductCard'
 import { HeartIcon } from '../components/Icons'
 
 export default function WishlistPage() {
-  const { wishlist, toggleWishlist, addToCart, toast } = useStore()
-  const products = wishlist.map(findProduct).filter(Boolean)
+  const { catalog, wishlist, addToCart, toast } = useStore()
+  const products = wishlist.map((id) => catalog.find((p) => p.id === id)).filter(Boolean)
 
   const moveAllToBag = () => {
     products.forEach((p) => {

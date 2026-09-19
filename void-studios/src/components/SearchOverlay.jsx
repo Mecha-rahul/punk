@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CloseIcon, SearchIcon } from './Icons'
-import { PRODUCTS } from '../data/products'
+import { useStore } from '../context/StoreContext'
 
-// Fullscreen search overlay. Typing filters the mock catalog live;
+// Fullscreen search overlay. Typing filters the catalog live;
 // submitting routes to /search?q=… for the full results page.
 export default function SearchOverlay({ open, onClose }) {
   const [q, setQ] = useState('')
   const inputRef = useRef(null)
   const navigate = useNavigate()
+  const { catalog } = useStore()
 
   useEffect(() => {
     if (open) {
@@ -23,10 +24,10 @@ export default function SearchOverlay({ open, onClose }) {
   const suggestions = useMemo(() => {
     const term = q.trim().toLowerCase()
     if (!term) return []
-    return PRODUCTS.filter((p) =>
+    return catalog.filter((p) =>
       `${p.name} ${p.category} ${p.subcategory}`.toLowerCase().includes(term),
     ).slice(0, 6)
-  }, [q])
+  }, [q, catalog])
 
   if (!open) return null
 
