@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import ProductGrid from '../components/ProductGrid'
-import { PRODUCTS } from '../data/products'
+import { useStore } from '../context/StoreContext'
 
 // Single reusable listing page — every category, subcategory and
 // collection route renders this with a different filter. No duplication.
@@ -18,8 +18,9 @@ const SUBCATEGORY_LABELS = {
 
 const CATEGORY_TITLES = { tops: 'Tops', bottoms: 'Bottoms', accessories: 'Accessories' }
 
-export default function CategoryPage({ mode, id }) {
+export default function CategoryPage({ mode, id, apiLive }) {
   const { subcategory } = useParams()
+  const { catalog } = useStore()
 
   const { title, crumbs, products } = useMemo(() => {
     if (mode === 'collection') {
@@ -29,8 +30,8 @@ export default function CategoryPage({ mode, id }) {
         crumbs: [{ label: 'Home', to: '/' }, { label: titles[id] }],
         products:
           id === 'sale'
-            ? PRODUCTS.filter((p) => p.salePrice != null)
-            : PRODUCTS.filter((p) => p.collections?.includes(id)),
+            ? catalog.filter((p) => p.salePrice != null)
+            : catalog.filter((p) => p.collections?.includes(id)),
       }
     }
     if (mode === 'subcategory') {
@@ -42,16 +43,16 @@ export default function CategoryPage({ mode, id }) {
           { label: CATEGORY_TITLES[id], to: `/${id}` },
           { label },
         ],
-        products: PRODUCTS.filter((p) => p.category === id && p.subcategory === subcategory),
+        products: catalog.filter((p) => p.category === id && p.subcategory === subcategory),
       }
     }
     // category parent page
     return {
       title: CATEGORY_TITLES[id],
       crumbs: [{ label: 'Home', to: '/' }, { label: CATEGORY_TITLES[id] }],
-      products: PRODUCTS.filter((p) => p.category === id),
+      products: catalog.filter((p) => p.category === id),
     }
-  }, [mode, id, subcategory])
+  }, [mode, id, subcategory, catalog])
 
   return (
     <div className="bg-bg-primary">
@@ -78,7 +79,12 @@ export default function CategoryPage({ mode, id }) {
       </div>
 
       <div className="ak-shell py-12">
-        {products.length ? (
+        {/* API still loading its first page — don't flash the empty state */}
+        {apiLive === null && products.length === 0 ? (
+          <div className="py-20 text-center">
+            <p className="font-wordmark text-2xl uppercase text-ink/25">Loading…</p>
+          </div>
+        ) : products.length ? (
           <ProductGrid products={products} />
         ) : (
           <div className="py-20 text-center">

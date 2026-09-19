@@ -93,6 +93,13 @@ const productSchema = new mongoose.Schema(
       default: false,
       index: true,
     },
+    collections: {
+      // merchandising tags consumed by the storefront: new-arrivals,
+      // top-picks, basics, sale…
+      type: [String],
+      default: [],
+      index: true,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

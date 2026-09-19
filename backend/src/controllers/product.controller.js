@@ -73,7 +73,7 @@ const listProducts = asyncHandler(async (req, res) => {
       .sort(sortMap[q.sort] || sortMap.newest)
       .skip(skip)
       .limit(limit)
-      .populate("category", "name slug")
+      .populate({ path: "category", select: "name slug parentCategory", populate: { path: "parentCategory", select: "name slug" } })
       .populate("brand", "name slug"),
     Product.countDocuments(filter),
   ]);
@@ -92,7 +92,7 @@ const getProductBySlug = asyncHandler(async (req, res) => {
   const { slug } = req.validatedParams;
 
   const product = await Product.findOne({ slug, isDeleted: false })
-    .populate("category", "name slug")
+    .populate({ path: "category", select: "name slug parentCategory", populate: { path: "parentCategory", select: "name slug" } })
     .populate("brand", "name slug logoUrl");
   ensureFound(product, "Product not found");
 
@@ -137,7 +137,7 @@ const prepareVariants = (productName, variants = []) =>
   }));
 
 const createProduct = asyncHandler(async (req, res) => {
-  const { name, description, category, brand, basePrice, variants, isFeatured } = req.body;
+  const { name, description, category, brand, basePrice, variants, isFeatured, collections } = req.body;
 
   await verifyProductRefs({ category, brand });
 
@@ -151,6 +151,7 @@ const createProduct = asyncHandler(async (req, res) => {
     basePrice,
     variants: prepareVariants(name, variants),
     isFeatured: isFeatured || false,
+    collections: collections || [],
   });
 
   return res.status(201).json(new ApiResponse(201, { product }, "Product created"));
@@ -158,7 +159,7 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.validatedParams;
-  const { name, description, category, brand, basePrice, isFeatured, variants } = req.body;
+  const { name, description, category, brand, basePrice, isFeatured, variants, collections } = req.body;
 
   const product = await Product.findById(id);
   ensureFound(product, "Product not found");
@@ -175,6 +176,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   if (brand !== undefined) product.brand = brand;
   if (basePrice !== undefined) product.basePrice = basePrice;
   if (isFeatured !== undefined) product.isFeatured = isFeatured;
+  if (collections !== undefined) product.collections = collections;
 
   if (variants !== undefined) {
     // Replace semantics: keeps existing SKUs (and their stock) when the same
