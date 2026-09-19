@@ -2,56 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------
+   AKUMA design tokens — edit palette here; tailwind.config.js mirrors
+   these values. The accent maroon is reserved for SALE signals only.
+------------------------------------------------------------------- */
+:root {
+  --bg-primary: #f1ede7;
+  --bg-secondary: #e7e0d6;
+  --bg-section-alt: #dcd6cb;
+  --text-primary: #1b1815;
+  --text-secondary: #5c554c;
+  --accent: #7a0000; /* muted maroon — the "devil" nod */
+  --accent-alt: #3a3a3a; /* graphite alternative, unused by default */
+  --border: #c9c1b4;
+  --white: #ffffff;
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-brand-black text-brand-light font-sans antialiased selection:bg-brand-accent selection:text-white min-h-screen;
+    @apply bg-[color:var(--bg-primary)] text-[color:var(--text-primary)] font-body antialiased;
+  }
+  ::selection {
+    background: var(--text-primary);
+    color: var(--bg-primary);
   }
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.editorial-gradient {
-  background: linear-gradient(180deg, rgba(7,7,7,0) 0%, rgba(7,7,7,0.85) 75%, rgba(7,7,7,1) 100%);
+@layer components {
+  .ak-shell {
+    @apply mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-10;
+  }
+  .ak-btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 border;
+  }
+  .ak-btn-dark {
+    @apply ak-btn border-[color:var(--text-primary)] bg-[color:var(--text-primary)] text-[color:var(--bg-primary)] hover:bg-transparent hover:text-[color:var(--text-primary)];
+  }
+  .ak-btn-outline {
+    @apply ak-btn border-[color:var(--text-primary)] bg-transparent text-[color:var(--text-primary)] hover:bg-[color:var(--text-primary)] hover:text-[color:var(--bg-primary)];
+  }
+  .ak-section-title {
+    @apply font-wordmark text-2xl sm:text-3xl uppercase tracking-wide text-[color:var(--text-primary)];
+  }
+  .ak-input {
+    @apply w-full border border-[color:var(--border)] bg-white px-4 py-3 text-sm text-[color:var(--text-primary)] placeholder:text-ink-soft/60 focus:border-[color:var(--text-primary)] focus:outline-none;
+  }
+  .ak-label {
+    @apply mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[color:var(--text-secondary)];
+  }
 }
 
-.glass-nav {
-  background: rgba(10, 10, 10, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+/* nav hover 'pop' — page dims while a mega-menu group is hovered */
+header:has(.nav-group:hover) .ak-nav-overlay {
+  opacity: 1;
 }
 
-.glass-card {
-  background: rgba(20, 20, 20, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+/* seamless marquee loop — track holds content twice, shifts by half */
+@keyframes ak-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ak-marquee {
+  animation: ak-marquee-scroll 28s linear infinite;
 }
 
-.drag-cursor {
-  cursor: grab;
-}
-.drag-cursor:active {
-  cursor: grabbing;
+/* thin scrollbar to match the minimal look */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }

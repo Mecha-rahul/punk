@@ -1,42 +1,72 @@
-import React from 'react';
+import { Link } from 'react-router-dom'
+import { BRAND, FOOTER_LINKS } from '../content/content'
+import { InstagramIcon, WhatsAppIcon } from './Icons'
 
-export function Footer() {
+// Dark charcoal footer — anchors the pastel page (--text-primary bg, --bg-primary text).
+export default function Footer() {
+  const socialIcons = { Instagram: InstagramIcon, WhatsApp: WhatsAppIcon }
+
   return (
-    <footer className="bg-brand-black border-t border-brand-border py-16 text-brand-muted font-mono text-xs">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
-        
-        {/* Col 1: Brand Info */}
-        <div className="space-y-3">
-          <span className="font-editorial text-2xl font-black tracking-mega text-brand-light block">
-            PUNK STUDIOS
-          </span>
-          <p className="text-[11px] leading-relaxed text-brand-muted max-w-sm">
-            Heavyweight streetwear and archival thrift studios based in New Delhi, India. Milled with 200–340 GSM Indian combed cotton and custom hardware.
+    <footer className="bg-ink text-bg-primary">
+      <div className="ak-shell grid gap-10 py-14 sm:grid-cols-3 lg:gap-8">
+        {/* brand */}
+        <div>
+          <p className="font-wordmark text-2xl tracking-[-0.01em]">AKUMA</p>
+          <p className="mt-3 max-w-xs text-[13px] leading-relaxed text-bg-primary/70">
+            {BRAND.footerBlurb}
           </p>
-          <div className="pt-2 text-[10px] text-brand-zinc">
-            © 2026 PUNK STUDIOS. ALL RIGHTS RESERVED. NEW DELHI, INDIA.
+          <div className="mt-5 flex gap-3">
+            {FOOTER_LINKS.social.map((s) => {
+              const Icon = socialIcons[s.label]
+              return (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  className="flex h-9 w-9 items-center justify-center border border-bg-primary/25 transition-colors hover:border-bg-primary"
+                >
+                  <Icon size={16} />
+                </a>
+              )
+            })}
           </div>
         </div>
 
-        {/* Col 2: Directory */}
-        <div className="space-y-2 uppercase tracking-wider text-[11px]">
-          <span className="text-brand-light font-bold block mb-3">Catalogue</span>
-          <a href="#shop-section" className="block hover:text-brand-light transition-colors">Shop Batch 01</a>
-          <a href="#lookbook-section" className="block hover:text-brand-light transition-colors">Delhi Lookbook</a>
-          <a href="#drops-section" className="block hover:text-brand-light transition-colors">Drop Countdown</a>
-          <a href="#about-section" className="block hover:text-brand-light transition-colors">Sourcing Manifesto</a>
-        </div>
+        {/* shop */}
+        <nav aria-label="Shop">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-bg-primary/60">Shop</p>
+          <ul className="mt-4 space-y-2.5">
+            {FOOTER_LINKS.shop.map((l) => (
+              <li key={l.label}>
+                <Link to={l.to} className="text-[13px] text-bg-primary/80 transition-colors hover:text-bg-primary hover:underline hover:underline-offset-4">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        {/* Col 3: Customer Service */}
-        <div className="space-y-2 uppercase tracking-wider text-[11px]">
-          <span className="text-brand-light font-bold block mb-3">Customer Care</span>
-          <a href="#" className="block hover:text-brand-light transition-colors">Pan-India Express Delivery</a>
-          <a href="#" className="block hover:text-brand-light transition-colors">UPI / Cards / NetBanking</a>
-          <a href="#" className="block hover:text-brand-light transition-colors">7-Day Easy Returns</a>
-          <a href="#" className="block hover:text-brand-light transition-colors">Delhi Studio Concierge</a>
-        </div>
+        {/* support */}
+        <nav aria-label="Support">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-bg-primary/60">Support</p>
+          <ul className="mt-4 space-y-2.5">
+            {FOOTER_LINKS.support.map((l) => (
+              <li key={l.label}>
+                <Link to={l.to} className="text-[13px] text-bg-primary/80 transition-colors hover:text-bg-primary hover:underline hover:underline-offset-4">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
       </div>
+
+      <div className="border-t border-bg-primary/15">
+        <div className="ak-shell flex flex-col items-center justify-center gap-3 py-5 text-[10px] uppercase tracking-[0.22em] text-bg-primary/50 sm:flex-row">
+          <p>{BRAND.copyright} · {BRAND.madeIn}</p>
+        </div>
+      </div>
     </footer>
-  );
+  )
 }

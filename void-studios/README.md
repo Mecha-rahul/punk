@@ -1,79 +1,44 @@
-# PUNK.IN — Heavyweight Streetwear & Archival Thrift Studios (Delhi, India)
+# AKUMA — Streetwear Storefront (Frontend)
 
-[![React](https://img.shields.io/badge/React-18-black?style=flat&logo=react)](https://reactjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-black?style=flat&logo=tailwindcss)](https://tailwindcss.com/)
-[![Vite](https://img.shields.io/badge/Vite-5.4-black?style=flat&logo=vite)](https://vitejs.dev/)
-[![GitHub](https://img.shields.io/badge/Repository-piyushpant--rgb%2FPUNK.in-black?style=flat&logo=github)](https://github.com/piyushpant-rgb/PUNK.in)
+Bold luxury streetwear brand site. Vite + React + Tailwind, frontend-only with mock data and local state, structured so a backend can be wired in without rewrites. 悪魔
 
-An architectural, editorial e-commerce platform engineered for **PUNK.IN / PUNK THRIFT STUDIOS**, based in **New Delhi, India**.
+## Run it
 
----
-
-## 🇮🇳 Features Tailored for PUNK.IN
-
-1. **INR Default Currency (₹)**:
-   - Full Indian Rupee integration with standard `₹` pricing (`₹1,399`, `₹2,899`, etc.).
-   - Multi-currency switcher supported for international clients (`USD $`, `EUR €`, `GBP £`).
-   - Free Pan-India express delivery milestone progress meter (Free shipping on orders above ₹2,499).
-
-2. **Image Gallery with Next / Prev (`<` `>`) Swipe Buttons**:
-   - Easily cycle through all product angles with interactive swipe/slide buttons on the main view.
-   - Keyboard arrow (`←` `→`) navigation & horizontal thumbnail strip.
-
-3. **Realistic 200–340 GSM Heavyweight Specs**:
-   - 240 GSM organic combed cotton graphic tees.
-   - 280 GSM cotton twill pleated parachute pants.
-   - 340 GSM custom knit loopback French Terry boxy hoodies.
-
-4. **Delhi Streetwear & Archival Thrift Lookbook**:
-   - Smooth horizontal swipe lookbook gallery with interactive *"Shop the Look"* hotspots.
-
-5. **Slide-Over Bag & Checkout**:
-   - Promo coupon code system (`PUNK10` for 10% Delhi VIP discount).
-   - UPI / Cards / NetBanking checkout simulation.
-
-6. **Drop Countdown & VIP List**:
-   - Live timer for **Drop 02 // Delhi Underground**.
-
----
-
-## 🖼️ How to Use Your Own Images (Free Hosting)
-
-You can host your custom product photos for free using any of these services and plug the URLs into `src/data/products.js`:
-
-### 1. **Firebase Storage (Google)**
-- Create a free project at [console.firebase.google.com](https://console.firebase.google.com).
-- Go to **Storage**, create a bucket, and upload your high-res product photos.
-- Copy the public image URLs directly into `PRODUCTS_DATA` in `src/data/products.js`!
-
-### 2. **Cloudinary (Free Tier)**
-- Sign up at [cloudinary.com](https://cloudinary.com) (free 25 GB storage & automated WebP compression).
-- Upload photos and copy image URLs into `products.js`.
-
-### 3. **Netlify / GitHub Assets**
-- Place your image files directly in the `public/images/` folder inside this repository.
-- Reference them in `products.js` as `/images/hoodie-black-1.jpg`.
-
----
-
-## 🚀 Quick Start & Deployment
-
-### 1. Instant Preview
-Double-click [index.html](file:///C:/Users/vipin%20Pant/.gemini/antigravity/scratch/void-studios/index.html) to open the website in Chrome, Edge, or Firefox.
-
-### 2. Run with Vite
 ```bash
 npm install
-npm run dev
+npm run dev      # local dev server
+npm run build    # production build → dist/
 ```
 
-### 3. Push to GitHub
-```bash
-git add .
-git commit -m "feat: PUNK.in Delhi streetwear store with INR, 200-340 GSM, and image swipe"
-git push origin main
-```
+## Where things live
 
----
+| What | Where |
+|---|---|
+| Brand copy, nav links, footer links, promo codes | `src/content/content.js` |
+| Mock product catalog (18 products) | `src/data/products.js` |
+| Color palette / design tokens | `src/index.css` (`:root` vars) + `tailwind.config.js` |
+| Wordmark component | `src/components/Logo.jsx` |
 
-© 2026 **PUNK THRIFT STUDIOS (PUNK.IN)**. Developed by [piyushpant-rgb](https://github.com/piyushpant-rgb).
+## Swap in real assets later
+
+- **Product photos** → drop files in `public/assets/products/` and point each product's `images[]` at them. Missing images render a designed "image coming soon" placeholder automatically.
+- **Hero video/image** → replace `HERO_SOURCE` at the top of `src/components/Hero.jsx` (accepts `.mp4` or `.jpg`).
+- **Category tiles / lookbook** → `public/assets/categories/`, `public/assets/lookbook/` (sources in `CategoryShowcase.jsx` and `Home.jsx`).
+
+## Logo icon slot
+
+`src/components/Logo.jsx` contains an empty `<span data-logo-icon-slot>` — drop the real brand mark (SVG or `<img>`) there when supplied. The wordmark font is controlled by the `font-wordmark` entry in `tailwind.config.js` (Anton → Archivo Black fallback).
+
+## Plug in a real backend later
+
+| Feature | File to change |
+|---|---|
+| Auth (login/register/session) | `src/context/StoreContext.jsx` — `login()`, `register()`, `logout()` currently mock + `localStorage` |
+| Cart persistence / server cart | same context — swap `localStorage` reads/writes for API calls |
+| Product catalog | replace `src/data/products.js` with API fetches (field names already match) |
+| Checkout / payments | `src/pages/CheckoutPage.jsx` — placeholder marks the exact POST point |
+| Promo codes | `src/content/content.js` → `PROMO_CODES` (mock validation in `CartPage.jsx`) |
+
+## Routes
+
+`/` · `/login` · `/register` · `/logout` · `/wishlist` · `/cart` · `/checkout` · `/account` · `/new-arrivals` · `/tops[/:subcategory]` · `/bottoms[/:subcategory]` · `/accessories` · `/sale` · `/product/:productId` · `/search?q=` · 404 catch-all

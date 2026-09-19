@@ -1,154 +1,104 @@
-import React, { useState } from 'react';
-import { useStore } from '../context/StoreContext';
-import { Heart, Eye, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom'
+import ProductImage from './ProductImage'
+import { HeartIcon, BagIcon } from './Icons'
+import { useStore } from '../context/StoreContext'
 
-export function ProductCard({ product }) {
-  const { setSelectedProduct, formatPrice, toggleWishlist, wishlist, addToCart } = useStore();
-  const [currentImgIndex, setCurrentImgIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const isWishlisted = wishlist.includes(product.id);
+const fmt = (n) => `₹${n.toLocaleString('en-IN')}`
 
-  const defaultColor = product.colors[0];
-  const defaultSize = product.sizes[0];
+// Shared product tile used on home, category grids, wishlist and search.
+export default function ProductCard({ product }) {
+  const { wishlist, toggleWishlist, addToCart, toast } = useStore()
+  const wished = wishlist.includes(product.id)
+  const onSale = product.salePrice != null
+  const discount = onSale ? Math.round((1 - product.salePrice / product.price) * 100) : 0
+
+  const quickAdd = () => {
+    addToCart(product.id, product.sizes[Math.min(1, product.sizes.length - 1)], product.colors[0], 1)
+    toast(`${product.name} added to bag`)
+  }
 
   return (
-    <div 
-      className="group relative flex flex-col bg-brand-surface rounded border border-brand-border/80 overflow-hidden transition-all duration-300 hover:border-brand-muted/60 hover:shadow-2xl"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Image Container */}
-      <div 
-        className="relative aspect-[3/4] bg-brand-dark overflow-hidden cursor-pointer"
-        onClick={() => setSelectedProduct(product)}
-      >
-        {/* Primary & Secondary Image Flip */}
-        <img 
-          src={isHovered && product.images[1] ? product.images[1] : product.images[currentImgIndex]} 
-          alt={product.name}
-          className="w-full h-full object-cover object-center filter grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out"
-          loading="lazy"
-        />
+    <div className="group relative flex flex-col">
+      <div className="relative overflow-hidden bg-white">
+        <Link to={`/product/${product.id}`} aria-label={product.name}>
+          <div className="aspect-[4/5] w-full">
+            <ProductImage
+              src={product.images[0]}
+              alt={product.name}
+              className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-0"
+            />
+            <ProductImage
+              src={product.images[1] ?? product.images[0]}
+              alt={`${product.name} — alternate`}
+              className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            />
+          </div>
+        </Link>
 
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-          {product.tags.map((tag, i) => (
-            <span 
-              key={i}
-              className={`text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded font-bold ${
-                tag === 'LIMITED DROP' ? 'bg-brand-accent text-white' :
-                tag === 'SOLD OUT' ? 'bg-zinc-800 text-zinc-400' :
-                'bg-brand-black/80 backdrop-blur-md text-brand-light border border-brand-border'
-              }`}
-            >
-              {tag}
+        {/* badges */}
+        <div className="absolute left-3 top-3 flex flex-col gap-1.5">
+          {onSale && (
+            <span className="bg-accent px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
+              Sale −{discount}%
             </span>
-          ))}
+          )}
+          {!product.inStock && (
+            <span className="bg-ink px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-bg-primary">
+              Sold Out
+            </span>
+          )}
         </div>
 
-        {/* Wishlist Heart Trigger */}
-        <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleWishlist(product.id);
-          }}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-brand-black/70 backdrop-blur-md border border-brand-border flex items-center justify-center text-brand-light hover:text-brand-accent transition-all z-10"
-          title="Save to wishlist"
+        {/* wishlist heart */}
+        <button
+          type="button"
+          onClick={() => toggleWishlist(product.id)}
+          aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
+          aria-pressed={wished}
+          className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center bg-white/90 transition-transform hover:scale-110 ${
+            wished ? 'text-accent' : 'text-ink'
+          }`}
         >
-          <Heart 
-            size={14} 
-            className={isWishlisted ? "text-brand-accent fill-brand-accent" : ""} 
-          />
+          <HeartIcon size={17} filled={wished} />
         </button>
 
-        {/* Fit Badge */}
-        <div className="absolute bottom-3 left-3 z-10">
-          <span className="text-[10px] font-mono uppercase tracking-wider bg-brand-black/90 backdrop-blur-md text-brand-bone px-2 py-0.5 rounded border border-brand-border">
-            {product.fit} Cut
-          </span>
+        {/* quick add — slides up on hover (always visible on touch: no hover needed via focus-within fallback) */}
+        <div className="absolute inset-x-0 bottom-0 translate-y-full transition-transform duration-200 group-hover:translate-y-0">
+          <button
+            type="button"
+            onClick={quickAdd}
+            disabled={!product.inStock}
+            className="flex w-full items-center justify-center gap-2 bg-ink py-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-bg-primary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <BagIcon size={15} />
+            {product.inStock ? 'Quick Add — M' : 'Sold Out'}
+          </button>
         </div>
-
-        {/* Quick Add Overlay on Hover */}
-        {product.inStock && (
-          <div className="absolute inset-x-3 bottom-3 hidden group-hover:flex gap-1.5 z-20 animate-fade-in">
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedProduct(product);
-              }}
-              className="flex-1 bg-brand-light hover:bg-white text-brand-black font-mono text-[11px] font-bold py-2.5 px-3 rounded text-center tracking-wider transition-colors uppercase flex items-center justify-center gap-1 shadow-lg"
-            >
-              <Eye size={13} />
-              <span>Inspect</span>
-            </button>
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                addToCart(product, defaultSize, defaultColor);
-              }}
-              className="bg-brand-black hover:bg-zinc-900 text-brand-light border border-brand-border font-mono text-[11px] py-2.5 px-3 rounded flex items-center justify-center transition-colors"
-              title="Quick Add to Bag"
-            >
-              <Plus size={14} />
-            </button>
-          </div>
-        )}
-
-        {!product.inStock && (
-          <div className="absolute inset-0 bg-brand-black/60 backdrop-blur-[2px] flex items-center justify-center">
-            <span className="font-mono text-xs uppercase tracking-widest text-zinc-400 border border-zinc-700 bg-brand-black/80 px-3 py-1 rounded">
-              ARCHIVED / SOLD OUT
-            </span>
-          </div>
-        )}
       </div>
 
-      {/* Card Info */}
-      <div className="p-4 flex flex-col flex-1 justify-between gap-3">
+      <div className="flex items-start justify-between gap-3 pt-3">
         <div>
-          {/* Color Swatches */}
-          <div className="flex items-center gap-1.5 mb-2">
-            {product.colors.map((c, i) => (
-              <button 
-                key={i}
-                onClick={() => setCurrentImgIndex(c.imgIndex || 0)}
-                className={`w-3.5 h-3.5 rounded-full border transition-all ${currentImgIndex === (c.imgIndex || 0) ? 'border-brand-accent scale-110' : 'border-zinc-700 hover:border-zinc-500'}`}
-                style={{ backgroundColor: c.hex }}
-                title={c.name}
-              />
-            ))}
-            <span className="text-[10px] font-mono text-brand-muted ml-1 uppercase">
-              {product.colors.length} {product.colors.length === 1 ? 'colorway' : 'colorways'}
-            </span>
-          </div>
-
-          {/* Title & Tagline */}
-          <h3 
-            onClick={() => setSelectedProduct(product)}
-            className="font-medium text-sm text-brand-light group-hover:text-brand-bone cursor-pointer tracking-wide"
+          <Link
+            to={`/product/${product.id}`}
+            className="text-[13px] font-medium tracking-wide text-ink hover:underline hover:decoration-accent hover:underline-offset-4"
           >
             {product.name}
-          </h3>
-          <p className="text-[11px] font-mono text-brand-muted mt-0.5 truncate">
-            {product.tagline}
+          </Link>
+          <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-ink-soft">
+            {product.subcategory}
           </p>
         </div>
-
-        {/* Price & Sizes */}
-        <div className="pt-2 border-t border-brand-border/60 flex items-center justify-between font-mono text-xs">
-          <span className="font-bold text-brand-light tracking-wider">
-            {formatPrice(product.priceUSD)}
-          </span>
-          <div className="flex gap-1 text-[10px] text-brand-muted uppercase">
-            {product.sizes.slice(0, 4).map((s, idx) => (
-              <span key={idx} className={product.sizeStock[s] === 0 ? 'line-through opacity-40' : ''}>
-                {s}
-              </span>
-            ))}
-            {product.sizes.length > 4 && <span>+{product.sizes.length - 4}</span>}
-          </div>
+        <div className="shrink-0 text-right text-[13px]">
+          {onSale ? (
+            <>
+              <span className="font-semibold text-accent">{fmt(product.salePrice)}</span>{' '}
+              <span className="text-[11px] text-ink-soft line-through">{fmt(product.price)}</span>
+            </>
+          ) : (
+            <span className="font-medium">{fmt(product.price)}</span>
+          )}
         </div>
       </div>
     </div>
-  );
+  )
 }
