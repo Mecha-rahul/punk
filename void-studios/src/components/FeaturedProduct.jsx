@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { findProduct } from '../data/products'
 import ProductImage from './ProductImage'
 import { useStore } from '../context/StoreContext'
 import { BagIcon, HeartIcon } from './Icons'
@@ -6,8 +7,8 @@ import { BagIcon, HeartIcon } from './Icons'
 const fmt = (n) => `₹${n.toLocaleString('en-IN')}`
 
 // Single-product spotlight (GENRAGE-style featured product section).
-// The product is resolved by Home (catalog-aware) and passed in.
-export default function FeaturedProduct({ product }) {
+export default function FeaturedProduct({ productId = 'ak-004' }) {
+  const product = findProduct(productId)
   const { addToCart, toggleWishlist, wishlist, toast, setCartOpen } = useStore()
   if (!product) return null
 

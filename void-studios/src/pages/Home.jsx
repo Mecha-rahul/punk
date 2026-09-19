@@ -7,9 +7,8 @@ import VideoSection from '../components/VideoSection'
 import EditorialSplit from '../components/EditorialSplit'
 import FeaturedProduct from '../components/FeaturedProduct'
 import InfoColumns from '../components/InfoColumns'
-import { HOME_SECTIONS } from '../data/products'
+import { HOME_SECTIONS, PRODUCTS, findProduct } from '../data/products'
 import { FEATURED_PRODUCT_ID } from '../content/content'
-import { useStore } from '../context/StoreContext'
 import { Link } from 'react-router-dom'
 
 // Editorial split copy — placeholder; swap when brand copy is final.
@@ -44,16 +43,9 @@ function CollectionList() {
 }
 
 export default function Home() {
-  const { catalog, apiLive } = useStore()
-
-  const featured = catalog.filter((p) => p.collections?.includes('top-picks'))
-  const justDropped =
-    apiLive === false
-      ? HOME_SECTIONS.newArrivals // curated mock section
-      : catalog
-          .filter((p) => p.collections?.includes('new-arrivals') || p.collections?.includes('top-picks'))
-          .slice(0, 8)
-  const featuredProduct = catalog.find((p) => p.id === FEATURED_PRODUCT_ID) || catalog[0]
+  const featured = PRODUCTS.filter((p) => p.collections.includes('top-picks'))
+  const justDropped = HOME_SECTIONS.newArrivals.slice(0, 8)
+  const featuredProduct = findProduct(FEATURED_PRODUCT_ID)
 
   return (
     <>
@@ -105,7 +97,7 @@ export default function Home() {
       <MarqueeStrip preset="secondary" dark={false} />
 
       {/* 10 — featured product spotlight */}
-      <FeaturedProduct product={featuredProduct} />
+      <FeaturedProduct productId={FEATURED_PRODUCT_ID} />
 
       {/* 11 — info columns */}
       <InfoColumns />

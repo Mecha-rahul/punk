@@ -4,8 +4,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from './Icons'
 
 // Announcement strip above the main header — auto-rotates, with manual
 // prev/next chevrons at the edges (reference-site layout).
-// Always black with light text, so it needs no hover styling — the genrage
-// hover flip only applies to the main bar below it.
 export default function AnnouncementBar() {
   const [i, setI] = useState(0)
 

@@ -8,23 +8,13 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
 
-  const [busy, setBusy] = useState(false)
-
-  const submit = async (e) => {
+  const submit = (e) => {
     e.preventDefault()
     if (!/^\S+@\S+\.\S+$/.test(form.email)) return setError('Enter a valid email address.')
     if (form.password.length < 6) return setError('Password must be at least 6 characters.')
-    setBusy(true)
-    setError('')
-    try {
-      const user = await login(form.email, form.password)
-      toast(`Welcome back, ${user.name}`)
-      navigate('/')
-    } catch (err) {
-      setError(err.message || 'Login failed — check your credentials.')
-    } finally {
-      setBusy(false)
-    }
+    const user = login(form.email)
+    toast(`Welcome back, ${user.name}`)
+    navigate('/')
   }
 
   return (
@@ -69,9 +59,7 @@ export default function LoginPage() {
 
             {error && <p className="text-[12px] font-medium text-accent">{error}</p>}
 
-            <button type="submit" disabled={busy} className="ak-btn-dark w-full disabled:opacity-50">
-              {busy ? 'Logging in…' : 'Log In'}
-            </button>
+            <button type="submit" className="ak-btn-dark w-full">Log In</button>
           </form>
 
           <p className="mt-6 text-center text-[12px] text-ink-soft">

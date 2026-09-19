@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
+import { findProduct, PRODUCTS } from '../data/products'
 import ProductImage from '../components/ProductImage'
 import ProductCard from '../components/ProductCard'
 import { useStore } from '../context/StoreContext'
@@ -9,8 +10,8 @@ const fmt = (n) => `₹${n.toLocaleString('en-IN')}`
 
 export default function ProductPage() {
   const { productId } = useParams()
-  const { catalog, apiLive, addToCart, toggleWishlist, wishlist, toast, setCartOpen } = useStore()
-  const product = catalog.find((p) => p.id === productId)
+  const product = findProduct(productId)
+  const { addToCart, toggleWishlist, wishlist, toast, setCartOpen } = useStore()
 
   const [size, setSize] = useState(null)
   const [color, setColor] = useState(null)
@@ -28,20 +29,11 @@ export default function ProductPage() {
   const related = useMemo(
     () =>
       product
-        ? catalog.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4)
+        ? PRODUCTS.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4)
         : [],
-    [catalog, product],
+    [product],
   )
 
-  // While the API catalog is still loading, a direct visit to /product/:id
-  // would look like a 404 — show a loader instead of redirecting.
-  if (!product && apiLive === null) {
-    return (
-      <div className="ak-shell py-32 text-center">
-        <p className="font-wordmark text-2xl uppercase text-ink/25">Loading…</p>
-      </div>
-    )
-  }
   if (!product) return <Navigate to="/404" replace />
 
   const wished = wishlist.includes(product.id)

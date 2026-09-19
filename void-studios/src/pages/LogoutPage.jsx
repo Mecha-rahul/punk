@@ -9,7 +9,8 @@ export default function LogoutPage() {
 
   useEffect(() => {
     if (user) {
-      Promise.resolve(logout()).then(() => toast("You've been logged out"))
+      logout()
+      toast("You've been logged out")
     }
     navigate('/', { replace: true })
   }, [user, logout, toast, navigate])
