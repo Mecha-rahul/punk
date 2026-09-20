@@ -17,6 +17,7 @@ import RegisterPage from './pages/RegisterPage'
 import LogoutPage from './pages/LogoutPage'
 import WishlistPage from './pages/WishlistPage'
 import AccountPage from './pages/AccountPage'
+import AdminPage from './pages/AdminPage'
 import SearchPage from './pages/SearchPage'
 import NotFoundPage from './pages/NotFoundPage'
 
@@ -55,6 +56,7 @@ export default function App() {
           <Route path="/logout" element={<LogoutPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/search" element={<SearchPage />} />
 
           <Route path="*" element={<NotFoundPage />} />

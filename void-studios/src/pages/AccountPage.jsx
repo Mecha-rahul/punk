@@ -26,6 +26,16 @@ export default function AccountPage() {
         <h1 className="ak-section-title">Hi, {user.name}</h1>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:max-w-3xl">
+          {user.role === 'admin' && (
+            <Link
+              to="/admin"
+              className="border border-ink bg-ink p-6 text-bg-primary transition-transform hover:-translate-y-0.5"
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">Staff</p>
+              <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em]">Admin Dashboard →</p>
+              <p className="mt-1 text-xs text-bg-primary/70">Push products, edit prices & stock, manage the catalog.</p>
+            </Link>
+          )}
           <div className="border border-line-soft bg-white p-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-soft">Profile</p>
             <p className="mt-3 text-sm font-medium">{user.name}</p>
