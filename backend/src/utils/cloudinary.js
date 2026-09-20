@@ -17,11 +17,14 @@ const uploadOnCloudinary = async (localFilePath) => {
         })
         // file has been uploaded successfull
         //console.log("file is uploaded on cloudinary ", response.url);
-        fs.unlinkSync(localFilePath)
+        try { fs.unlinkSync(localFilePath) } catch { /* temp file already gone */ }
         return response;
 
     } catch (error) {
-        fs.unlinkSync(localFilePath) // remove the locally saved temporary file as the upload operation got failed
+        // Surface the real Cloudinary error (invalid key, bad cloud name,
+        // network…) — a silent null here made uploads undiagnosable.
+        console.error("[cloudinary] upload failed:", error?.message || error);
+        try { fs.unlinkSync(localFilePath) } catch { /* temp file already gone */ }
         return null;
     }
 }
