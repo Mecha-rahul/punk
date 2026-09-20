@@ -38,6 +38,11 @@ async function request(path, { method = 'GET', body } = {}) {
     throw new ApiUnavailable()
   }
 
+  return handle(res)
+}
+
+/** Shared response handling for JSON and multipart requests. */
+async function handle(res) {
   let json = null
   try {
     json = await res.json()
@@ -52,6 +57,24 @@ async function request(path, { method = 'GET', body } = {}) {
     throw err
   }
   return json?.data
+}
+
+/**
+ * upload() — multipart POST (FormData). The browser sets the
+ * Content-Type/boundary; we must NOT set a JSON header here.
+ */
+async function upload(path, formData) {
+  let res
+  try {
+    res = await fetch(`${BASE}${path}`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    })
+  } catch {
+    throw new ApiUnavailable()
+  }
+  return handle(res)
 }
 
 /** Backend cart payloads are `{ cart: [...items], totals }` — normalize to `items`. */
@@ -81,6 +104,20 @@ export const api = {
   wishlist: () => request('/wishlist'),
   addWishlist: (productId) => request(`/wishlist/${productId}`, { method: 'POST' }),
   removeWishlist: (productId) => request(`/wishlist/${productId}`, { method: 'DELETE' }),
+
+  // catalog metadata (public — powers the admin dropdowns)
+  categories: () => request('/categories'),
+  brands: () => request('/brands'),
+
+  // admin — product management (JSON bodies; images go through uploadImages)
+  adminCreateProduct: (body) => request('/products', { method: 'POST', body }),
+  adminUpdateProduct: (id, body) => request(`/products/${id}`, { method: 'PATCH', body }),
+  adminDeleteProduct: (id) => request(`/products/${id}`, { method: 'DELETE' }),
+  adminUploadImages: (id, files) => {
+    const fd = new FormData()
+    for (const file of files) fd.append('images', file)
+    return upload(`/products/${id}/images`, fd)
+  },
 }
 
 export { BASE as API_BASE }
