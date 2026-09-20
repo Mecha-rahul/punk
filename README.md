@@ -1,10 +1,9 @@
 
 # AKUMA — BOLD STREETWEAR
-### by PUNK THRIFT STUDIOS
 
 > **Heavyweight streetwear & archival thrift — New Delhi, India**
 
-**AKUMA** is the studio label of **Punk Thrift Studios**, an independent outfit from New Delhi working at the crossing point of two obsessions: **archival thrift** — hunting, restoring and re-issuing pieces that already lived a life — and **heavyweight streetwear**, cut from dense 240–340 GSM cotton built to hold its shape for years, not seasons.
+**AKUMA** is an independent studio from New Delhi working at the crossing point of two obsessions: **archival thrift** — hunting, restoring and re-issuing pieces that already lived a life — and **heavyweight streetwear**, cut from dense 240–340 GSM cotton built to hold its shape for years, not seasons.
 
 Every drop is a limited batch, hand-finished and often one-of-one. Once it's gone, it's gone — no restocks, no reprints.
 
@@ -38,4 +37,4 @@ New batches release as limited drops announced on the store. Past drops have sol
 
 📍 **New Delhi, India**
 
-© 2026 **AKUMA — PUNK THRIFT STUDIOS**
+© 2026 **AKUMA**
