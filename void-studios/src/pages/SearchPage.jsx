@@ -1,14 +1,15 @@
 import { useSearchParams, Link } from 'react-router-dom'
-import { PRODUCTS } from '../data/products'
 import ProductGrid from '../components/ProductGrid'
+import { useStore } from '../context/StoreContext'
 
 export default function SearchPage() {
   const [params] = useSearchParams()
+  const { catalog, apiLive } = useStore()
   const q = (params.get('q') ?? '').trim()
   const term = q.toLowerCase()
 
   const results = term
-    ? PRODUCTS.filter((p) =>
+    ? catalog.filter((p) =>
         `${p.name} ${p.category} ${p.subcategory} ${p.description}`.toLowerCase().includes(term),
       )
     : []
@@ -24,7 +25,11 @@ export default function SearchPage() {
         </p>
 
         <div className="mt-10">
-          {results.length ? (
+          {apiLive === null && results.length === 0 ? (
+            <div className="py-16 text-center">
+              <p className="font-wordmark text-2xl uppercase text-ink/25">Loading…</p>
+            </div>
+          ) : results.length ? (
             <ProductGrid products={results} />
           ) : (
             <div className="py-16 text-center">

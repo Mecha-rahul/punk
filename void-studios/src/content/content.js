@@ -97,13 +97,17 @@ export const FOOTER_LINKS = {
     { label: 'Track Order', to: '/account' },
     { label: 'Returns & Exchange Policy', to: '/account' },
     { label: 'FAQs', to: '/account' },
-    { label: 'Contact Us', to: '/account' },
+    { label: 'Contact Us', href: 'mailto:akuma04313@gmail.com?subject=' + encodeURIComponent('Hi AKUMA — product question') },
     { label: 'Terms of Service', to: '/account' },
     { label: 'Privacy Policy', to: '/account' },
   ],
   social: [
-    { label: 'Instagram', href: '#' },
-    { label: 'WhatsApp', href: '#' },
+    { label: 'Instagram', href: 'https://www.instagram.com/akuma04313/' },
+    {
+      label: 'WhatsApp',
+      // 91 = India country code; pre-filled first message opens the chat ready to send
+      href: 'https://wa.me/919318407257?text=' + encodeURIComponent("Hi AKUMA! I have a question about a product."),
+    },
   ],
 }
 

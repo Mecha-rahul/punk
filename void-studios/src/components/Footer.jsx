@@ -23,6 +23,8 @@ export default function Footer() {
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex h-9 w-9 items-center justify-center border border-bg-primary/25 transition-colors hover:border-bg-primary"
                 >
                   <Icon size={16} />
@@ -50,13 +52,20 @@ export default function Footer() {
         <nav aria-label="Support">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-bg-primary/60">Support</p>
           <ul className="mt-4 space-y-2.5">
-            {FOOTER_LINKS.support.map((l) => (
-              <li key={l.label}>
-                <Link to={l.to} className="text-[13px] text-bg-primary/80 transition-colors hover:text-bg-primary hover:underline hover:underline-offset-4">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
+            {FOOTER_LINKS.support.map((l) => {
+              // entries with `href` are external (mailto:, social) — plain anchor;
+              // everything else routes internally
+              const classes = "text-[13px] text-bg-primary/80 transition-colors hover:text-bg-primary hover:underline hover:underline-offset-4"
+              return (
+                <li key={l.label}>
+                  {l.href ? (
+                    <a href={l.href} className={classes}>{l.label}</a>
+                  ) : (
+                    <Link to={l.to} className={classes}>{l.label}</Link>
+                  )}
+                </li>
+              )
+            })}
           </ul>
         </nav>
 

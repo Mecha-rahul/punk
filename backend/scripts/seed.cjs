@@ -1,10 +1,12 @@
 /**
- * Seeds the AKUMA catalog into MongoDB.
- *   node scripts/seed.cjs
+ * Seeds the AKUMA catalog into MongoDB. IDEMPOTENT — brand, categories and
+ * products are keyed by slug (created only when missing), so it can run on
+ * every boot / be re-run safely. Prints the seeded admin credentials once.
  *
- * Loads ../.env the same way index.js does. Idempotent: brand, categories
- * and products are keyed by slug (created only when missing), so it can be
- * re-run safely. Prints the seeded admin credentials at the end.
+ * Two ways to run:
+ *   CLI:      node scripts/seed.cjs                    (connects, seeds, disconnects)
+ *   In-app:   import { seed } — used by index.js when SEED_ON_BOOT=true,
+ *             sharing the already-open mongoose connection.
  */
 require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
 
@@ -45,16 +47,12 @@ const ADMIN = {
   password: process.env.SEED_ADMIN_PASSWORD || "akuma-admin-123",
 };
 
-async function main() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    console.error("MONGODB_URI missing — set it in backend/.env");
-    process.exit(1);
-  }
-
-  await mongoose.connect(uri);
-  console.log("connected to", mongoose.connection.name);
-
+/**
+ * Runs the seed against the CURRENT mongoose connection — does not
+ * connect or disconnect (caller owns the connection lifecycle).
+ * @returns {Promise<{productsCreated: number, adminEmail: string}>}
+ */
+async function seed() {
   // ESM models can't be require()d — load via dynamic import instead.
   const { Brand: BrandModel } = await import("../src/models/brand.model.js");
   const { Category: CategoryModel } = await import("../src/models/category.model.js");
@@ -131,11 +129,26 @@ async function main() {
     console.log(`admin already present — email: ${ADMIN.email}`);
   }
 
-  await mongoose.disconnect();
-  console.log("seed done ✓");
+  return { productsCreated: created, adminEmail: ADMIN.email };
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+module.exports = { seed };
+
+// CLI entry: `node scripts/seed.cjs` — owns the connection when run directly.
+if (require.main === module) {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.error("MONGODB_URI missing — set it in backend/.env");
+    process.exit(1);
+  }
+  (async () => {
+    await mongoose.connect(uri);
+    console.log("connected to", mongoose.connection.name);
+    await seed();
+    await mongoose.disconnect();
+    console.log("seed done ✓");
+  })().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
