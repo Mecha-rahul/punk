@@ -37,9 +37,9 @@ export const MARQUEE_SECONDARY = [
 // assets exist. Slide transition style is intentionally simple for now
 // (owner will specify the final animation treatment later).
 export const HERO_SLIDES = [
-  { type: 'image', src: '/assets/hero/slide-1.jpg', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
-  { type: 'image', src: '/assets/hero/slide-2.jpg', tagline: 'Heavyweight. Limited. Gone Forever.', cta: 'Shop Hoodies', to: '/tops/hoodies' },
-  { type: 'image', src: '/assets/hero/slide-3.jpg', tagline: 'Bold Streetwear', cta: 'Shop All', to: '/new-arrivals' },
+  // Static hero banner — single image (carousel removed). Keep the array
+  // shape so swapping the artwork later stays a one-line change.
+  { type: 'image', src: '/assets/hero/hero-banner.webp', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
 ]
 
 // Mock reviews — replace with real reviews once backend lands

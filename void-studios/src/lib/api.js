@@ -90,6 +90,8 @@ export const api = {
   register: (body) => request('/auth/register', { method: 'POST', body }),
   login: (body) => request('/auth/login', { method: 'POST', body }),
   logout: () => request('/auth/logout', { method: 'POST' }),
+  forgotPassword: (body) => request('/auth/forgot-password', { method: 'POST', body }),
+  resetPassword: (body) => request('/auth/reset-password', { method: 'POST', body }),
 
   // cart
   cart: () => request('/cart').then(normCart),

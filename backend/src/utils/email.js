@@ -19,7 +19,10 @@ export const sendEmail = async ({ to, subject, text }) => {
   }
 
   try {
-    const nodemailer = await import("nodemailer");
+    // CJS/ESM interop: nodemailer v6 exports via module.exports — dynamic
+    // import may wrap it under `.default` depending on the Node version.
+    const mod = await import("nodemailer");
+    const nodemailer = mod.default ?? mod;
     const port = Number(process.env.SMTP_PORT || 587);
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
