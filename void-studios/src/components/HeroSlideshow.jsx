@@ -23,9 +23,6 @@ export default function HeroSlideshow() {
           <ProductImage src={slide.src} alt="AKUMA" className="h-full w-full object-cover" />
         </div>
 
-        {/* tonal overlay keeps text legible on any artwork */}
-        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-transparent to-bg-primary/60" />
-
         {/* --- overlay content: tagline chip removed by owner request;
             wordmark styled to sit IN the artwork (poster outline + hard
             shadow) so it reads as part of the banner, not a label on it --- */}
