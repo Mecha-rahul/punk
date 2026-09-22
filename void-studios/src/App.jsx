@@ -17,8 +17,6 @@ import RegisterPage from './pages/RegisterPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import LogoutPage from './pages/LogoutPage'
-import ForgotPasswordPage from './pages/ForgotPasswordPage'
-import ResetPasswordPage from './pages/ResetPasswordPage'
 import WishlistPage from './pages/WishlistPage'
 import AccountPage from './pages/AccountPage'
 import AdminPage from './pages/AdminPage'
@@ -61,13 +59,11 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/logout" element={<LogoutPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/privacy" element={<PrivacyPolicyPage />} /> />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
