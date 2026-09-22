@@ -17,7 +17,15 @@ export const slugify = (text) =>
  * catches it and the error handler maps it to a 409.
  */
 export const generateUniqueSlug = async (model, base) => {
-  const clean = base || "item";
+  // Slugify first: lowercase, strip accents, non-alphanumerics → hyphens.
+  // Without this, names like "Pipeline UI Test" produced slugs with spaces,
+  // breaking /product/:slug URLs.
+  const clean = (base || "item")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "item";
   let candidate = clean;
   let counter = 1;
   // eslint-disable-next-line no-await-in-loop

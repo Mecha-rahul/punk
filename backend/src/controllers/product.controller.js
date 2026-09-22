@@ -5,6 +5,7 @@ import { Product } from "../models/product.model.js";
 import { Category } from "../models/category.model.js";
 import { Brand } from "../models/brand.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { v2 as cloudinary } from "cloudinary";
 import {
   escapeRegex,
   generateUniqueSlug,
@@ -220,7 +221,10 @@ const softDeleteProduct = asyncHandler(async (req, res) => {
 /**
  * POST /products/:id/images — multipart field `images`.
  * Uploads each file to Cloudinary and appends the URLs to product.images.
+ * Cap: MAX 3 images per product (counting existing + incoming).
  */
+const MAX_IMAGES = 3;
+
 const uploadImages = asyncHandler(async (req, res) => {
   const { id } = req.validatedParams;
   const product = await Product.findById(id);
@@ -228,6 +232,10 @@ const uploadImages = asyncHandler(async (req, res) => {
 
   const files = req.files || [];
   if (files.length === 0) throw new ApiError(400, "No images provided (field name: `images`)");
+
+  if (product.images.length + files.length > MAX_IMAGES) {
+    throw new ApiError(400, `Max ${MAX_IMAGES} images per product — you have ${product.images.length}, trying to add ${files.length}`);
+  }
 
   const urls = [];
   for (const file of files) {
@@ -246,6 +254,35 @@ const uploadImages = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { images: product.images }, "Images uploaded"));
 });
 
+/**
+ * DELETE /products/:id/images — body { url }. Removes one image by URL
+ * (both from the product doc and from Cloudinary storage).
+ */
+const removeImage = asyncHandler(async (req, res) => {
+  const { id } = req.validatedParams;
+  const { url } = req.body;
+
+  const product = await Product.findById(id);
+  ensureFound(product, "Product not found");
+
+  const idx = product.images.indexOf(url);
+  if (idx === -1) throw new ApiError(404, "Image not found on this product");
+  product.images.splice(idx, 1);
+
+  // Best-effort Cloudinary cleanup — public_id is the path after /upload/,
+  // without the file extension. Failure to delete the asset must not block
+  // removing it from the product.
+  try {
+    const match = url.match(/\/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z0-9]+$/);
+    if (match) await cloudinary.uploader.destroy(match[1]);
+  } catch (err) {
+    console.error("[cloudinary] destroy failed:", err?.message || err);
+  }
+
+  await product.save();
+  return res.status(200).json(new ApiResponse(200, { images: product.images }, "Image removed"));
+});
+
 export {
   listProducts,
   getProductBySlug,
@@ -254,4 +291,5 @@ export {
   updateProduct,
   softDeleteProduct,
   uploadImages,
+  removeImage,
 };

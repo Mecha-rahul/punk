@@ -12,6 +12,7 @@ import ProductImage from '../components/ProductImage'
 
 const fmt = (n) => `₹${Number(n || 0).toLocaleString('en-IN')}`
 const COLLECTION_OPTIONS = ['new-arrivals', 'top-picks', 'basics', 'sale']
+const MAX_IMAGES = 3
 
 const emptyForm = {
   name: '',
@@ -43,6 +44,10 @@ export default function AdminPage() {
   const [formError, setFormError] = useState(null)
   const [files, setFiles] = useState([])
   const [busy, setBusy] = useState(false)
+  const fileInputRef = useRef(null)
+
+  // Cap enforcement across current + queued images (max 3 per product)
+  const totalImages = (editing !== 'new' && editing?.images?.length ? editing.images.length : 0) + files.length
 
   // quick variant-matrix generator inputs
   const [gen, setGen] = useState({ sizes: 'S, M, L', colors: 'Ink', stock: 8, price: '' })
@@ -233,6 +238,7 @@ export default function AdminPage() {
         toast(`"${payload.name}" created`)
       } else {
         await api.adminUpdateProduct(editing._id, payload)
+        productId = editing._id // edit path must also be able to upload images
         toast(`"${payload.name}" updated`)
       }
 
@@ -248,6 +254,7 @@ export default function AdminPage() {
 
       setEditing(null)
       setFiles([])
+      if (fileInputRef.current) fileInputRef.current.value = ''
       await Promise.all([load(), boot()]) // refresh admin table + storefront catalog
     } catch (err) {
       const detail = err.errors?.map((x) => x.message).join(' · ')
@@ -262,11 +269,31 @@ export default function AdminPage() {
     setBusy(true)
     try {
       await api.adminUploadImages(editing._id, files)
+      const fresh = await api.products({ limit: 60 })
+      setProducts(fresh.products)
+      const updated = fresh.products.find((p) => p._id === editing._id)
+      if (updated) setEditing(updated)
       setFiles([])
+      if (fileInputRef.current) fileInputRef.current.value = ''
       toast(`${files.length} image${files.length > 1 ? 's' : ''} uploaded`)
       await Promise.all([load(), boot()])
     } catch (err) {
       toast(`Image upload failed: ${err.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const removeImage = async (p, url) => {
+    setBusy(true)
+    try {
+      const data = await api.adminRemoveImage(p._id, url)
+      setProducts((prev) => prev.map((x) => (x._id === p._id ? { ...x, images: data.images } : x)))
+      if (editing !== 'new' && editing?._id === p._id) setEditing({ ...editing, images: data.images })
+      toast('Image removed')
+      await boot() // storefront catalog refresh
+    } catch (err) {
+      toast(`Remove failed: ${err.message}`)
     } finally {
       setBusy(false)
     }
@@ -600,31 +627,68 @@ export default function AdminPage() {
               </button>
             </div>
 
-            {/* images */}
+            {/* images — max 3, live previews, per-image remove */}
             <div className="mt-6 border-t border-line-soft pt-6">
-              <p className={labelCls}>Images {editing !== 'new' && editing?.images?.length ? `(${editing.images.length} current)` : '(uploaded after save)'}</p>
-              {editing !== 'new' && editing?.images?.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {editing.images.map((src) => (
-                    <ProductImage key={src} src={src} alt="" className="h-16 w-16 border border-line-soft object-cover" />
+              <p className={labelCls}>
+                Images ({totalImages}/{MAX_IMAGES})
+              </p>
+              <div className="mt-3 flex flex-wrap items-start gap-3">
+                {editing !== 'new' &&
+                  (editing?.images || []).map((src) => (
+                    <div key={src} className="relative">
+                      <ProductImage src={src} alt="" className="h-16 w-16 border border-line-soft object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(editing, src)}
+                        disabled={busy}
+                        aria-label="Remove image"
+                        className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center bg-ink text-[10px] text-bg-primary hover:bg-accent"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   ))}
-                </div>
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={(e) => setFiles([...e.target.files])}
-                className="mt-3 block text-sm text-ink-soft file:mr-3 file:border file:border-ink file:bg-white file:px-3 file:py-1.5 file:text-[10px] file:font-semibold file:uppercase file:tracking-[0.18em] file:text-ink hover:file:bg-ink hover:file:text-bg-primary"
-              />
-              {editing !== 'new' && files.length > 0 && (
-                <button type="button" onClick={uploadImagesOnly} disabled={busy} className="ak-btn-outline mt-3">
-                  Upload {files.length} image{files.length > 1 ? 's' : ''} now
-                </button>
-              )}
+                {files.map((f, i) => (
+                  <div key={`${f.name}-${i}`} className="relative">
+                    <img src={URL.createObjectURL(f)} alt="" className="h-16 w-16 border border-dashed border-line-soft object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setFiles(files.filter((_, j) => j !== i))}
+                      aria-label="Remove selected file"
+                      className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center bg-ink-soft text-[10px] text-bg-primary hover:bg-accent"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                {totalImages < MAX_IMAGES && (
+                  <label className="flex h-16 w-16 cursor-pointer flex-col items-center justify-center gap-0.5 border border-dashed border-line-soft text-[9px] uppercase tracking-[0.15em] text-ink-soft transition-colors hover:border-ink hover:text-ink">
+                    <span className="text-base leading-none">+</span>
+                    Add
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) => {
+                        const picked = [...e.target.files]
+                        const room = MAX_IMAGES - totalImages
+                        if (picked.length > room) {
+                          setFormError(`Max ${MAX_IMAGES} images per product — picked ${picked.length}, room for ${room}`)
+                          setFiles((prev) => [...prev, ...picked.slice(0, Math.max(0, room))])
+                        } else {
+                          setFormError(null)
+                          setFiles((prev) => [...prev, ...picked])
+                        }
+                        e.target.value = ''
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+              </div>
               <p className="mt-2 text-xs text-ink-soft">
-                Files go to Cloudinary — needs CLOUDINARY_* env vars on the API. Without them the product
-                still saves; only the upload step will report an error.
+                Up to {MAX_IMAGES} images per product. “Add” queues files; they upload to Cloudinary when you save (new products) or via “Upload now” (existing).
               </p>
             </div>
 

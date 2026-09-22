@@ -8,7 +8,7 @@
  *   fail because a mail server is missing.
  */
 
-export const sendEmail = async ({ to, subject, text }) => {
+export const sendEmail = async ({ to, subject, text, html }) => {
   const configured = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER);
 
   if (!configured) {
@@ -19,8 +19,7 @@ export const sendEmail = async ({ to, subject, text }) => {
   }
 
   try {
-    // CJS/ESM interop: nodemailer v6 exports via module.exports — dynamic
-    // import may wrap it under `.default` depending on the Node version.
+    // nodemailer is CJS — dynamic import yields { default: { createTransport } }.
     const mod = await import("nodemailer");
     const nodemailer = mod.default ?? mod;
     const port = Number(process.env.SMTP_PORT || 587);
@@ -34,11 +33,16 @@ export const sendEmail = async ({ to, subject, text }) => {
       },
     });
 
+    // verify() fails fast with a clear auth/connection error instead of a
+    // timeout deep inside sendMail.
+    await transporter.verify();
+
     await transporter.sendMail({
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to,
       subject,
       text,
+      ...(html ? { html } : {}),
     });
     return { delivered: true };
   } catch (error) {

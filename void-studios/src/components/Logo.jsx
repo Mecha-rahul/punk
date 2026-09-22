@@ -2,10 +2,14 @@ import { Link } from 'react-router-dom'
 
 /**
  * AKUMA brand logo (image wordmark).
- * Both PNGs have genuinely transparent backgrounds (see
- * backend/scripts/make-brand-bg-transparent.ps1), so no blend tricks are
- * needed - the mark reads cleanly over the cream bar, the hero below it,
- * and the inverted black bar on header hover.
+ * - Default state renders logo-black.png. That source PNG has a baked-in
+ *   white background, so it's blended with `multiply` — the white melts
+ *   into the cream header and only the dark artwork shows.
+ * - `inverted` (header hover → black bar) renders logo-white.png, whose
+ *   baked-in black background is blended away with `screen` — black
+ *   disappears against the dark bar AND the gradient bleed below it, so
+ *   the mark's background reads as the bar melting downward. The mark
+ *   also swells slightly and sinks toward the gradient on hover.
  *
  * Sizes deliberately exceed the bar height on desktop for the default
  * (black) mark: the PNG carries baked-in whitespace that `multiply`
@@ -24,8 +28,8 @@ export default function Logo({ className = '', inverted = false }) {
         alt="AKUMA"
         className={`w-auto -my-1 transition-all duration-300 ${
           inverted
-            ? 'h-10 sm:h-12 nav:h-14 scale-110 origin-left translate-y-1'
-            : 'h-12 sm:h-16 nav:h-20'
+            ? 'h-10 sm:h-12 nav:h-14 mix-blend-screen scale-110 origin-left translate-y-1'
+            : 'h-12 sm:h-16 nav:h-20 mix-blend-multiply'
         }`}
         draggable="false"
       />
