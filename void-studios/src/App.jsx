@@ -63,7 +63,7 @@ export default function App() {
           <Route path="/account" element={<AccountPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/privacy" element={<PrivacyPolicyPage />} /> />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

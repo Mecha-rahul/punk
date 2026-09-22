@@ -1,18 +1,12 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useStore } from '../context/StoreContext'
+import { Link } from 'react-router-dom'
 import { api } from '../lib/api'
 
-// Forgot password — asks the backend for a reset link. The backend emails the
-// link (SMTP configured on the server) and always answers the same way, so we
-// must NOT reveal whether the address exists — show the generic confirmation.
 export default function ForgotPasswordPage() {
-  const { toast } = useStore()
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
+  const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [sent, setSent] = useState(false)
-  const [busy, setBusy] = useState(false)
 
   const submit = async (e) => {
     e.preventDefault()
@@ -20,10 +14,10 @@ export default function ForgotPasswordPage() {
     setBusy(true)
     setError('')
     try {
-      await api.forgotPassword({ email })
-      setSent(true)
+      await api.forgotPassword(email)
+      setSent(true) // same response whether or not the email exists — never leak it
     } catch (err) {
-      setError(err.message || 'Something went wrong — please try again.')
+      setError(err.message || 'Something went wrong — try again.')
     } finally {
       setBusy(false)
     }
@@ -35,18 +29,21 @@ export default function ForgotPasswordPage() {
         <div className="w-full max-w-md border border-line-soft bg-white p-8 sm:p-10">
           <h1 className="ak-section-title text-center">Forgot Password</h1>
           <p className="mt-2 text-center text-[11px] uppercase tracking-[0.2em] text-ink-soft">
-            We'll send you a reset link
+            We&apos;ll send you a reset link
           </p>
 
           {sent ? (
-            <div className="mt-8 space-y-6 text-center">
-              <p className="text-sm text-ink-soft">
+            <div className="mt-8 space-y-4 text-center">
+              <p className="text-[13px] leading-relaxed">
                 If that email is registered, a password reset link is on its way.
-                Check your inbox — the link expires in 15 minutes.
+                It expires in <strong>15 minutes</strong>.
               </p>
-              <button type="button" onClick={() => navigate('/login')} className="ak-btn-dark w-full">
-                Back to Log In
-              </button>
+              <p className="text-[12px] text-ink-soft">
+                Didn&apos;t get it? Check spam, or{' '}
+                <button type="button" onClick={() => setSent(false)} className="font-semibold text-ink underline underline-offset-4">
+                  try again
+                </button>
+              </p>
             </div>
           ) : (
             <form onSubmit={submit} className="mt-8 space-y-5" noValidate>
@@ -68,15 +65,15 @@ export default function ForgotPasswordPage() {
               <button type="submit" disabled={busy} className="ak-btn-dark w-full disabled:opacity-50">
                 {busy ? 'Sending…' : 'Send Reset Link'}
               </button>
-
-              <p className="text-center text-[12px] text-ink-soft">
-                Remembered it?{' '}
-                <Link to="/login" className="font-semibold text-ink underline underline-offset-4">
-                  Back to log in
-                </Link>
-              </p>
             </form>
           )}
+
+          <p className="mt-6 text-center text-[12px] text-ink-soft">
+            Remembered it?{' '}
+            <Link to="/login" className="font-semibold text-ink underline underline-offset-4">
+              Back to log in
+            </Link>
+          </p>
         </div>
       </div>
     </div>

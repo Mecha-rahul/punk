@@ -76,6 +76,11 @@ export const idParamSchema = z.object({
   params: z.object({ id: objectId }),
 });
 
+export const removeProductImageSchema = z.object({
+  params: z.object({ id: objectId }),
+  body: z.object({ url: z.string().min(1, "image url is required") }),
+});
+
 export const slugParamSchema = z.object({
   params: z.object({ slug: z.string().trim().min(1) }),
 });

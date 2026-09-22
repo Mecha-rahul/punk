@@ -1,6 +1,10 @@
-# Never bake secrets or local junk into the Railway image
 node_modules
+npm-debug.log*
 .env
 .env.*
 !.env.example
-*.log
+public/temp/*
+scripts/.memory-mongo-uri
+.git
+Dockerfile
+.dockerignore
