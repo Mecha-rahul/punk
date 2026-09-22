@@ -21,6 +21,7 @@ import WishlistPage from './pages/WishlistPage'
 import AccountPage from './pages/AccountPage'
 import AdminPage from './pages/AdminPage'
 import SearchPage from './pages/SearchPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
@@ -62,6 +63,7 @@ export default function App() {
           <Route path="/account" element={<AccountPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} /> />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

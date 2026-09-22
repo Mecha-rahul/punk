@@ -99,7 +99,7 @@ export const FOOTER_LINKS = {
     { label: 'FAQs', to: '/account' },
     { label: 'Contact Us', href: 'mailto:akuma04313@gmail.com?subject=' + encodeURIComponent('Hi AKUMA — product question') },
     { label: 'Terms of Service', to: '/account' },
-    { label: 'Privacy Policy', to: '/account' },
+    { label: 'Privacy Policy', to: '/privacy' },
   ],
   social: [
     { label: 'Instagram', href: 'https://www.instagram.com/akuma04313/' },
