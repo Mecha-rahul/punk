@@ -4,7 +4,7 @@
 
 ## 1. Introduction
 
-AKUMA ("AKUMA", "we", "us", or "our") operates the website **[https://punkstudios.vercel.app](https://punkstudios.vercel.app)** (the "Site"), an online store for streetwear and apparel based in India. We are AKUMA, registered in India.
+AKUMA operates the website https://punkstudios.vercel.app , an online store for streetwear and apparel based in India. We are AKUMA, registered in India. 
 
 This Privacy Policy explains what personal information we collect when you visit the Site, create an account, shop with us, sign up for our newsletter, or contact us — and how we use, share, and protect that information. It applies to all visitors and customers of the Site.
 
@@ -16,11 +16,10 @@ By using the Site, you agree to the practices described in this policy. If you d
 
 We collect information you provide when you use the Site, including:
 
-- **Account details** — your name, email address, phone number, and password when you register for an account. (Your password is stored only in encrypted, hashed form — we never see or store your actual password.)
-- **Order and delivery details** — shipping and billing addresses, and your order history, when you place an order.
-- **Wishlist items** — products you save to your wishlist while signed in.
-- **Newsletter signup** — your email address when you subscribe to our mailing list.
-- **Customer support messages** — anything you send us when you contact us by email, phone, WhatsApp, or through the Site.
+- Account details  : your name, email address, phone number, and password when you register for an account. (Your password is stored only in encrypted, hashed form — we never see or store your actual password.)
+- Order and delivery details : shipping and billing addresses, and your order history, when you place an order.
+- Wishlist items : products you save to your wishlist while signed in.
+- Customer support messages : anything you send us when you contact us by email, phone, WhatsApp, or through the Site.
 
 ### 2.2 Information collected automatically
 
@@ -43,14 +42,14 @@ Online payments and order tracking are being added to the Site; this section wil
 
 We use the information we collect to:
 
-- **Process and fulfil orders** — confirm orders, arrange delivery, and handle returns or exchanges.
-- **Manage your account** — let you register, log in, and manage your profile.
-- **Sync your cart and wishlist** — keep your saved items available across devices and visits while you are signed in.
-- **Provide customer support** — respond to your questions, complaints, and requests.
-- **Send marketing emails** — newsletters, new drops, restocks, and offers — **only if you subscribed**. Every marketing email includes an unsubscribe link, and you can opt out at any time (see Section 7).
-- **Prevent fraud and abuse** — detect suspicious activity, protect accounts, and enforce our terms.
-- **Improve the website** — understand how visitors use the Site so we can fix problems and make it better.
-- **Comply with the law** — meet tax, accounting, and other legal obligations.
+- **Process and fulfil orders** : confirm orders, arrange delivery, and handle returns or exchanges.
+- **Manage your account** : let you register, log in, and manage your profile.
+- **Sync your cart and wishlist** : keep your saved items available across devices and visits while you are signed in.
+- **Provide customer support** : respond to your questions, complaints, and requests.
+- **Send marketing emails** : newsletters, new drops, restocks, and offers — **only if you subscribed**. Every marketing email includes an unsubscribe link, and you can opt out at any time (see Section 7).
+- **Prevent fraud and abuse** :  detect suspicious activity, protect accounts, and enforce our terms.
+- **Improve the website** : understand how visitors use the Site so we can fix problems and make it better.
+- **Comply with the law** : meet tax, accounting, and other legal obligations.
 
 We will never use your personal information for purposes that are incompatible with the ones above without telling you first.
 
@@ -136,8 +135,8 @@ Questions, requests, or complaints about this policy or your personal data? Cont
 **AKUMA**
 Attn: Grievance Officer / Data Protection Contact
 
-- **Email:** [akuma04313@gmail.com](mailto:akuma04313@gmail.com)
-- **Phone:** [+91 93184 07257](tel:+919318407257)
-- **WhatsApp:** [+91 93184 07257](https://wa.me/919318407257)
+- **Email:** (mailto:akuma04313@gmail.com
+- **Phone:** (tel:+919318407257)
+- **WhatsApp:** (https://wa.me/919318407257)
 
 We aim to respond to all genuine requests within 30 days.
