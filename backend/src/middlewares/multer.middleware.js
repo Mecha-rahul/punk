@@ -1,11 +1,15 @@
 import multer from "multer";
 import { randomUUID } from "node:crypto";
+import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Temp dir anchored to the backend folder (NOT process.cwd()) so uploads
-// work no matter where the server was started from.
+// work no matter where the server was started from. Created eagerly —
+// fresh clones / container deploys don't ship an empty dir, and multer
+// would 500 with ENOENT on the first upload otherwise.
 const TEMP_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "public", "temp");
+mkdirSync(TEMP_DIR, { recursive: true });
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
