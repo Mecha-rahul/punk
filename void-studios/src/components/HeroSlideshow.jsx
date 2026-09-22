@@ -22,10 +22,11 @@ export default function HeroSlideshow() {
         {/* tonal overlay keeps text legible on any artwork */}
         <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-transparent to-bg-primary/60" />
 
-        {/* --- minimal overlay content --- */}
+        {/* --- overlay content: tagline chip removed by owner request;
+            wordmark styled to sit IN the artwork (poster outline + hard
+            shadow) so it reads as part of the banner, not a label on it --- */}
         <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
-          <p className="bg-ink px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.42em] text-bg-primary">{slide.tagline}</p>
-          <h1 className="font-wordmark text-5xl leading-none tracking-[-0.01em] text-ink sm:text-7xl">
+          <h1 className="ak-hero-stroke font-wordmark text-[clamp(4.5rem,17vw,13rem)] leading-[0.85] tracking-[-0.01em] text-white">
             AKUMA
           </h1>
           <Link to={slide.to} className="ak-btn-dark mt-2">{slide.cta}</Link>
