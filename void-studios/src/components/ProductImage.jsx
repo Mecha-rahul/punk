@@ -6,9 +6,12 @@ export default function ProductImage({ src, alt, className = '' }) {
   const [failed, setFailed] = useState(false)
 
   if (failed || !src) {
+    // Sizing comes from the caller's className only — hardcoding h-full w-full
+    // here overrode fixed-size thumbs (e.g. h-12 in the admin table), which
+    // blew the placeholder up to full width and crushed adjacent table columns.
     return (
       <div
-        className={`flex h-full w-full flex-col items-center justify-center gap-2 bg-bg-secondary text-center ${className}`}
+        className={`flex flex-col items-center justify-center gap-2 bg-bg-secondary text-center ${className}`}
         role="img"
         aria-label={alt}
       >
