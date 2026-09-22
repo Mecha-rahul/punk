@@ -1,10 +1,10 @@
 # AKUMA Privacy Policy
 
-*Last updated: [PLACEHOLDER: DATE — e.g. 22 September 2026]*
+*Last updated: 22 September 2026*
 
 ## 1. Introduction
 
-AKUMA ("AKUMA", "we", "us", or "our") operates the website **[PLACEHOLDER: DOMAIN — e.g. https://akuma.com]** (the "Site"), an online store for streetwear and apparel based in India. We are **[PLACEHOLDER: LEGAL ENTITY NAME — e.g. AKUMA Apparel Pvt. Ltd.]**, registered in India, with our registered office at **[PLACEHOLDER: REGISTERED ADDRESS]**.
+AKUMA ("AKUMA", "we", "us", or "our") operates the website **[https://punkstudios.vercel.app](https://punkstudios.vercel.app)** (the "Site"), an online store for streetwear and apparel based in India. We are AKUMA, registered in India.
 
 This Privacy Policy explains what personal information we collect when you visit the Site, create an account, shop with us, sign up for our newsletter, or contact us — and how we use, share, and protect that information. It applies to all visitors and customers of the Site.
 
@@ -35,7 +35,7 @@ When you browse the Site, we automatically collect certain technical information
 
 ### 2.3 Information from payments
 
-When you pay for an order, the payment is processed by a third-party payment gateway — **[PLACEHOLDER: PAYMENT GATEWAY — e.g. Razorpay / Stripe]** (the "Payment Provider"). **We do not receive or store your full card number, CVV, UPI credentials, or net-banking details.** That information goes directly to the Payment Provider over an encrypted connection and is governed by their own privacy policy. We only receive and store a confirmation of the payment (e.g. a transaction ID, the amount, and the payment status) so we can process and support your order.
+When you pay for an order, the payment is processed by a third-party payment gateway — **Razorpay** (the "Payment Provider"). **We do not receive or store your full card number, CVV, UPI credentials, or net-banking details.** That information goes directly to the Payment Provider over an encrypted connection and is governed by their own privacy policy. We only receive and store a confirmation of the payment (e.g. a transaction ID, the amount, and the payment status) so we can process and support your order.
 
 Online payments and order tracking are being added to the Site; this section will apply once they are live.
 
@@ -59,8 +59,8 @@ We will never use your personal information for purposes that are incompatible w
 The Site uses cookies — small text files stored on your device — and similar technologies. We use three types:
 
 - **Essential cookies** — strictly necessary for the Site to work. They keep you logged in, remember your cart contents, and protect against fraud. The Site cannot function properly without them.
-- **Analytics cookies** — help us understand how visitors use the Site (which pages are popular, where visitors come from) so we can improve it. We currently use / plan to use **[PLACEHOLDER: ANALYTICS TOOLS — e.g. Google Analytics / Meta Pixel — delete if none]**.
-- **Marketing cookies** — used to show you relevant AKUMA ads on other platforms and measure how our campaigns perform. These are only set if **[PLACEHOLDER: CONFIRM WHETHER MARKETING COOKIES ARE USED]**.
+- **Analytics cookies** — help us understand how visitors use the Site (which pages are popular, where visitors come from) so we can improve it. If we add an analytics tool (such as Google Analytics) in the future, we will update this section before it goes live.
+- **Marketing cookies** — used to show you relevant AKUMA ads on other platforms and measure how our campaigns perform. We do not currently set marketing cookies; if that changes, this section will be updated first.
 
 ### Controlling cookies
 
@@ -72,7 +72,7 @@ You can control or delete cookies through your browser settings, and most browse
 
 We share personal information only with the categories of third parties listed below, and only to the extent needed to run our business:
 
-- **Payment processors** — **[PLACEHOLDER: PAYMENT GATEWAY — e.g. Razorpay / Stripe]**, to take payments securely.
+- **Payment processors** — **Razorpay**, to take payments securely.
 - **Shipping and courier partners** — delivery companies that ship your orders; we share only what they need (name, delivery address, phone, order contents).
 - **IT and hosting providers** — companies that host our website, servers, and database (see Section 6).
 - **Marketing and analytics tools** — email delivery and analytics services that help us run the newsletter and understand Site usage.
@@ -82,7 +82,7 @@ All third parties we work with are bound to use your information only for the se
 
 ## 6. Data Storage & Security
 
-**Where your data lives.** Site data is stored in a managed cloud database provided by **[PLACEHOLDER: DATABASE/HOSTING PROVIDER — e.g. MongoDB Atlas]**. Your data may be stored on servers located outside India; where that happens, we rely on appropriate safeguards required by applicable law.
+**Where your data lives.** Site data is stored in a managed cloud database provided by **MongoDB Atlas**. Your data may be stored on servers located outside India; where that happens, we rely on appropriate safeguards required by applicable law.
 
 **How we protect it.** We use industry-standard measures, including:
 
@@ -96,9 +96,9 @@ All third parties we work with are bound to use your information only for the se
 **How long we keep it.** We keep your personal information only as long as needed for the purposes in this policy:
 
 - Account data — until you ask us to delete your account
-- Order records — as long as required by tax and accounting law in India (typically **[PLACEHOLDER: RETENTION PERIOD — e.g. 8 years]**)
+- Order records — as long as required by tax and accounting law in India (typically 8 years)
 - Marketing data — until you unsubscribe
-- Technical logs — for a short period for security and troubleshooting (**[PLACEHOLDER: LOG RETENTION — e.g. 90 days]**)
+- Technical logs — for a short period for security and troubleshooting (typically 90 days)
 
 ## 7. Your Rights
 
@@ -115,11 +115,11 @@ You have real control over your personal information. Subject to applicable law,
 
 **If you are outside India** (e.g. in the EU/UK), we extend GDPR-style rights to you on the same terms — access, rectification, erasure, restriction of processing, portability, and objection — regardless of where you live.
 
-To exercise any right, contact us at **[PLACEHOLDER: SUPPORT EMAIL]**. We will respond within a reasonable time. We may ask you to verify your identity before acting on a request. You will never be discriminated against for exercising your rights.
+To exercise any right, contact us at **[akuma04313@gmail.com](mailto:akuma04313@gmail.com)**. We will respond within a reasonable time. We may ask you to verify your identity before acting on a request. You will never be discriminated against for exercising your rights.
 
 ## 8. Children's Privacy
 
-The Site is not intended for children, and we do not knowingly collect personal information from anyone under **[PLACEHOLDER: MINIMUM AGE — e.g. 18]**. If you believe a child has provided us with personal information, contact us at **[PLACEHOLDER: SUPPORT EMAIL]** and we will delete it promptly. You must be at least the age of majority in your place of residence to make a purchase on the Site.
+The Site is not intended for children, and we do not knowingly collect personal information from anyone under **18**. If you believe a child has provided us with personal information, contact us at **[akuma04313@gmail.com](mailto:akuma04313@gmail.com)** and we will delete it promptly. You must be at least the age of majority in your place of residence to make a purchase on the Site.
 
 ## 9. Third-Party Links
 
@@ -133,11 +133,11 @@ We may update this policy from time to time — for example, when we launch onli
 
 Questions, requests, or complaints about this policy or your personal data? Contact our Grievance Officer:
 
-**[PLACEHOLDER: LEGAL ENTITY NAME — e.g. AKUMA Apparel Pvt. Ltd.]**
+**AKUMA**
 Attn: Grievance Officer / Data Protection Contact
 
-- **Email:** [PLACEHOLDER: SUPPORT EMAIL — e.g. support@akuma.com]
-- **Phone:** [PLACEHOLDER: SUPPORT PHONE — e.g. +91 XXXXX XXXXX]
-- **Address:** [PLACEHOLDER: REGISTERED ADDRESS]
+- **Email:** [akuma04313@gmail.com](mailto:akuma04313@gmail.com)
+- **Phone:** [+91 93184 07257](tel:+919318407257)
+- **WhatsApp:** [+91 93184 07257](https://wa.me/919318407257)
 
 We aim to respond to all genuine requests within 30 days.

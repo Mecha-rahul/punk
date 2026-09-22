@@ -32,7 +32,7 @@ function renderInline(text) {
   return parts
 }
 
-function MarkdownBlocks({ md }) {
+export function MarkdownBlocks({ md }) {
   const lines = md.split('\n')
   const out = []
   let listItems = []

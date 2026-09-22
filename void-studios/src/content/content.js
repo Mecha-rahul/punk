@@ -98,7 +98,7 @@ export const FOOTER_LINKS = {
     { label: 'Returns & Exchange Policy', to: '/account' },
     { label: 'FAQs', to: '/account' },
     { label: 'Contact Us', href: 'mailto:akuma04313@gmail.com?subject=' + encodeURIComponent('Hi AKUMA — product question') },
-    { label: 'Terms of Service', to: '/account' },
+    { label: 'Terms of Service', to: '/terms' },
     { label: 'Privacy Policy', to: '/privacy' },
   ],
   social: [

@@ -68,7 +68,10 @@ export default function RegisterPage() {
               />
               <span>
                 I agree to the{' '}
-                <span className="underline underline-offset-4">Terms of Service</span> and{' '}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-ink underline underline-offset-4">
+                  Terms of Service
+                </a>{' '}
+                and{' '}
                 <a href="/privacy" target="_blank" rel="noopener noreferrer" className="font-semibold text-ink underline underline-offset-4">
                   Privacy Policy
                 </a>.
