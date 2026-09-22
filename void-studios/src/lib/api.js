@@ -90,8 +90,8 @@ export const api = {
   register: (body) => request('/auth/register', { method: 'POST', body }),
   login: (body) => request('/auth/login', { method: 'POST', body }),
   logout: () => request('/auth/logout', { method: 'POST' }),
-  forgotPassword: (body) => request('/auth/forgot-password', { method: 'POST', body }),
-  resetPassword: (body) => request('/auth/reset-password', { method: 'POST', body }),
+  forgotPassword: (email) => request('/auth/forgot-password', { method: 'POST', body: { email } }),
+  resetPassword: (token, newPassword) => request('/auth/reset-password', { method: 'POST', body: { token, newPassword } }),
 
   // cart
   cart: () => request('/cart').then(normCart),
@@ -120,6 +120,7 @@ export const api = {
     for (const file of files) fd.append('images', file)
     return upload(`/products/${id}/images`, fd)
   },
+  adminRemoveImage: (id, url) => request(`/products/${id}/images`, { method: 'DELETE', body: { url } }),
 }
 
 export { BASE as API_BASE }

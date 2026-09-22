@@ -139,14 +139,23 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   const resetPath = `/reset-password?token=${rawToken}`;
   const origin = process.env.FRONTEND_URL || "http://localhost:5173";
+  const resetUrl = `${origin}${resetPath}`;
 
   const mail = await sendEmail({
     to: user.email,
-    subject: "Reset your password",
+    subject: "Reset your AKUMA password",
     text:
       `You requested a password reset. This link expires in 15 minutes.\n\n` +
-      `${origin}${resetPath}\n\n` +
+      `${resetUrl}\n\n` +
       `If you didn't request this, you can ignore this email.`,
+    html:
+      `<div style="font-family:Helvetica,Arial,sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#faf8f4;border:1px solid #e7e2d8">` +
+      `<h1 style="margin:0 0 8px;font-size:22px;letter-spacing:2px;text-transform:uppercase;color:#141414">AKUMA</h1>` +
+      `<p style="margin:0 0 24px;font-size:14px;color:#555">You requested a password reset. Click below to choose a new one — the link expires in <strong>15 minutes</strong>.</p>` +
+      `<a href="${resetUrl}" style="display:inline-block;padding:12px 28px;background:#141414;color:#fff;text-decoration:none;font-size:13px;letter-spacing:1.5px;text-transform:uppercase">Reset password</a>` +
+      `<p style="margin:24px 0 0;font-size:12px;color:#888;word-break:break-all">Or paste this link into your browser:<br>${resetUrl}</p>` +
+      `<p style="margin:16px 0 0;font-size:12px;color:#888">If you didn't request this, you can safely ignore this email.</p>` +
+      `</div>`,
   });
 
   if (!mail.delivered) {
