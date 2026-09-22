@@ -62,7 +62,7 @@ export const NAV_LINKS = [
     children: [
       { label: 'T-SHIRTS', to: '/tops/tshirts' },
       { label: 'HOODIES', to: '/tops/hoodies' },
-      { label: 'JACKETS', to: '/tops/jackets' },
+      // JACKETS hidden for now — re-add: { label: 'JACKETS', to: '/tops/jackets' },
       { label: 'FULL SLEEVE T-SHIRT', to: '/tops/full-sleeve' },
       { label: 'TANK TOPS', to: '/tops/tank-tops' },
     ],
@@ -72,8 +72,9 @@ export const NAV_LINKS = [
   {
     label: 'BOTTOMS',
     children: [
-      { label: 'PANTS', to: '/bottoms/pants' },
-      { label: 'JEANS', to: '/bottoms/jeans' },
+      // PANTS & JEANS hidden for now — re-add:
+      // { label: 'PANTS', to: '/bottoms/pants' },
+      // { label: 'JEANS', to: '/bottoms/jeans' },
       { label: 'SHORTS', to: '/bottoms/shorts' },
     ],
     viewAll: '/bottoms',
