@@ -39,7 +39,7 @@ export const MARQUEE_SECONDARY = [
 export const HERO_SLIDES = [
   // Static hero banner — single image (carousel removed). Keep the array
   // shape so swapping the artwork later stays a one-line change.
-  { type: 'image', src: '/assets/hero/hero-banner.webp', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
+  { type: 'image', src: '/assets/hero/hero-banner.png', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
 ]
 
 // Mock reviews — replace with real reviews once backend lands

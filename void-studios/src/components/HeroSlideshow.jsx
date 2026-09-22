@@ -12,8 +12,12 @@ export default function HeroSlideshow() {
   return (
     <section className="relative">
       <div className="relative flex h-[calc(100svh-6rem)] min-h-[540px] items-center justify-center overflow-hidden bg-bg-secondary">
-        {/* --- static media layer --- */}
-        <ProductImage src={slide.src} alt="AKUMA" className="h-full w-full object-cover" />
+        {/* --- static media layer (absolute so it never competes with the
+            overlay content for flex space — in-flow images squeeze the
+            layout and shove the text sideways) --- */}
+        <div className="absolute inset-0">
+          <ProductImage src={slide.src} alt="AKUMA" className="h-full w-full object-cover" />
+        </div>
 
         {/* tonal overlay keeps text legible on any artwork */}
         <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-transparent to-bg-primary/60" />
