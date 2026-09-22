@@ -52,9 +52,9 @@ export default function LoginPage() {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="login-password" className="ak-label">Password</label>
-                <button type="button" className="text-[10px] uppercase tracking-[0.16em] text-ink-soft underline-offset-4 hover:underline">
+                <Link to="/forgot-password" className="text-[10px] uppercase tracking-[0.16em] text-ink-soft underline-offset-4 hover:underline">
                   Forgot password?
-                </button>
+                </Link>
               </div>
               <input
                 id="login-password"
