@@ -24,12 +24,15 @@ export default function Logo({ className = '', inverted = false }) {
       className={`inline-flex items-center ${className}`}
     >
       <img
-        src={inverted ? '/assets/brand/logo-white.png' : '/assets/brand/logo-black.png'}
+        src={inverted
+          ? '/assets/brand/logo-white.png?v=2'
+          : '/assets/brand/logo-black.png?v=2'
+        }
         alt="AKUMA"
         className={`w-auto -my-1 transition-all duration-300 ${
           inverted
-            ? 'h-10 sm:h-12 nav:h-14 mix-blend-screen scale-110 origin-left translate-y-1'
-            : 'h-12 sm:h-16 nav:h-20 mix-blend-multiply'
+            ? 'h-10 sm:h-12 nav:h-14'
+            : 'h-12 sm:h-16 nav:h-20'
         }`}
         draggable="false"
       />
