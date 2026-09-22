@@ -1,6 +1,6 @@
 # AKUMA — Terms and Conditions
 
-**Last Updated:** 22/09/2026
+Last Updated: 22/09/2026
 
 Welcome to AKUMA. These Terms and Conditions govern your access to and use of the website **AKUMA — Bold Streetwear** (the "Site") and any purchase you make from us. By accessing or using the Site, creating an account, or placing an order, you agree to be bound by these Terms. If you do not agree, please do not use the Site.
 
