@@ -11,7 +11,11 @@ export default function HeroSlideshow() {
 
   return (
     <section className="relative">
-      <div className="relative flex h-[calc(100svh-6rem)] min-h-[540px] items-center justify-center overflow-hidden bg-bg-secondary">
+      {/* Phones: box matches the artwork's 16:9 ratio so the WHOLE image is
+          visible (object-cover into a tall portrait box zooms into a ~30%
+          slice and the art becomes unreadable). Tablets/desktop keep the
+          tall immersive hero. */}
+      <div className="relative flex aspect-video items-center justify-center overflow-hidden bg-bg-secondary md:aspect-auto md:h-[calc(100svh-6rem)] md:min-h-[540px]">
         {/* --- static media layer (absolute so it never competes with the
             overlay content for flex space — in-flow images squeeze the
             layout and shove the text sideways) --- */}
