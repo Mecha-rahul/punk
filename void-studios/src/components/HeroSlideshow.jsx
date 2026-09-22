@@ -26,7 +26,7 @@ export default function HeroSlideshow() {
             wordmark styled to sit IN the artwork (poster outline + hard
             shadow) so it reads as part of the banner, not a label on it --- */}
         <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
-          <h1 className="ak-hero-stroke font-wordmark text-[clamp(4.5rem,17vw,13rem)] leading-[0.85] tracking-[-0.01em] text-white">
+          <h1 className="ak-hero-stroke font-wordmark text-[clamp(2.5rem,8.5vw,6.5rem)] leading-[0.9] tracking-[-0.01em] text-white">
             AKUMA
           </h1>
           <Link to={slide.to} className="ak-btn-dark mt-2">{slide.cta}</Link>
