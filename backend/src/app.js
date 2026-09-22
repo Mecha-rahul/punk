@@ -35,10 +35,10 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-// Tiny health endpoint for uptime checks.
-app.get("/api/v1/health", (_req, res) => {
-  res.json({ success: true, message: "API is up", data: null });
-});
+// Tiny health endpoint for uptime checks — also exposes the deployed commit
+// and boot time, so a stale deploy is detectable with a single curl.
+import { attachHealthMeta } from "./utils/healthMeta.js";
+attachHealthMeta(app);
 
 // ─── API v1 routers ──────────────────────────────────────────────────────────
 import authRouter from "./routes/auth.routes.js";
