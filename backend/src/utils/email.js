@@ -31,20 +31,51 @@ export const sendEmail = async ({ to, subject, text, html }) => {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      // Hard caps so a bad host/port/firewall can NEVER hang a request —
+      // every phase of the SMTP conversation must answer within seconds.
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 15_000,
     });
+
+    console.log(
+      `📧 SMTP → ${process.env.SMTP_HOST}:${port} (secure=${port === 465}) as ${process.env.SMTP_USER}`
+    );
 
     // verify() fails fast with a clear auth/connection error instead of a
     // timeout deep inside sendMail.
     await transporter.verify();
 
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
-      to,
-      subject,
-      text,
-      ...(html ? { html } : {}),
-    });
-    return { delivered: true };
+    // Send in the background with a cap — the HTTP response must never wait
+    // on the mail server. Callers get `delivered: false, reason: 'sending'
+    // continues in background' immediately; the send result lands in logs.
+    const sendPromise = transporter
+      .sendMail({
+        from: process.env.SMTP_FROM || process.env.SMTP_USER,
+        to,
+        subject,
+        text,
+        ...(html ? { html } : {}),
+      })
+      .then(() => {
+        console.log(`📧 Email sent to ${to}`);
+        return true;
+      })
+      .catch((err) => {
+        console.error("📧 Email send failed:", err.message);
+        return false;
+      });
+
+    // Race against a short cap so the endpoint answers quickly either way.
+    const ok = await Promise.race([
+      sendPromise,
+      new Promise((resolve) => setTimeout(() => resolve("timeout"), 5000)),
+    ]);
+
+    if (ok === "timeout") {
+      return { delivered: false, reason: "SMTP send still in progress (backgrounded)" };
+    }
+    return ok ? { delivered: true } : { delivered: false, reason: "send failed — see logs" };
   } catch (error) {
     console.error("📧 Email send failed:", error.message);
     return { delivered: false, reason: error.message };
