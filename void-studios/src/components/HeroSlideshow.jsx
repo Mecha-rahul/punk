@@ -42,9 +42,6 @@ export default function HeroSlideshow({ autoplay = 5000 }) {
             <ProductImage src={slide.src} alt="" className="h-full w-full object-cover" />
           )}
         </div>
-        {/* tonal overlay keeps text legible once real footage lands */}
-        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-transparent to-bg-primary/60" />
-
         {/* --- minimal overlay content --- */}
         <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
           <p className="bg-ink px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.42em] text-bg-primary">{slide.tagline}</p>
