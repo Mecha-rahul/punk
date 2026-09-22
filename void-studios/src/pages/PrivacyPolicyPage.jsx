@@ -58,6 +58,7 @@ export function MarkdownBlocks({ md }) {
     }
     flushList(idx)
     if (!line.trim() || line.trim() === '---') return
+    if (line.startsWith('# ')) return // docs' H1 is duplicated by the page's own <h1>
     if (line.startsWith('## ')) {
       out.push(
         <h2 key={idx} className="mt-12 border-t border-line-soft pt-8 text-xl font-semibold tracking-tight text-ink first:mt-0 first:border-0 first:pt-0 sm:text-2xl">
