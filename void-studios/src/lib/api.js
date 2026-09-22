@@ -118,6 +118,7 @@ export const api = {
     for (const file of files) fd.append('images', file)
     return upload(`/products/${id}/images`, fd)
   },
+  adminRemoveImage: (id, url) => request(`/products/${id}/images`, { method: 'DELETE', body: { url } }),
 }
 
 export { BASE as API_BASE }
