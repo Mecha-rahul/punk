@@ -1,28 +1,19 @@
 import multer from "multer";
-import { randomUUID } from "node:crypto";
-import { mkdirSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-// Temp dir anchored to the backend folder (NOT process.cwd()) so uploads
-// work no matter where the server was started from. Created eagerly —
-// fresh clones / container deploys don't ship an empty dir, and multer
-// would 500 with ENOENT on the first upload otherwise.
-const TEMP_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "public", "temp");
-mkdirSync(TEMP_DIR, { recursive: true });
+// Keep uploads in memory and stream them straight to Cloudinary. This avoids
+// relying on an ephemeral filesystem, which is a common cause of first-upload
+// failures on container hosts such as Railway.
+const imageTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"]);
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, TEMP_DIR)
-    },
-    filename: function (req, file, cb) {
-      // Unique prefix — with multi-file uploads, two files sharing an
-      // originalname would write to the same temp path and one would vanish.
-      const safeName = file.originalname.replace(/[^\w.\-]+/g, "_");
-      cb(null, `${randomUUID()}-${safeName}`)
-    }
-  })
-  
-export const upload = multer({ 
-    storage, 
-})
+export const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024, files: 3 },
+  fileFilter: (_req, file, cb) => {
+    if (imageTypes.has(file.mimetype)) return cb(null, true);
+    // statusCode routes this through the error handler as a clean 415
+    // (not the generic 500) — see errorHandler.middleware.js.
+    const err = new Error("Only JPEG, PNG, WebP, GIF, and AVIF images are supported");
+    err.statusCode = 415;
+    return cb(err);
+  },
+});
