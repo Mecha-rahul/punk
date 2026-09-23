@@ -1,5 +1,4 @@
 import {v2 as cloudinary} from "cloudinary"
-import fs from "fs"
 
 
 cloudinary.config({ 
@@ -8,26 +7,26 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-const uploadOnCloudinary = async (localFilePath) => {
-    try {
-        if (!localFilePath) return null
-        //upload the file on cloudinary
-        const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "auto"
-        })
-        // file has been uploaded successfull
-        //console.log("file is uploaded on cloudinary ", response.url);
-        try { fs.unlinkSync(localFilePath) } catch { /* temp file already gone */ }
-        return response;
+const uploadOnCloudinary = (file) => {
+  if (!file?.buffer?.length) return Promise.resolve(null);
 
-    } catch (error) {
-        // Surface the real Cloudinary error (invalid key, bad cloud name,
-        // network…) — a silent null here made uploads undiagnosable.
-        console.error("[cloudinary] upload failed:", error?.message || error);
-        try { fs.unlinkSync(localFilePath) } catch { /* temp file already gone */ }
-        return null;
-    }
-}
+  return new Promise((resolve) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { resource_type: "image", folder: "akuma/products" },
+      (error, result) => {
+        if (error) {
+          // The detailed provider error stays in Railway logs; callers receive
+          // a safe, actionable response instead of an opaque 500.
+          console.error("[cloudinary] upload failed:", error.message || error);
+          resolve(null);
+          return;
+        }
+        resolve(result);
+      }
+    );
+    stream.end(file.buffer);
+  });
+};
 
 
 

@@ -239,7 +239,7 @@ const uploadImages = asyncHandler(async (req, res) => {
 
   const urls = [];
   for (const file of files) {
-    const result = await uploadOnCloudinary(file.path);
+    const result = await uploadOnCloudinary(file);
     if (!result) {
       throw new ApiError(502, "Image upload to Cloudinary failed");
     }
