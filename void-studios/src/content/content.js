@@ -37,9 +37,10 @@ export const MARQUEE_SECONDARY = [
 // assets exist. Slide transition style is intentionally simple for now
 // (owner will specify the final animation treatment later).
 export const HERO_SLIDES = [
-  // Static hero banner — single image (carousel removed). Keep the array
-  // shape so swapping the artwork later stays a one-line change.
-  { type: 'image', src: '/assets/hero/hero-banner.png', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
+  // Static hero banner — single image on Cloudinary's CDN. The transform
+  // (f_auto,q_auto,w_2560) delivers auto-format/quality at 2560px wide —
+  // the 8MB source PNG ships as ~450KB. Swap src when new artwork drops.
+  { type: 'image', src: 'https://res.cloudinary.com/mak8wmjn/image/upload/f_auto,q_auto,w_2560/v1790320789/ghwjf.webp', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
 ]
 
 // Mock reviews — replace with real reviews once backend lands
