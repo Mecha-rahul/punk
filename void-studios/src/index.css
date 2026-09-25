@@ -69,6 +69,29 @@ header:has(.nav-group:hover) .ak-nav-overlay {
   animation: ak-marquee-scroll 28s linear infinite;
 }
 
+/* skeleton shimmer — used by components/Skeletons.jsx while the
+   catalog/detail data loads. Warm-neutral sheen sweeps each block. */
+.ak-skeleton {
+  background: linear-gradient(
+    100deg,
+    var(--bg-secondary) 0%,
+    var(--bg-alt) 40%,
+    var(--bg-secondary) 80%
+  );
+  background-size: 200% 100%;
+  animation: ak-skeleton-slide 1.6s ease-in-out infinite;
+}
+@keyframes ak-skeleton-slide {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ak-skeleton {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
 /* thin scrollbar to match the minimal look */
 * {
   scrollbar-width: thin;

@@ -1,5 +1,6 @@
 import { useSearchParams, Link } from 'react-router-dom'
 import ProductGrid from '../components/ProductGrid'
+import { SkeletonGrid } from '../components/Skeletons'
 import { useStore } from '../context/StoreContext'
 
 export default function SearchPage() {
@@ -26,9 +27,7 @@ export default function SearchPage() {
 
         <div className="mt-10">
           {apiLive === null && results.length === 0 ? (
-            <div className="py-16 text-center">
-              <p className="font-wordmark text-2xl uppercase text-ink/25">Loading…</p>
-            </div>
+            <SkeletonGrid count={8} />
           ) : results.length ? (
             <ProductGrid products={results} />
           ) : (
