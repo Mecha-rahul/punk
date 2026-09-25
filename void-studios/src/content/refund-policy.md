@@ -1,4 +1,4 @@
-# Refund Policy
+# Return & Exchange Policy
 
 ## Order Cancellation & Size Exchange
 
