@@ -96,7 +96,7 @@ export const FOOTER_LINKS = {
   ],
   support: [
     { label: 'Track Order', to: '/account' },
-    { label: 'Returns & Exchange Policy', to: '/account' },
+    { label: 'Returns & Exchange Policy', to: '/refund' },
     { label: 'FAQs', to: '/account' },
     { label: 'Contact Us', href: 'mailto:akuma04313@gmail.com?subject=' + encodeURIComponent('Hi AKUMA — product question') },
     { label: 'Terms of Service', to: '/terms' },

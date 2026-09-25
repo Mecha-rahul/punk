@@ -23,6 +23,7 @@ import AdminPage from './pages/AdminPage'
 import SearchPage from './pages/SearchPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsPage from './pages/TermsPage'
+import RefundPolicyPage from './pages/RefundPolicyPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/refund" element={<RefundPolicyPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

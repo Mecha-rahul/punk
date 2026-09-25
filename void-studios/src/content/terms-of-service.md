@@ -53,10 +53,10 @@ You must be at least 18 years old to create an account or place an order on the 
 
 ## 6. Returns, Exchanges & Refunds
 
-- Eligible items may be exchanged within **9 days** of delivery, subject to the conditions outlined in our separate Returns & Exchange Policy.
+- Eligible items may be exchanged within **9 days** of delivery, subject to the conditions outlined in our separate [Returns & Exchange Policy](/refund).
 - Returns for a refund are accepted only where the product received is defective, damaged, or different from what was ordered. We do not offer refunds for change-of-mind returns — size or color issues can be handled through an exchange instead, subject to availability.
 - Items must be unused, unwashed, with original tags and packaging intact to be eligible for exchange or a defect-based return.
-- Certain categories (e.g. innerwear, accessories, sale/clearance items) may be non-exchangeable and non-returnable — see the Returns & Exchange Policy for the full list.
+- Certain categories (e.g. innerwear, accessories, sale/clearance items) may be non-exchangeable and non-returnable — see the [Returns & Exchange Policy](/refund) for the full list.
 - Refunds for defective, damaged, or incorrect items will be processed to the original payment method within **7–10 business days** of approval.
 
 ---
@@ -123,4 +123,4 @@ Phone: 9318407257
 
 ---
 
-*This document should be read together with our Privacy Policy and Returns & Exchange Policy.*
+*This document should be read together with our [Privacy Policy](/privacy) and [Returns & Exchange Policy](/refund).*
