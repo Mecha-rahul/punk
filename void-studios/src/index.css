@@ -32,6 +32,15 @@
 }
 
 @layer components {
+  /* Hero wordmark — thick white poster outline + hard ink drop shadow so the
+     name sits inside the artwork (paint-style), legible on any background. */
+  .ak-hero-stroke {
+    -webkit-text-stroke: 1.5px var(--text-primary);
+    paint-order: stroke fill;
+    text-shadow:
+      3px 3px 0 rgba(27, 24, 21, 0.55),
+      0 6px 18px rgba(27, 24, 21, 0.35);
+  }
   .ak-shell {
     @apply mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-10;
   }

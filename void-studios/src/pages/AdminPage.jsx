@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import { api } from '../lib/api'
+import { compressImage } from '../lib/imageUpload'
 import ProductImage from '../components/ProductImage'
 
 // ==================================================================
@@ -670,16 +671,21 @@ export default function AdminPage() {
                       type="file"
                       accept="image/*"
                       multiple
-                      onChange={(e) => {
+                      onChange={async (e) => {
                         const picked = [...e.target.files]
                         const room = MAX_IMAGES - totalImages
+                        const accepted = picked.length > room ? picked.slice(0, Math.max(0, room)) : picked
                         if (picked.length > room) {
                           setFormError(`Max ${MAX_IMAGES} images per product — picked ${picked.length}, room for ${room}`)
-                          setFiles((prev) => [...prev, ...picked.slice(0, Math.max(0, room))])
                         } else {
                           setFormError(null)
-                          setFiles((prev) => [...prev, ...picked])
                         }
+                        // Compress each image client-side first — phone photos are 3–8MB
+                        // and anything over ~2.85MB 502s at the Vercel proxy before it
+                        // reaches the backend. Compressed files render the same preview
+                        // and upload the same way; see lib/imageUpload.js.
+                        const compressed = await Promise.all(accepted.map(compressImage))
+                        setFiles((prev) => [...prev, ...compressed])
                         e.target.value = ''
                       }}
                       className="hidden"
@@ -688,7 +694,7 @@ export default function AdminPage() {
                 )}
               </div>
               <p className="mt-2 text-xs text-ink-soft">
-                Up to {MAX_IMAGES} images per product. “Add” queues files; they upload to Cloudinary when you save (new products) or via “Upload now” (existing).
+                Up to {MAX_IMAGES} images per product. Large photos are compressed automatically in your browser before upload. “Add” queues files; they upload to Cloudinary when you save (new products) or via “Upload now” (existing).
               </p>
             </div>
 

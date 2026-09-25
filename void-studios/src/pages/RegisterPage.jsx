@@ -66,7 +66,16 @@ export default function RegisterPage() {
                 onChange={(e) => setForm({ ...form, terms: e.target.checked })}
                 className="mt-0.5 h-4 w-4 shrink-0 accent-ink"
               />
-              <span>I agree to the Terms of Service and Privacy Policy.</span>
+              <span>
+                I agree to the{' '}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-ink underline underline-offset-4">
+                  Terms of Service
+                </a>{' '}
+                and{' '}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="font-semibold text-ink underline underline-offset-4">
+                  Privacy Policy
+                </a>.
+              </span>
             </label>
 
             {error && <p className="text-[12px] font-medium text-accent">{error}</p>}

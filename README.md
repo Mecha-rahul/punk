@@ -1,10 +1,11 @@
-# PUNK THRIFT STUDIOS
+
+# AKUMA — BOLD STREETWEAR
 
 > **Heavyweight streetwear & archival thrift — New Delhi, India**
 
-**PUNK.IN** is an independent studio from New Delhi working at the crossing point of two obsessions: **archival thrift** — hunting, restoring and re-issuing pieces that already lived a life — and **heavyweight streetwear**, built on dense 240–340 GSM cotton that holds its shape for years, not seasons.
+**AKUMA** is an independent studio from New Delhi working at the crossing point of two obsessions: **archival thrift** — hunting, restoring and re-issuing pieces that already lived a life — and **heavyweight streetwear**, cut from dense 240–340 GSM cotton built to hold its shape for years, not seasons.
 
-Every drop is a limited batch. Pieces are hand-finished, often one-of-one, and once a batch is gone, it's gone.
+Every drop is a limited batch, hand-finished and often one-of-one. Once it's gone, it's gone — no restocks, no reprints.
 
 ---
 
@@ -12,7 +13,7 @@ Every drop is a limited batch. Pieces are hand-finished, often one-of-one, and o
 
 - **One-of-One Hand-Painted Tees** — original artwork painted by hand; no two pieces ever identical
 - **Heavyweight Essentials** — boxy hoodies, distressed tees and mocknecks in 240–340 GSM loopback French terry and combed cotton
-- **Archive Restorations** — curated thrift finds, cleaned, repaired and re-issued under the PUNK archive label
+- **Archive Restorations** — curated thrift finds, cleaned, repaired and re-issued under the AKUMA archive label
 - **Objects & Accessories** — leather goods, headwear and studio oddities from past collections
 
 ---
@@ -30,10 +31,10 @@ Every drop is a limited batch. Pieces are hand-finished, often one-of-one, and o
 
 New batches release as limited drops announced on the store. Past drops have sold out — follow the store to catch the next one.
 
-🛒 **Official store:** [punkstudios.vercel.app](https://punkstudios.vercel.app)
+🛒 **Official store:** [akuma-store.vercel.app](https://akuma-store.vercel.app/)
 
 ---
 
 📍 **New Delhi, India**
 
-© 2026 **PUNK THRIFT STUDIOS (PUNK.IN)**
+© 2026 **AKUMA**

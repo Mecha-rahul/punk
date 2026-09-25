@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import AnnouncementBar from './AnnouncementBar'
 import Logo from './Logo'
 import SearchOverlay from './SearchOverlay'
 import {
@@ -54,7 +53,7 @@ export default function Header() {
 
   return (
     <header ref={headerRef} className="sticky top-0 z-50">
-      <AnnouncementBar />
+      {/* announcement strip removed by owner request — main header starts directly */}
 
       {/* ---- main bar — light normally, black while hovered ---- */}
       <div

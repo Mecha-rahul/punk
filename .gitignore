@@ -1,0 +1,22 @@
+# ─── secrets (NEVER commit — Atlas password, JWT secrets live here) ─────────
+.env
+.env.*
+!.env.example
+
+# ─── dependencies ────────────────────────────────────────────────────────────
+node_modules/
+backend/node_modules/
+void-studios/node_modules/
+
+# ─── build output ────────────────────────────────────────────────────────────
+void-studios/dist/
+
+# ─── local tooling / logs ────────────────────────────────────────────────────
+.freebuff/
+.tools/
+*.log
+akuma-preview.log
+
+# ─── OS / editor noise ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

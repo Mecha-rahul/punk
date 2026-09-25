@@ -248,7 +248,13 @@ export function StoreProvider({ children }) {
   const toggleWishlist = useCallback(
     async (productId) => {
       if (apiLive && user) {
-        const data = await api.addWishlist(productId)
+        // Decide from the CURRENT wishlist state: already liked → DELETE,
+        // otherwise → POST. (Previously this always POSTed, so unlike never
+        // reached the backend and the heart could never un-toggle.)
+        const alreadyLiked = backendWishlist.includes(productId)
+        const data = alreadyLiked
+          ? await api.removeWishlist(productId)
+          : await api.addWishlist(productId)
         setBackendWishlist(toUiWishlistIds(data.wishlist))
         return
       }
@@ -256,7 +262,7 @@ export function StoreProvider({ children }) {
         prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
       )
     },
-    [apiLive, user],
+    [apiLive, user, backendWishlist],
   )
 
   // --- cart drawer ------------------------------------------------

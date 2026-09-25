@@ -7,6 +7,7 @@ import { ApiError } from "../utils/ApiError.js";
  *
  * - ApiError keeps its own status/message (business errors).
  * - Mongoose ValidationError → 422, CastError → 400, duplicate key → 409.
+ * - Multer upload errors → 413/400 with actionable messages.
  * - Anything else (unexpected) → 500 with a generic message; the real error
  *   is logged server-side and never leaked to the client.
  */
@@ -30,7 +31,18 @@ const errorHandler = (err, _req, res, _next) => {
     statusCode = 409;
     const fields = Object.keys(err.keyValue || {}).join(", ") || "field";
     message = `Duplicate value for ${fields}`;
+  } else if (err?.name === "MulterError") {
+    // Multipart errors (too large, too many files…) — client-fixable, so 4xx
+    // with a real message instead of the generic 500.
+    statusCode = err.code === "LIMIT_FILE_SIZE" ? 413 : 400;
+    message =
+      err.code === "LIMIT_FILE_SIZE"
+        ? "File too large — maximum 10MB per image"
+        : `Upload error: ${err.message}`;
   }
+  // Note: the multer fileFilter rejection sets err.statusCode = 415 directly,
+  // which the `err?.statusCode || 500` lookup at the top already honors —
+  // no special branch needed.
 
   if (!(err instanceof ApiError) && statusCode >= 500) {
     message = "Internal Server Error";

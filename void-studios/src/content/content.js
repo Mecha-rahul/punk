@@ -37,7 +37,9 @@ export const MARQUEE_SECONDARY = [
 // assets exist. Slide transition style is intentionally simple for now
 // (owner will specify the final animation treatment later).
 export const HERO_SLIDES = [
-  { type: 'image', src: '/assets/hero/hero-art.webp', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
+  // Static hero banner — single image (carousel removed). Keep the array
+  // shape so swapping the artwork later stays a one-line change.
+  { type: 'image', src: '/assets/hero/hero-banner.png', tagline: 'Drop 01 — Now Live', cta: 'Shop Now', to: '/new-arrivals' },
 ]
 
 // Mock reviews — replace with real reviews once backend lands
@@ -60,7 +62,7 @@ export const NAV_LINKS = [
     children: [
       { label: 'T-SHIRTS', to: '/tops/tshirts' },
       { label: 'HOODIES', to: '/tops/hoodies' },
-      { label: 'JACKETS', to: '/tops/jackets' },
+      // JACKETS hidden for now — re-add: { label: 'JACKETS', to: '/tops/jackets' },
       { label: 'FULL SLEEVE T-SHIRT', to: '/tops/full-sleeve' },
       { label: 'TANK TOPS', to: '/tops/tank-tops' },
     ],
@@ -70,8 +72,9 @@ export const NAV_LINKS = [
   {
     label: 'BOTTOMS',
     children: [
-      { label: 'PANTS', to: '/bottoms/pants' },
-      { label: 'JEANS', to: '/bottoms/jeans' },
+      // PANTS & JEANS hidden for now — re-add:
+      // { label: 'PANTS', to: '/bottoms/pants' },
+      // { label: 'JEANS', to: '/bottoms/jeans' },
       { label: 'SHORTS', to: '/bottoms/shorts' },
     ],
     viewAll: '/bottoms',
@@ -95,13 +98,17 @@ export const FOOTER_LINKS = {
     { label: 'Track Order', to: '/account' },
     { label: 'Returns & Exchange Policy', to: '/account' },
     { label: 'FAQs', to: '/account' },
-    { label: 'Contact Us', to: '/account' },
-    { label: 'Terms of Service', to: '/account' },
-    { label: 'Privacy Policy', to: '/account' },
+    { label: 'Contact Us', href: 'mailto:akuma04313@gmail.com?subject=' + encodeURIComponent('Hi AKUMA — product question') },
+    { label: 'Terms of Service', to: '/terms' },
+    { label: 'Privacy Policy', to: '/privacy' },
   ],
   social: [
-    { label: 'Instagram', href: '#' },
-    { label: 'WhatsApp', href: '#' },
+    { label: 'Instagram', href: 'https://www.instagram.com/akuma04313/' },
+    {
+      label: 'WhatsApp',
+      // 91 = India country code; pre-filled first message opens the chat ready to send
+      href: 'https://wa.me/919318407257?text=' + encodeURIComponent("Hi AKUMA! I have a question about a product."),
+    },
   ],
 }
 

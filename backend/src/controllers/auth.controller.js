@@ -141,7 +141,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const origin = process.env.FRONTEND_URL || "http://localhost:5173";
   const resetUrl = `${origin}${resetPath}`;
 
-  await sendEmail({
+  const mail = await sendEmail({
     to: user.email,
     subject: "Reset your AKUMA password",
     text:
@@ -158,10 +158,22 @@ const forgotPassword = asyncHandler(async (req, res) => {
       `</div>`,
   });
 
-  // In non-production (and only there) the raw token is returned so the flow
-  // is testable without a mail server. Production relies on the email only.
-  if (process.env.NODE_ENV !== "production") {
-    genericResponse.data = { resetToken: rawToken };
+  if (!mail.delivered) {
+    // Never leak the raw token as a fallback (account-takeover risk) — make
+    // the misconfiguration loud instead so SMTP gets fixed in the dashboard.
+    console.error(
+      `[auth] Password-reset email NOT delivered (${mail.reason}). ` +
+        "Set SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS to enable password resets."
+    );
+    // Non-production gets the token inline so the flow is testable without a
+    // mail server. Production relies on the email only.
+    if (process.env.NODE_ENV !== "production") {
+      genericResponse.data = { resetToken: rawToken, delivered: false };
+    } else {
+      genericResponse.data = { delivered: false };
+    }
+  } else {
+    genericResponse.data = { delivered: true };
   }
 
   return res.status(200).json(genericResponse);
