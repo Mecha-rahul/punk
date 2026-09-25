@@ -51,6 +51,10 @@ export const REVIEWS = [
   { name: 'Kabir N.', location: 'Pune', product: 'Oni Cap', rating: 5, text: 'Clean embroidery, no cheap details. Bought a second one for my brother.' },
 ]
 
+// Campaign section banner (Cloudinary). Swap this URL to change the artwork.
+export const CAMPAIGN_BANNER =
+  'https://res.cloudinary.com/mak8wmjn/image/upload/v1790335057/Untitled79_20260925163950.webp'
+
 // Single-product spotlight section
 export const FEATURED_PRODUCT_ID = 'ak-004'
 

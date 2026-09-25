@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
+import { CAMPAIGN_BANNER } from '../content/content'
 
-// Full-bleed video section (GENRAGE-style architecture). No asset yet —
-// shows a branded poster slot; drop an mp4 path in `src` when ready.
-export default function VideoSection({ src, poster, heading }) {
+// Full-bleed video section (GENRAGE-style architecture). Shows the campaign
+// banner artwork until a film is cut; drop an mp4 path in `src` when ready.
+export default function VideoSection({ src, poster = CAMPAIGN_BANNER, heading }) {
   const videoRef = useRef(null)
   const [playing, setPlaying] = useState(false)
 
@@ -35,10 +36,21 @@ export default function VideoSection({ src, poster, heading }) {
               onClick={toggle}
             />
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-              <span className="font-wordmark text-4xl uppercase tracking-wide text-ink/15">AKUMA</span>
-              <span className="text-[9px] uppercase tracking-[0.3em] text-ink-soft/60">Campaign film coming soon</span>
-            </div>
+            <>
+              {/* campaign banner — the artwork fills the slot until the film exists */}
+              <img
+                src={poster}
+                alt="AKUMA campaign banner"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-center pb-4">
+                <span className="bg-ink px-3 py-1.5 text-[9px] uppercase tracking-[0.3em] text-bg-primary">
+                  Campaign film coming soon
+                </span>
+              </div>
+            </>
           )}
 
           {src && !playing && (
