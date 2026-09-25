@@ -12,7 +12,7 @@ export default {
       },
       colors: {
         // Palette is mirrored from CSS variables in src/index.css — keep both in sync.
-        'bg-primary': '#F1EDE7',
+        'bg-primary': '#FBD7BB',
         'bg-secondary': '#E7E0D6',
         'bg-alt': '#DCD6CB',
         ink: '#1B1815',

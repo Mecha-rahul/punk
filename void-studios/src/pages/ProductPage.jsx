@@ -3,7 +3,7 @@ import { useParams, Link, Navigate } from 'react-router-dom'
 import ProductImage from '../components/ProductImage'
 import ProductCard from '../components/ProductCard'
 import { useStore } from '../context/StoreContext'
-import { HeartIcon, BagIcon } from '../components/Icons'
+import { HeartIcon, BagIcon, ChevronLeftIcon, ChevronRightIcon } from '../components/Icons'
 
 const fmt = (n) => `₹${n.toLocaleString('en-IN')}`
 
@@ -47,6 +47,17 @@ export default function ProductPage() {
   const wished = wishlist.includes(product.id)
   const onSale = product.salePrice != null
   const discount = onSale ? Math.round((1 - product.salePrice / product.price) * 100) : 0
+  const hasSwipe = product.images.length > 1
+
+  const prevImg = () => setActiveImg((i) => (i - 1 + product.images.length) % product.images.length)
+  const nextImg = () => setActiveImg((i) => (i + 1) % product.images.length)
+
+  // Price follows the picked variant when the merchant set a per-variant
+  // priceOverride; otherwise the base/sale price applies.
+  const selectedVariant = product.variants?.find(
+    (v) => String(v.size) === String(size) && (!color || v.color === color),
+  )
+  const displayPrice = selectedVariant?.priceOverride ?? (onSale ? product.salePrice : product.price)
 
   const handleAdd = () => {
     if (!product.inStock) return
@@ -73,13 +84,36 @@ export default function ProductPage() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
           {/* gallery */}
           <div>
-            <div className="aspect-[4/5] bg-white">
+            <div className="relative aspect-[4/5] bg-white">
               <ProductImage
                 key={activeImg}
                 src={product.images[activeImg]}
                 alt={product.name}
                 className="h-full w-full object-cover"
               />
+
+              {hasSwipe && (
+                <>
+                  <button
+                    type="button"
+                    onClick={prevImg}
+                    aria-label="Previous image"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-white disabled:pointer-events-none disabled:opacity-0"
+                    disabled={activeImg === 0}
+                  >
+                    <ChevronLeftIcon size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextImg}
+                    aria-label="Next image"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-white disabled:pointer-events-none disabled:opacity-0"
+                    disabled={activeImg === product.images.length - 1}
+                  >
+                    <ChevronRightIcon size={18} />
+                  </button>
+                </>
+              )}
             </div>
             <div className="mt-3 flex gap-3">
               {product.images.map((src, i) => (
@@ -96,6 +130,10 @@ export default function ProductPage() {
                 </button>
               ))}
             </div>
+            {/* invisible counter keeps gallery height stable while swiping */}
+            <p className="sr-only" aria-live="polite">
+              Image {activeImg + 1} of {product.images.length}
+            </p>
           </div>
 
           {/* info + buy panel */}
@@ -111,10 +149,17 @@ export default function ProductPage() {
 
             <div className="mt-3 flex items-baseline gap-3">
               <span className={`text-lg font-semibold ${onSale ? 'text-accent' : ''}`}>
-                {fmt(onSale ? product.salePrice : product.price)}
+                {fmt(displayPrice)}
               </span>
-              {onSale && <span className="text-sm text-ink-soft line-through">{fmt(product.price)}</span>}
+              {onSale && displayPrice !== product.price && (
+                <span className="text-sm text-ink-soft line-through">{fmt(product.price)}</span>
+              )}
             </div>
+            {onSale && selectedVariant?.priceOverride != null && selectedVariant.priceOverride > product.salePrice && (
+              <p className="mt-1 text-[12px] text-ink-soft">
+                Other variants from {fmt(product.salePrice)}
+              </p>
+            )}
 
             <p className="mt-5 text-sm leading-relaxed text-ink-soft">{product.description}</p>
 
