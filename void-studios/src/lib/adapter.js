@@ -44,6 +44,7 @@ export const toUiUser = (u) =>
         name: u.name,
         email: u.email,
         role: u.role,
+        phone: u.phone || '',
         addresses: u.addresses || [],
       }
     : null

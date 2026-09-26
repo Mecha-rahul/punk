@@ -102,6 +102,20 @@ export const api = {
     request(`/cart/items/${encodeURIComponent(sku)}`, { method: 'DELETE' }).then(normCart),
   clearCart: () => request('/cart', { method: 'DELETE' }).then(normCart),
 
+  // checkout & payments (Razorpay Standard Checkout)
+  // checkoutOrder creates the order + pending payment and, when keys are
+  // configured, the matching Razorpay order server-side.
+  checkoutOrder: (body) => request('/orders/checkout', { method: 'POST', body }),
+  // Retry path when the modal was dismissed before paying.
+  razorpayOrder: (paymentId) =>
+    request('/payments/razorpay/order', { method: 'POST', body: { paymentId } }),
+  // HMAC-SHA256(order_id|payment_id, KEY_SECRET) is verified server-side.
+  verifyPayment: (body) => request('/payments/razorpay/verify', { method: 'POST', body }),
+  myOrders: () => request('/orders/me'),
+
+  // user addresses (required by checkout)
+  addAddress: (body) => request('/users/me/addresses', { method: 'POST', body }),
+
   // wishlist
   wishlist: () => request('/wishlist'),
   addWishlist: (productId) => request(`/wishlist/${productId}`, { method: 'POST' }),
