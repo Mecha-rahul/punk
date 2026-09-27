@@ -102,7 +102,8 @@ const checkout = asyncHandler(async (req, res) => {
         discount = calcCouponDiscount(coupon, subtotal);
       }
       const afterDiscount = subtotal - discount;
-      const shippingFee = afterDiscount >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+      // FREE_SHIPPING_THRESHOLD is 0 (no free tier) — flat SHIPPING_FEE on every order.
+      const shippingFee = afterDiscount === 0 ? 0 : SHIPPING_FEE;
       const total = afterDiscount + shippingFee;
 
       // 6. Order (immutable snapshot) + Payment in the same transaction.

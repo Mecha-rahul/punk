@@ -15,6 +15,13 @@ export function toUiProduct(p) {
   const prices = variants.map((v) => v.priceOverride ?? p.basePrice)
   const minPrice = prices.length ? Math.min(...prices) : p.basePrice
 
+  // The price a shopper can actually pay is the cheapest variant — the
+  // backend always charges variant priceOverride. basePrice is only
+  // meaningful when variants are discounted BELOW it (real sale).
+  // - discount case: price = basePrice (struck through), salePrice = min
+  // - otherwise: price = min variant price (basePrice never shown)
+  const onRealSale = minPrice < p.basePrice
+
   return {
     id: p._id,
     slug: p.slug,
@@ -23,8 +30,8 @@ export function toUiProduct(p) {
     // subcategory = leaf slug (hoodies/jeans/…). Accessories has no parent.
     category: p.category?.parentCategory?.slug ?? p.category?.slug ?? p.category ?? '',
     subcategory: p.category?.parentCategory ? p.category.slug : '',
-    price: p.basePrice,
-    salePrice: minPrice < p.basePrice ? minPrice : null,
+    price: onRealSale ? p.basePrice : minPrice,
+    salePrice: onRealSale ? minPrice : null,
     images: Array.isArray(p.images) ? p.images : [],
     sizes: [...new Set(variants.map((v) => String(v.size)))],
     colors: [...new Set(variants.map((v) => v.color).filter(Boolean))],

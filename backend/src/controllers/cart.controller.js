@@ -11,7 +11,8 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from "../constants.js";
  */
 const computeTotals = (items) => {
   const subtotal = items.reduce((sum, it) => sum + it.priceSnapshot * it.quantity, 0);
-  const shippingFee = subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+  // FREE_SHIPPING_THRESHOLD is 0 (no free tier) — charge SHIPPING_FEE whenever the cart has items.
+  const shippingFee = subtotal === 0 ? 0 : SHIPPING_FEE;
   return { subtotal, shippingFee, total: subtotal + shippingFee };
 };
 

@@ -105,7 +105,7 @@ export default function CartDrawer() {
                           <PlusIcon size={13} />
                         </button>
                       </div>
-                      <p className="text-[13px] font-medium">{fmt((l.product.salePrice ?? l.product.price) * l.qty)}</p>
+                      <p className="text-[13px] font-medium">{fmt((l.price ?? l.product.salePrice ?? l.product.price) * l.qty)}</p>
                     </div>
                   </div>
                 </li>

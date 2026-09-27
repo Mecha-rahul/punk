@@ -4,7 +4,7 @@ import { useStore } from '../context/StoreContext'
 import { useSeo } from '../lib/seo'
 import { api } from '../lib/api'
 import { openRazorpayCheckout } from '../lib/razorpay'
-import { FREE_SHIPPING_THRESHOLD, SHIPPING_FLAT_RATE } from '../content/content'
+import { SHIPPING_FLAT_RATE } from '../content/content'
 
 const fmt = (n) => `₹${n.toLocaleString('en-IN')}`
 
@@ -55,8 +55,8 @@ export default function CheckoutPage() {
       .catch(() => {})
   }, [apiLive, user])
 
-  const shipping =
-    cartSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : cartLines.length ? SHIPPING_FLAT_RATE : 0
+  // Flat ₹49 whenever the bag has items (threshold is 0 — no free tier).
+  const shipping = cartLines.length ? SHIPPING_FLAT_RATE : 0
   const total = useMemo(() => cartSubtotal + shipping, [cartSubtotal, shipping])
 
   // ── Address creation ───────────────────────────────────────────────────────

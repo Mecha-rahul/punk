@@ -43,7 +43,7 @@ export const LEGAL_ORDER_TRANSITIONS = {
 export const CUSTOMER_CANCELLABLE_STATUSES = ["pending_payment", "confirmed"];
 
 // ─── Business rules ──────────────────────────────────────────────────────────
-export const FREE_SHIPPING_THRESHOLD = 999; // in currency units, post-discount
+export const FREE_SHIPPING_THRESHOLD = 0; // 0 = shipping always charged (owner request: flat ₹49, no free tier)
 export const SHIPPING_FEE = 49;
 
 // ─── Auth cookies ────────────────────────────────────────────────────────────
