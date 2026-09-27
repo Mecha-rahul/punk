@@ -12,7 +12,11 @@ import { Link } from 'react-router-dom'
  * `inverted` (header hover → olive bar) renders logo-cream.png; the mark
  * swells slightly and sinks toward the bar edge on hover.
  *
- * `?v=4` busts browser caches whenever the underlying PNGs change.
+ * The default mark is BLACK again (owner request, Sep 27 2026) — the olive
+ * tint (logo-olive.png) is kept in the repo in case the earth-tone logo
+ * returns.
+ *
+ * `?v=5` busts browser caches whenever the underlying PNGs change.
  */
 
 export default function Logo({ className = '', inverted = false }) {
@@ -25,8 +29,8 @@ export default function Logo({ className = '', inverted = false }) {
       <img
         src={
           inverted
-            ? '/assets/brand/logo-cream.png?v=4'
-            : '/assets/brand/logo-olive.png?v=4'
+            ? '/assets/brand/logo-cream.png?v=5'
+            : '/assets/brand/logo-black.png?v=5'
         }
         alt="AKUMA"
         width={629}
