@@ -64,6 +64,9 @@ export function toUiCartLines(items = [], products = []) {
       size: variant?.size ?? '',
       color: variant?.color ?? '',
       qty: it.quantity,
+      // Server-revalidated per-line price (variant priceOverride included).
+      // This is what the backend charges — UI must display it, not basePrice.
+      price: it.priceSnapshot,
     }
   })
 }

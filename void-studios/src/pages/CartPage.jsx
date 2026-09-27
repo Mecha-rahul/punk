@@ -88,7 +88,7 @@ export default function CartPage() {
                         <PlusIcon size={13} />
                       </button>
                     </div>
-                    <p className="text-sm font-semibold">{fmt((l.product.salePrice ?? l.product.price) * l.qty)}</p>
+                    <p className="text-sm font-semibold">{fmt((l.price ?? l.product.salePrice ?? l.product.price) * l.qty)}</p>
                   </div>
                 </div>
               </li>

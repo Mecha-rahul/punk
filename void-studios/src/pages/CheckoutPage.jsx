@@ -405,7 +405,7 @@ export default function CheckoutPage() {
                   <span className="truncate">
                     {l.product.name} × {l.qty}
                   </span>
-                  <span className="shrink-0">{fmt((l.product.salePrice ?? l.product.price) * l.qty)}</span>
+                  <span className="shrink-0">{fmt((l.price ?? l.product.salePrice ?? l.product.price) * l.qty)}</span>
                 </li>
               ))}
             </ul>

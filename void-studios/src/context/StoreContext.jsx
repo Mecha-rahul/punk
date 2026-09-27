@@ -124,10 +124,13 @@ export function StoreProvider({ children }) {
 
   const cartSubtotal = useMemo(
     () =>
-      cartLines.reduce(
-        (sum, l) => sum + (l.product.salePrice ?? l.product.price) * l.qty,
-        0,
-      ),
+      cartLines.reduce((sum, l) => {
+        // Backend carts carry the authoritative per-line price (priceSnapshot:
+        // variant priceOverride included). Fall back to catalog price only for
+        // guest/local carts that never touched the API.
+        const unit = l.price ?? l.product.salePrice ?? l.product.price
+        return sum + unit * l.qty
+      }, 0),
     [cartLines],
   )
 
