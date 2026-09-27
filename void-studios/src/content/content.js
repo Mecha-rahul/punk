@@ -13,7 +13,7 @@ export const BRAND = {
 }
 
 export const ANNOUNCEMENTS = [
-  'FREE SHIPPING ON ORDERS ABOVE ₹5,000',
+  'FREE SHIPPING ON ORDERS ABOVE ₹999',
   'NEW DROP LIVE NOW',
   'LIMITED UNITS — NO RESTOCKS',
 ]
@@ -23,7 +23,7 @@ export const TRUST_BADGES = ['SHIPS FAST', 'LIMITED DROPS', 'NO RESTOCKS']
 // Scrolling marquee strips (GENRAGE-style architecture, AKUMA copy)
 export const MARQUEE_PRIMARY = [
   'NO RESTOCKS',
-  'FREE SHIPPING ABOVE ₹5,000',
+  'FREE SHIPPING ABOVE ₹999',
   'NEW DROP LIVE NOW',
 ]
 export const MARQUEE_SECONDARY = [
@@ -119,5 +119,5 @@ export const PROMO_CODES = {
   AKUMA10: 10, // % off — mock validation lives in cart summary
 }
 
-export const FREE_SHIPPING_THRESHOLD = 5000 // ₹
-export const SHIPPING_FLAT_RATE = 199 // ₹, below the free threshold
+export const FREE_SHIPPING_THRESHOLD = 999 // ₹ — must match backend FREE_SHIPPING_THRESHOLD (backend/src/constants.js)
+export const SHIPPING_FLAT_RATE = 49 // ₹, below the free threshold — must match backend SHIPPING_FEE
