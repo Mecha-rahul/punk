@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import ProductImage from '../components/ProductImage'
 import ProductCard from '../components/ProductCard'
@@ -90,6 +90,17 @@ export default function ProductPage() {
   const prevImg = () => setActiveImg((i) => (i - 1 + product.images.length) % product.images.length)
   const nextImg = () => setActiveImg((i) => (i + 1) % product.images.length)
 
+  // touch swipe on the main image (mobile) — horizontal drag > 40px flips
+  // to the next/previous shot; vertical scrolling stays untouched.
+  const touchX = useRef(null)
+  const onTouchStart = (e) => (touchX.current = e.touches[0].clientX)
+  const onTouchEnd = (e) => {
+    if (touchX.current == null) return
+    const dx = e.changedTouches[0].clientX - touchX.current
+    if (Math.abs(dx) > 40) (dx < 0 ? nextImg : prevImg)()
+    touchX.current = null
+  }
+
   // Price follows the picked variant when the merchant set a per-variant
   // priceOverride; otherwise the base/sale price applies.
   const selectedVariant = product.variants?.find(
@@ -122,7 +133,11 @@ export default function ProductPage() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
           {/* gallery */}
           <div>
-            <div className="relative aspect-[4/5] bg-bg-primary">
+            <div
+              className="relative aspect-[4/5] bg-bg-primary touch-pan-y"
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+            >
               <ProductImage
                 key={activeImg}
                 src={product.images[activeImg]}
