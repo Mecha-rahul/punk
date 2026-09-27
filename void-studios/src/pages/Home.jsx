@@ -97,6 +97,7 @@ function CollectionList() {
   return (
     <section className="bg-bg-primary py-14 sm:py-16">
       <div className="ak-shell">
+        <div className="relative">
         {loaded ? (
           <div
             ref={trackRef}
@@ -135,24 +136,24 @@ function CollectionList() {
           </div>
         )}
 
-        {/* desktop arrows — touch devices swipe natively */}
-        <div className="mt-6 hidden justify-end gap-2 sm:flex">
-          <button
-            type="button"
-            onClick={() => scrollByTiles(-1)}
-            aria-label="Scroll collections back"
-            className="border border-line-soft p-2.5 transition-colors hover:bg-bg-secondary"
-          >
-            <ArrowLeftIcon size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollByTiles(1)}
-            aria-label="Scroll collections forward"
-            className="border border-line-soft p-2.5 transition-colors hover:bg-bg-secondary"
-          >
-            <ArrowRightIcon size={16} />
-          </button>
+        {/* overlay arrows — one per side, vertically centered on the strip.
+            Hidden on touch devices: they swipe the strip natively. */}
+        <button
+          type="button"
+          onClick={() => scrollByTiles(-1)}
+          aria-label="Scroll collections back"
+          className="absolute left-2 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line-soft bg-bg-primary/90 shadow-sm backdrop-blur-sm transition-colors hover:bg-bg-primary sm:flex"
+        >
+          <ArrowLeftIcon size={16} />
+        </button>
+        <button
+          type="button"
+          onClick={() => scrollByTiles(1)}
+          aria-label="Scroll collections forward"
+          className="absolute right-2 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line-soft bg-bg-primary/90 shadow-sm backdrop-blur-sm transition-colors hover:bg-bg-primary sm:flex"
+        >
+          <ArrowRightIcon size={16} />
+        </button>
         </div>
       </div>
     </section>
