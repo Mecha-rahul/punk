@@ -324,10 +324,15 @@ export default function AdminPage() {
         <div className="ak-shell flex flex-col items-center py-24 text-center">
           <h1 className="ak-section-title">Admin</h1>
           <p className="mt-2 max-w-md text-sm text-ink-soft">
-            The dashboard manages live catalog data, so it needs the backend API — which isn&apos;t
-            reachable right now. Start the Express server and reload.
+            The dashboard manages live catalog data, so it needs the backend API — which didn&apos;t
+            respond just now. The hosted server may be waking up (free tier sleeps when idle).
           </p>
-          <Link to="/" className="ak-btn-dark mt-8">Back to Store</Link>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <button type="button" onClick={() => boot()} className="ak-btn-dark">
+              Retry connection
+            </button>
+            <Link to="/" className="ak-btn-outline">Back to Store</Link>
+          </div>
         </div>
       </div>
     )
