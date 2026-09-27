@@ -4,18 +4,41 @@
 
 /* ------------------------------------------------------------------
    AKUMA design tokens — edit palette here; tailwind.config.js mirrors
-   these values. The accent maroon is reserved for SALE signals only.
-   Palette: white canvas, ink text, maroon SALE accent.
+   these values. Earth palette: cream canvas, olive authority, mustard
+   reserved for small sale/highlight signals only.
+
+   ROLE HIERARCHY (60/25/10/5):
+   --color-base        cream  #F5EFE3  ~60%  page/card/section default
+   --color-secondary   tan    #D8C9A8  ~25%  alt sections, borders, inputs
+   --color-primary     olive  #4F5B2A  ~10%  text, buttons, footer
+   --color-highlight   gold   #B8892D   ~5%  badges/tags/active states only
+
+   WCAG notes (measured):
+   - olive on cream            5.97:1  AA ✓  (body text OK)
+   - cream on olive            5.97:1  AA ✓  (button text OK)
+   - olive on TAN            4.18:1  FAIL → use --color-primary-deep
+   - gold as TEXT on cream   2.76:1  FAIL → use --color-highlight-deep
+   - mustard never sits next to olive as text-on-bg (too close in value);
+     it is confined to badges with dark text and small decorative accents.
 ------------------------------------------------------------------- */
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #ffffff;
-  --bg-section-alt: #ffffff;
-  --text-primary: #1b1815;
-  --text-secondary: #5c554c;
-  --accent: #7a0000; /* muted maroon — the "devil" nod */
-  --accent-alt: #3a3a3a; /* graphite alternative, unused by default */
-  --border: #c9c1b4;
+  /* roles */
+  --color-base: #f5efe3;
+  --color-secondary: #d8c9a8;
+  --color-primary: #4f5b2a;
+  --color-highlight: #b8892d;
+  /* WCAG-derived deeps — same hue, darkened only for text contrast */
+  --color-primary-deep: #3e4822; /* olive on tan / large fields needing extra punch */
+  --color-highlight-deep: #8a6318; /* gold as TEXT (sale price, sale errors) */
+  /* legacy aliases — keep old var names working during the transition */
+  --bg-primary: var(--color-base);
+  --bg-secondary: var(--color-secondary);
+  --bg-section-alt: var(--color-secondary);
+  --text-primary: var(--color-primary-deep);
+  --text-secondary: #55492f; /* warm umber — ≥4.5:1 on cream AND tan */
+  --accent: var(--color-highlight-deep);
+  --accent-alt: #2f3619; /* deepest olive for on-tan text/scrims */
+  --border: #c3b48f; /* tan, one step down from --color-secondary */
   --white: #ffffff;
 }
 
@@ -27,8 +50,8 @@
     @apply bg-[color:var(--bg-primary)] text-[color:var(--text-primary)] font-body antialiased;
   }
   ::selection {
-    background: var(--text-primary);
-    color: var(--bg-primary);
+    background: var(--color-primary);
+    color: var(--color-base);
   }
 }
 
@@ -48,17 +71,20 @@
   .ak-btn {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 border;
   }
+  /* Primary button: olive bg + cream text (5.97:1 AA). Hover inverts to
+     cream bg + deep-olive text — keeps the pair, flips the mass. */
   .ak-btn-dark {
-    @apply ak-btn border-[color:var(--text-primary)] bg-[color:var(--text-primary)] text-[color:var(--bg-primary)] hover:bg-transparent hover:text-[color:var(--text-primary)];
+    @apply ak-btn border-[color:var(--color-primary)] bg-[color:var(--color-primary)] text-[color:var(--color-base)] hover:bg-transparent hover:text-[color:var(--color-primary-deep)];
   }
+  /* Secondary/outline button: tan border + olive text. */
   .ak-btn-outline {
-    @apply ak-btn border-[color:var(--text-primary)] bg-transparent text-[color:var(--text-primary)] hover:bg-[color:var(--text-primary)] hover:text-[color:var(--bg-primary)];
+    @apply ak-btn border-[color:var(--color-secondary)] bg-transparent text-[color:var(--color-primary-deep)] hover:border-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-base)];
   }
   .ak-section-title {
-    @apply font-wordmark text-2xl sm:text-3xl uppercase tracking-wide text-[color:var(--text-primary)];
+    @apply font-wordmark text-2xl sm:text-3xl uppercase tracking-wide text-[color:var(--color-primary-deep)];
   }
   .ak-input {
-    @apply w-full border border-[color:var(--border)] bg-white px-4 py-3 text-sm text-[color:var(--text-primary)] placeholder:text-ink-soft/60 focus:border-[color:var(--text-primary)] focus:outline-none;
+    @apply w-full border border-[color:var(--border)] bg-[color:var(--color-secondary)] px-4 py-3 text-sm text-[color:var(--color-primary-deep)] placeholder:text-[color:var(--text-secondary)] focus:border-[color:var(--color-primary)] focus:outline-none;
   }
   .ak-label {
     @apply mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[color:var(--text-secondary)];
@@ -82,8 +108,8 @@ header:has(.nav-group:hover) .ak-nav-overlay {
 /* skeleton placeholders — used by components/Skeletons.jsx while the
    catalog/detail data loads. Deliberately static: no shimmer/motion. */
 .ak-skeleton {
-  background: var(--bg-secondary);
-  opacity: 0.65;
+  background: var(--color-secondary);
+  opacity: 0.55;
 }
 
 /* thin scrollbar to match the minimal look */

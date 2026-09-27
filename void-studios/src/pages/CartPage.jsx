@@ -55,7 +55,7 @@ export default function CartPage() {
             {cartLines.map((l) => (
               <li key={`${l.productId}-${l.size}-${l.color}`} className="flex gap-5 py-6">
                 <Link to={`/product/${l.productId}`} className="w-24 shrink-0 sm:w-28">
-                  <div className="aspect-[4/5] bg-white">
+                  <div className="aspect-[4/5] bg-bg-primary">
                     <ProductImage src={l.product.images[0]} alt={l.product.name} className="h-full w-full object-cover" />
                   </div>
                 </Link>
@@ -96,7 +96,7 @@ export default function CartPage() {
           </ul>
 
           {/* order summary */}
-          <aside className="h-fit border border-line-soft bg-white p-6 lg:sticky lg:top-32">
+          <aside className="h-fit border border-line-soft bg-bg-primary p-6 lg:sticky lg:top-32">
             <h2 className="text-[12px] font-semibold uppercase tracking-[0.24em]">Order Summary</h2>
 
             <dl className="mt-5 space-y-3 text-sm">

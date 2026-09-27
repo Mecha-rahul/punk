@@ -28,7 +28,7 @@ const emptyForm = {
 
 const labelCls = 'block text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-soft'
 const inputCls =
-  'mt-1.5 w-full border border-line-soft bg-white px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none'
+  'mt-1.5 w-full border border-line-soft bg-bg-primary px-3 py-2 text-sm text-ink focus:border-ink focus:outline-none'
 
 import { useSeo } from '../lib/seo'
 
@@ -389,7 +389,7 @@ export default function AdminPage() {
             ['Low stock (≤10)', lowStock],
             ['Sold out', soldOut],
           ].map(([label, value]) => (
-            <div key={label} className="border border-line-soft bg-white p-5">
+            <div key={label} className="border border-line-soft bg-bg-primary p-5">
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-ink-soft">{label}</p>
               <p className="mt-2 text-2xl font-semibold">{value}</p>
             </div>
@@ -398,7 +398,7 @@ export default function AdminPage() {
 
         {/* create / edit form */}
         {editing && (
-          <form onSubmit={save} className="mt-8 border border-ink bg-white p-6 lg:p-8">
+          <form onSubmit={save} className="mt-8 border border-ink bg-bg-primary p-6 lg:p-8">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold uppercase tracking-[0.14em]">
                 {editing === 'new' ? 'New Product' : `Editing — ${editing.name}`}
@@ -499,8 +499,8 @@ export default function AdminPage() {
                       onClick={() => toggleCollection(c)}
                       className={`border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition-colors ${
                         form.collections.includes(c)
-                          ? 'border-ink bg-ink text-bg-primary'
-                          : 'border-line-soft bg-white text-ink-soft hover:border-ink hover:text-ink'
+                          ? 'border-ink bg-olive text-bg-primary'
+                          : 'border-line-soft bg-bg-primary text-ink-soft hover:border-ink hover:text-ink'
                       }`}
                     >
                       {c}
@@ -515,8 +515,8 @@ export default function AdminPage() {
                   onClick={() => setField({ isFeatured: !form.isFeatured })}
                   className={`mt-2 border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition-colors ${
                     form.isFeatured
-                      ? 'border-accent bg-accent text-white'
-                      : 'border-line-soft bg-white text-ink-soft hover:border-ink hover:text-ink'
+                      ? 'border-accent bg-accent text-bg-primary'
+                      : 'border-line-soft bg-bg-primary text-ink-soft hover:border-ink hover:text-ink'
                   }`}
                 >
                   {form.isFeatured ? '★ Featured' : '☆ Not featured'}
@@ -646,7 +646,7 @@ export default function AdminPage() {
                         onClick={() => removeImage(editing, src)}
                         disabled={busy}
                         aria-label="Remove image"
-                        className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center bg-ink text-[10px] text-bg-primary hover:bg-accent"
+                        className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center bg-olive text-[10px] text-bg-primary hover:bg-accent"
                       >
                         ✕
                       </button>
@@ -726,7 +726,7 @@ export default function AdminPage() {
             <p className="mt-4 border border-accent bg-accent/10 px-4 py-3 text-sm text-accent">{loadError}</p>
           )}
 
-          <div className="mt-4 overflow-x-auto border border-line-soft bg-white">
+          <div className="mt-4 overflow-x-auto border border-line-soft bg-bg-primary">
             <table className="w-full min-w-[760px] text-left text-sm">
               <thead>
                 <tr className="border-b border-line-soft text-[10px] uppercase tracking-[0.2em] text-ink-soft">

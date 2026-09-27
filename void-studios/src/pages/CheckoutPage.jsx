@@ -26,7 +26,7 @@ export default function CheckoutPage() {
   return (
     <div className="bg-bg-primary">
       <div className="ak-shell py-14">
-        <div className="mx-auto max-w-lg border border-line-soft bg-white p-8 text-center sm:p-10">
+        <div className="mx-auto max-w-lg border border-line-soft bg-bg-primary p-8 text-center sm:p-10">
           <p className="font-wordmark text-3xl tracking-[-0.01em]">AKUMA</p>
           <h1 className="mt-4 text-lg font-medium">Checkout — Coming Soon</h1>
           <p className="mt-3 text-sm leading-relaxed text-ink-soft">

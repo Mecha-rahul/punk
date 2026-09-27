@@ -34,7 +34,7 @@ function CollectionList() {
         {tiles.map((t) => (
           <Link key={t.to} to={t.to} className="group relative overflow-hidden bg-bg-secondary">
             <div className="aspect-square border border-line-soft" />
-            <span className="absolute inset-0 flex items-center justify-center font-wordmark text-lg uppercase tracking-wide text-ink/70 transition-transform duration-300 group-hover:scale-110 sm:text-2xl">
+            <span className="absolute inset-0 flex items-center justify-center font-wordmark text-lg uppercase tracking-wide text-ink transition-transform duration-300 group-hover:scale-110 sm:text-2xl">
               {t.label}
             </span>
             <span className="absolute bottom-3 left-1/2 h-px w-0 -translate-x-1/2 bg-accent transition-all duration-300 group-hover:w-1/2" />

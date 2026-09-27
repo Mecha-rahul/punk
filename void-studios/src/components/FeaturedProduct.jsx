@@ -28,7 +28,7 @@ export default function FeaturedProduct({ product }) {
         </p>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <Link to={`/product/${product.id}`} className="block">
-            <div className="aspect-[4/5] bg-white">
+            <div className="aspect-[4/5] bg-bg-primary">
               <ProductImage src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
             </div>
           </Link>
@@ -36,8 +36,10 @@ export default function FeaturedProduct({ product }) {
           <div>
             <h2 className="text-xl font-medium tracking-wide sm:text-2xl">{product.name}</h2>
             <div className="mt-3 flex items-baseline gap-3">
-              <span className={`text-lg font-semibold ${onSale ? 'text-accent' : ''}`}>
-                {fmt(onSale ? product.salePrice : product.price)}
+              {/* Gold text fails AA on this tan section (3.35:1), so the sale
+                  price sits on a cream chip — highlight family, compliant. */}
+              <span className={onSale ? 'bg-bg-primary px-2 py-0.5 font-semibold text-accent' : 'font-semibold text-lg'}>
+                <span className="text-lg">{fmt(onSale ? product.salePrice : product.price)}</span>
               </span>
               {onSale && <span className="text-sm text-ink-soft line-through">{fmt(product.price)}</span>}
             </div>

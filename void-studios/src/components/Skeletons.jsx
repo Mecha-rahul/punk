@@ -25,7 +25,7 @@ export function SkeletonBlock({ className = '', size = 'line' }) {
 export function SkeletonCard() {
   return (
     <div className="flex flex-col" aria-hidden="true">
-      <div className="relative overflow-hidden bg-white">
+      <div className="relative overflow-hidden bg-bg-primary">
         <div className="aspect-[4/5] w-full">
           <SkeletonBlock size="cover" />
         </div>
@@ -63,12 +63,12 @@ export function SkeletonProduct() {
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-14" aria-hidden="true">
       {/* gallery */}
       <div>
-        <div className="relative aspect-[4/5] bg-white">
+        <div className="relative aspect-[4/5] bg-bg-primary">
           <SkeletonBlock size="cover" />
         </div>
         <div className="mt-3 flex gap-3">
           {Array.from({ length: 3 }, (_, i) => (
-            <div key={i} className="aspect-[4/5] w-20 bg-white">
+            <div key={i} className="aspect-[4/5] w-20 bg-bg-primary">
               <SkeletonBlock size="cover" />
             </div>
           ))}

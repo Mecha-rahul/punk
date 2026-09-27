@@ -9,10 +9,10 @@ import { Link } from 'react-router-dom'
  * backgrounds, which caused the white strip under the header — keep using the
  * transparent local files unless re-uploading transparent versions to the CDN.
  *
- * `inverted` (header hover → black bar) renders logo-white.png; the mark
+ * `inverted` (header hover → olive bar) renders logo-cream.png; the mark
  * swells slightly and sinks toward the bar edge on hover.
  *
- * `?v=3` busts browser caches whenever the underlying PNGs change.
+ * `?v=4` busts browser caches whenever the underlying PNGs change.
  */
 
 export default function Logo({ className = '', inverted = false }) {
@@ -25,8 +25,8 @@ export default function Logo({ className = '', inverted = false }) {
       <img
         src={
           inverted
-            ? '/assets/brand/logo-white.png?v=3'
-            : '/assets/brand/logo-black.png?v=3'
+            ? '/assets/brand/logo-cream.png?v=4'
+            : '/assets/brand/logo-olive.png?v=4'
         }
         alt="AKUMA"
         width={629}

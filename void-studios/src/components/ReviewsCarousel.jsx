@@ -20,7 +20,7 @@ export default function ReviewsCarousel() {
           {REVIEWS.map((r) => (
             <figure
               key={r.name}
-              className="w-[80vw] flex-shrink-0 snap-start border border-line-soft bg-white p-6 sm:w-[46vw] lg:w-[31%]"
+              className="w-[80vw] flex-shrink-0 snap-start border border-line-soft bg-bg-primary p-6 sm:w-[46vw] lg:w-[31%]"
             >
               <Stars n={r.rating} />
               <blockquote className="mt-3 text-sm leading-relaxed text-ink">“{r.text}”</blockquote>

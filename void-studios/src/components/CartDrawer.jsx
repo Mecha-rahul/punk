@@ -38,7 +38,7 @@ export default function CartDrawer() {
 
   return (
     <div className="fixed inset-0 z-[75]">
-      <div className="absolute inset-0 bg-black/40" onClick={() => setCartOpen(false)} />
+      <div className="absolute inset-0 bg-ink/45" onClick={() => setCartOpen(false)} />
       <aside className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-bg-primary shadow-2xl">
         <div className="flex items-center justify-between border-b border-line-soft px-6 py-5">
           <p className="text-[12px] font-semibold uppercase tracking-[0.24em]">Your Bag ({cartLines.length})</p>
@@ -61,7 +61,7 @@ export default function CartDrawer() {
               {cartLines.map((l) => (
                 <li key={lineKey(l)} className="flex gap-4 py-4">
                   <Link to={`/product/${l.productId}`} onClick={() => setCartOpen(false)} className="w-20 shrink-0">
-                    <div className="aspect-[4/5] bg-white">
+                    <div className="aspect-[4/5] bg-bg-primary">
                       <ProductImage src={l.product.images[0]} alt={l.product.name} className="h-full w-full object-cover" />
                     </div>
                   </Link>

@@ -19,7 +19,7 @@ function CountBadge({ count, dark = false }) {
   return (
     <span
       className={`absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center px-1 text-[9px] font-bold leading-none ${
-        dark ? 'bg-bg-primary text-ink' : 'bg-accent text-white'
+        dark ? 'bg-bg-primary text-ink' : 'bg-accent text-bg-primary'
       }`}
     >
       {count}
@@ -58,7 +58,7 @@ export default function Header() {
       {/* ---- main bar — light normally, black while hovered ---- */}
       <div
         className={`group/head relative border-b transition-colors duration-200 ${
-          headHover ? 'border-transparent bg-ink' : 'border-line-soft bg-bg-primary'
+          headHover ? 'border-transparent bg-olive' : 'border-line-soft bg-bg-primary'
         }`}
         onMouseEnter={() => setHeadHover(true)}
         onMouseLeave={() => setHeadHover(false)}
@@ -68,7 +68,7 @@ export default function Header() {
             blocks clicks, opacity-toggled for the hover ease. */}
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute inset-x-0 top-full h-44 bg-gradient-to-b from-ink via-ink/50 to-transparent transition-opacity duration-300 ${
+          className={`pointer-events-none absolute inset-x-0 top-full h-44 bg-gradient-to-b from-olive via-olive/50 to-transparent transition-opacity duration-300 ${
             headHover ? 'opacity-100' : 'opacity-0'
           }`}
         />
@@ -104,7 +104,7 @@ export default function Header() {
                     {/* full-width mega-menu — opens under the whole bar on hover */}
                     <div
                       className={`invisible absolute left-0 top-full w-full translate-y-1 border-b opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${
-                        headHover ? 'border-ink bg-ink' : 'border-line-soft bg-bg-primary'
+                        headHover ? 'border-ink bg-olive' : 'border-line-soft bg-bg-primary'
                       }`}
                     >
                       <div className="ak-shell grid grid-cols-[1fr_280px] gap-10 py-8">
@@ -117,12 +117,12 @@ export default function Header() {
                                   to={child.to}
                                   className={`group/link flex items-center justify-between border-b py-3 text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors ${
                                     headHover
-                                      ? 'border-white/15 text-bg-primary hover:text-white'
+                                      ? 'border-bg-primary/15 text-bg-primary hover:text-bg-primary'
                                       : 'border-line-soft/60 text-ink hover:text-accent'
                                   }`}
                                 >
                                   {child.label}
-                                  <span className="text-accent opacity-0 transition-opacity group-hover/link:opacity-100">→</span>
+                                  <span className={`${headHover ? 'text-bg-primary' : 'text-accent'} opacity-0 transition-opacity group-hover/link:opacity-100`}>→</span>
                                 </Link>
                               </li>
                             ))}
@@ -131,7 +131,7 @@ export default function Header() {
                             <Link
                               to={item.viewAll}
                               className={`mt-5 inline-block text-[11px] font-bold uppercase tracking-[0.22em] underline underline-offset-8 transition-opacity hover:opacity-70 ${
-                                headHover ? 'text-white' : 'text-accent'
+                                headHover ? 'text-bg-primary' : 'text-accent'
                               }`}
                             >
                               View All
@@ -153,7 +153,7 @@ export default function Header() {
                             <p
                               className={`mt-3 text-[11px] font-bold uppercase tracking-[0.2em] ${
                                 headHover
-                                  ? 'text-bg-primary group-hover/promo:text-white'
+                                  ? 'text-bg-primary group-hover/promo:text-bg-primary'
                                   : 'text-ink group-hover/promo:text-accent'
                               }`}
                             >
@@ -172,7 +172,7 @@ export default function Header() {
                         `whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.18em] transition-colors ${
                           item.pill
                             ? headHover
-                              ? 'text-white/90 hover:text-white'
+                              ? 'text-bg-primary/90 hover:text-bg-primary'
                               : 'text-accent hover:underline hover:decoration-accent hover:underline-offset-8'
                             : item.dot
                               ? headHover
@@ -234,7 +234,7 @@ export default function Header() {
       {/* ---- mobile drawer ---- */}
       {mobileOpen && (
         <div className="fixed inset-0 z-[70] nav:hidden">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
+          <div className="absolute inset-0 bg-ink/45" onClick={() => setMobileOpen(false)} />
           <div className="absolute inset-y-0 left-0 flex w-[86%] max-w-sm flex-col bg-bg-primary shadow-2xl">
             <div className="flex items-center justify-between border-b border-line-soft px-5 py-4">
               <Logo />

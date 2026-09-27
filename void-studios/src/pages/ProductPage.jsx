@@ -122,7 +122,7 @@ export default function ProductPage() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
           {/* gallery */}
           <div>
-            <div className="relative aspect-[4/5] bg-white">
+            <div className="relative aspect-[4/5] bg-bg-primary">
               <ProductImage
                 key={activeImg}
                 src={product.images[activeImg]}
@@ -136,7 +136,7 @@ export default function ProductPage() {
                     type="button"
                     onClick={prevImg}
                     aria-label="Previous image"
-                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-white disabled:pointer-events-none disabled:opacity-0"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-bg-primary/90 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-bg-primary disabled:pointer-events-none disabled:opacity-0"
                     disabled={activeImg === 0}
                   >
                     <ChevronLeftIcon size={18} />
@@ -145,7 +145,7 @@ export default function ProductPage() {
                     type="button"
                     onClick={nextImg}
                     aria-label="Next image"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-white disabled:pointer-events-none disabled:opacity-0"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-bg-primary/90 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-bg-primary disabled:pointer-events-none disabled:opacity-0"
                     disabled={activeImg === product.images.length - 1}
                   >
                     <ChevronRightIcon size={18} />
@@ -160,7 +160,7 @@ export default function ProductPage() {
                   type="button"
                   onClick={() => setActiveImg(i)}
                   aria-label={`View image ${i + 1}`}
-                  className={`aspect-[4/5] w-20 bg-white border transition-colors ${
+                  className={`aspect-[4/5] w-20 bg-bg-primary border transition-colors ${
                     activeImg === i ? 'border-ink' : 'border-line-soft hover:border-ink-soft'
                   }`}
                 >
@@ -179,7 +179,7 @@ export default function ProductPage() {
             <div className="flex items-start justify-between gap-4">
               <h1 className="text-xl font-medium tracking-wide sm:text-2xl">{product.name}</h1>
               {onSale && (
-                <span className="mt-1 shrink-0 bg-accent px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
+                <span className="mt-1 shrink-0 bg-accent px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-bg-primary">
                   −{discount}%
                 </span>
               )}
@@ -213,7 +213,7 @@ export default function ProductPage() {
                     aria-pressed={size === s}
                     className={`min-w-12 border px-3 py-2.5 text-[12px] tracking-wide transition-colors ${
                       size === s
-                        ? 'border-ink bg-ink text-bg-primary'
+                        ? 'border-ink bg-olive text-bg-primary'
                         : 'border-line-soft hover:border-ink'
                     }`}
                   >
@@ -235,7 +235,7 @@ export default function ProductPage() {
                     aria-pressed={color === c}
                     className={`border px-4 py-2.5 text-[12px] tracking-wide transition-colors ${
                       color === c
-                        ? 'border-ink bg-ink text-bg-primary'
+                        ? 'border-ink bg-olive text-bg-primary'
                         : 'border-line-soft hover:border-ink'
                     }`}
                   >

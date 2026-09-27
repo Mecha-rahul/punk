@@ -19,7 +19,7 @@ export default function AnnouncementBar() {
   const next = () => setI((v) => (v + 1) % ANNOUNCEMENTS.length)
 
   return (
-    <div className="relative bg-ink py-2 text-center text-[10px] font-medium uppercase tracking-[0.28em] text-bg-primary">
+    <div className="relative bg-olive py-2 text-center text-[10px] font-medium uppercase tracking-[0.28em] text-bg-primary">
       <button
         type="button"
         onClick={prev}

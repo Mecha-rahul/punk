@@ -9,7 +9,7 @@ export default function ToastStack() {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className="pointer-events-auto border border-ink bg-ink px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-bg-primary shadow-lg"
+          className="pointer-events-auto border border-olive bg-olive px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-bg-primary shadow-lg"
         >
           {t.message}
         </div>

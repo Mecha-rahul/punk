@@ -53,7 +53,7 @@ function Tile({ tile, index }) {
         />
         {!tile.live && (
           <div className="absolute inset-0 flex items-center justify-center bg-bg-primary/70 backdrop-blur-[1px]">
-            <span className="border border-ink bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-ink">
+            <span className="border border-ink bg-bg-primary px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-ink">
               Coming soon
             </span>
           </div>

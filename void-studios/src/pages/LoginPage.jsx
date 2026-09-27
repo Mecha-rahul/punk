@@ -56,7 +56,7 @@ export default function LoginPage() {
   return (
     <div className="bg-bg-primary">
       <div className="ak-shell flex justify-center py-16 sm:py-20">
-        <div className="w-full max-w-md border border-line-soft bg-white p-8 sm:p-10">
+        <div className="w-full max-w-md border border-line-soft bg-bg-primary p-8 sm:p-10">
           <h1 className="ak-section-title text-center">Log In</h1>
           <p className="mt-2 text-center text-[11px] uppercase tracking-[0.2em] text-ink-soft">
             Members see drops first

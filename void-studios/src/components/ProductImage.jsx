@@ -19,7 +19,7 @@ export default function ProductImage({ src, alt, className = '', priority = fals
         <span className="font-wordmark text-3xl uppercase tracking-wide text-ink/15">
           AKUMA
         </span>
-        <span className="text-[9px] uppercase tracking-[0.3em] text-ink-soft/60">
+        <span className="text-[9px] uppercase tracking-[0.3em] text-ink-soft">
           Image coming soon
         </span>
       </div>

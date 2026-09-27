@@ -19,7 +19,7 @@ export default function ProductCard({ product }) {
 
   return (
     <div className="group relative flex flex-col">
-      <div className="relative overflow-hidden bg-white">
+      <div className="relative overflow-hidden bg-bg-primary">
         <Link to={`/product/${product.id}`} aria-label={product.name}>
           <div className="aspect-[4/5] w-full">
             <ProductImage
@@ -38,12 +38,12 @@ export default function ProductCard({ product }) {
         {/* badges */}
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {onSale && (
-            <span className="bg-accent px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-white">
+            <span className="bg-accent px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-bg-primary">
               Sale −{discount}%
             </span>
           )}
           {!product.inStock && (
-            <span className="bg-ink px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-bg-primary">
+            <span className="bg-olive px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-bg-primary">
               Sold Out
             </span>
           )}
@@ -55,7 +55,7 @@ export default function ProductCard({ product }) {
           onClick={() => toggleWishlist(product.id)}
           aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
           aria-pressed={wished}
-          className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center bg-white/90 transition-transform hover:scale-110 ${
+          className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center bg-bg-primary/90 transition-transform hover:scale-110 ${
             wished ? 'text-accent' : 'text-ink'
           }`}
         >
@@ -68,7 +68,7 @@ export default function ProductCard({ product }) {
             type="button"
             onClick={quickAdd}
             disabled={!product.inStock}
-            className="flex w-full items-center justify-center gap-2 bg-ink py-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-bg-primary disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 bg-olive py-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-bg-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
             <BagIcon size={15} />
             {product.inStock ? 'Quick Add — M' : 'Sold Out'}
@@ -91,7 +91,9 @@ export default function ProductCard({ product }) {
         <div className="shrink-0 text-right text-[13px]">
           {onSale ? (
             <>
-              <span className="font-semibold text-accent">{fmt(product.salePrice)}</span>{' '}
+              {/* Gold-as-text only passes AA on cream (4.59:1), so the sale
+                  price always gets a cream chip regardless of section bg. */}
+              <span className="bg-bg-primary px-1.5 py-0.5 font-semibold text-accent">{fmt(product.salePrice)}</span>{' '}
               <span className="text-[11px] text-ink-soft line-through">{fmt(product.price)}</span>
             </>
           ) : (

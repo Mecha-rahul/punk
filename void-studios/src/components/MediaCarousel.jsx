@@ -67,7 +67,7 @@ export default function MediaCarousel({ items, autoplay = false, aspect = 'aspec
             type="button"
             onClick={() => scrollTo(index - 1)}
             aria-label="Previous slide"
-            className="absolute left-3 top-1/2 -translate-y-1/2 border border-line-soft bg-white/90 p-2.5 hover:bg-white"
+            className="absolute left-3 top-1/2 -translate-y-1/2 border border-line-soft bg-bg-primary/90 p-2.5 hover:bg-bg-primary"
           >
             <ArrowLeftIcon size={16} />
           </button>
@@ -75,7 +75,7 @@ export default function MediaCarousel({ items, autoplay = false, aspect = 'aspec
             type="button"
             onClick={() => scrollTo(index + 1)}
             aria-label="Next slide"
-            className="absolute right-3 top-1/2 -translate-y-1/2 border border-line-soft bg-white/90 p-2.5 hover:bg-white"
+            className="absolute right-3 top-1/2 -translate-y-1/2 border border-line-soft bg-bg-primary/90 p-2.5 hover:bg-bg-primary"
           >
             <ArrowRightIcon size={16} />
           </button>
@@ -86,7 +86,7 @@ export default function MediaCarousel({ items, autoplay = false, aspect = 'aspec
                 type="button"
                 aria-label={`Go to slide ${i + 1}`}
                 onClick={() => scrollTo(i)}
-                className={`h-1.5 w-6 transition-colors ${i === index ? 'bg-ink' : 'bg-line-soft'}`}
+                className={`h-1.5 w-6 transition-colors ${i === index ? 'bg-olive' : 'bg-line-soft'}`}
               />
             ))}
           </div>
