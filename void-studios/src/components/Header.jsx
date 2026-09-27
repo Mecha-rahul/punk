@@ -68,7 +68,7 @@ export default function Header() {
             blocks clicks, opacity-toggled for the hover ease. */}
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute inset-x-0 top-full h-44 bg-gradient-to-b from-[#1c843b] via-[#1c843b]/50 to-transparent transition-opacity duration-300 ${
+          className={`pointer-events-none absolute inset-x-0 top-full h-44 bg-gradient-to-b from-olive from-50% to-ink transition-opacity duration-300 ${
             headHover ? 'opacity-100' : 'opacity-0'
           }`}
         />
