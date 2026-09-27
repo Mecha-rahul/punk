@@ -1,6 +1,9 @@
+import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import HeroSlideshow from '../components/HeroSlideshow'
 import MarqueeStrip from '../components/MarqueeStrip'
 import ProductCarousel from '../components/ProductCarousel'
+import { ArrowLeftIcon, ArrowRightIcon } from '../components/Icons'
 import ProductGrid from '../components/ProductGrid'
 import VideoSection from '../components/VideoSection'
 import EditorialSplit from '../components/EditorialSplit'
@@ -9,7 +12,6 @@ import InfoColumns from '../components/InfoColumns'
 import { HOME_SECTIONS } from '../data/products'
 import { FEATURED_PRODUCT_ID } from '../content/content'
 import { useStore } from '../context/StoreContext'
-import { Link } from 'react-router-dom'
 
 import { useSeo } from '../lib/seo'
 
@@ -21,24 +23,67 @@ const EDITORIAL = {
 }
 
 // Small collections strip mirroring GENRAGE's collection-list section.
+// Horizontally swipeable (touch snap + desktop arrows) — five tiles, ~3 visible.
 function CollectionList() {
+  const trackRef = useRef(null)
   const tiles = [
     { label: 'Hoodies', to: '/tops/hoodies' },
     { label: 'T-Shirts', to: '/tops/tshirts' },
     { label: 'Jackets', to: '/tops/jackets' },
+    { label: 'Pants', to: '/bottoms/pants' },
+    { label: 'Accessories', to: '/accessories' },
   ]
+
+  const scrollBy = (dir) => {
+    const track = trackRef.current
+    if (!track) return
+    const card = track.querySelector('a[data-tile]')
+    const step = card ? card.offsetWidth + 16 : 280
+    track.scrollBy({ left: dir * step * 2, behavior: 'smooth' })
+  }
+
   return (
     <section className="bg-bg-primary py-14 sm:py-16">
-      <div className="ak-shell grid grid-cols-3 gap-4 md:gap-6">
-        {tiles.map((t) => (
-          <Link key={t.to} to={t.to} className="group relative overflow-hidden bg-bg-secondary">
-            <div className="aspect-square border border-line-soft" />
-            <span className="absolute inset-0 flex items-center justify-center font-wordmark text-lg uppercase tracking-wide text-ink transition-transform duration-300 group-hover:scale-110 sm:text-2xl">
-              {t.label}
-            </span>
-            <span className="absolute bottom-3 left-1/2 h-px w-0 -translate-x-1/2 bg-accent transition-all duration-300 group-hover:w-1/2" />
-          </Link>
-        ))}
+      <div className="ak-shell">
+        <div
+          ref={trackRef}
+          className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0"
+        >
+          {tiles.map((t) => (
+            <Link
+              key={t.to}
+              data-tile
+              to={t.to}
+              className="group relative w-[62vw] flex-shrink-0 snap-start overflow-hidden bg-bg-secondary sm:w-[38vw] lg:w-[23%]"
+            >
+              <div className="aspect-square border border-line-soft" />
+              <span className="absolute inset-0 flex items-center justify-center font-wordmark text-lg uppercase tracking-wide text-ink transition-transform duration-300 group-hover:scale-110 sm:text-2xl">
+                {t.label}
+              </span>
+              <span className="absolute bottom-3 left-1/2 h-px w-0 -translate-x-1/2 bg-accent transition-all duration-300 group-hover:w-1/2" />
+            </Link>
+          ))}
+        </div>
+
+        {/* desktop arrows — touch devices swipe natively */}
+        <div className="mt-6 hidden justify-end gap-2 sm:flex">
+          <button
+            type="button"
+            onClick={() => scrollBy(-1)}
+            aria-label="Scroll collections back"
+            className="border border-line-soft p-2.5 transition-colors hover:bg-bg-secondary"
+          >
+            <ArrowLeftIcon size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollBy(1)}
+            aria-label="Scroll collections forward"
+            className="border border-line-soft p-2.5 transition-colors hover:bg-bg-secondary"
+          >
+            <ArrowRightIcon size={16} />
+          </button>
+        </div>
       </div>
     </section>
   )
