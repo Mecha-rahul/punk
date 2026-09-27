@@ -4,7 +4,7 @@ import { useStore } from '../context/StoreContext'
 import { useSeo } from '../lib/seo'
 import ProductImage from '../components/ProductImage'
 import { BagIcon, TrashIcon, PlusIcon, MinusIcon } from '../components/Icons'
-import { PROMO_CODES, FREE_SHIPPING_THRESHOLD, SHIPPING_FLAT_RATE } from '../content/content'
+import { PROMO_CODES, SHIPPING_FLAT_RATE } from '../content/content'
 
 const fmt = (n) => `₹${n.toLocaleString('en-IN')}`
 
@@ -16,7 +16,8 @@ export default function CartPage() {
   const [promoError, setPromoError] = useState('')
 
   const discount = promo ? Math.round((cartSubtotal * promo.pct) / 100) : 0
-  const shipping = cartSubtotal === 0 || cartSubtotal - discount >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT_RATE
+  // Flat ₹49 whenever the bag has items (threshold is 0 — no free tier).
+  const shipping = cartSubtotal === 0 ? 0 : SHIPPING_FLAT_RATE
   const total = cartSubtotal - discount + shipping
 
   const applyPromo = (e) => {

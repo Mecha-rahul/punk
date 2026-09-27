@@ -58,7 +58,7 @@ export default function Header() {
       {/* ---- main bar — light normally, black while hovered ---- */}
       <div
         className={`group/head relative border-b transition-colors duration-200 ${
-          headHover ? 'border-transparent bg-olive' : 'border-line-soft bg-bg-primary'
+          headHover ? 'border-transparent bg-[#1c843b]' : 'border-line-soft bg-bg-primary'
         }`}
         onMouseEnter={() => setHeadHover(true)}
         onMouseLeave={() => setHeadHover(false)}
@@ -68,7 +68,7 @@ export default function Header() {
             blocks clicks, opacity-toggled for the hover ease. */}
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute inset-x-0 top-full h-44 bg-gradient-to-b from-olive via-olive/50 to-transparent transition-opacity duration-300 ${
+          className={`pointer-events-none absolute inset-x-0 top-full h-44 bg-gradient-to-b from-[#1c843b] via-[#1c843b]/50 to-transparent transition-opacity duration-300 ${
             headHover ? 'opacity-100' : 'opacity-0'
           }`}
         />
@@ -104,7 +104,7 @@ export default function Header() {
                     {/* full-width mega-menu — opens under the whole bar on hover */}
                     <div
                       className={`invisible absolute left-0 top-full w-full translate-y-1 border-b opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${
-                        headHover ? 'border-ink bg-olive' : 'border-line-soft bg-bg-primary'
+                        headHover ? 'border-ink bg-[#1c843b]' : 'border-line-soft bg-bg-primary'
                       }`}
                     >
                       <div className="ak-shell grid grid-cols-[1fr_280px] gap-10 py-8">

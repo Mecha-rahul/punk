@@ -103,9 +103,14 @@ export default function ProductPage() {
 
   // Price follows the picked variant when the merchant set a per-variant
   // priceOverride; otherwise the base/sale price applies.
-  const selectedVariant = product.variants?.find(
-    (v) => String(v.size) === String(size) && (!color || v.color === color),
+  // Match on EITHER dimension so the price updates as soon as the shopper
+  // picks a size or a colour — not only when both are chosen.
+  const matchedVariants = (product.variants || []).filter(
+    (v) => (!size || String(v.size) === String(size)) && (!color || v.color === color),
   )
+  const selectedVariant =
+    matchedVariants.find((v) => size && color && String(v.size) === String(size) && v.color === color) ||
+    matchedVariants[0]
   const displayPrice = selectedVariant?.priceOverride ?? (onSale ? product.salePrice : product.price)
 
   const handleAdd = () => {
