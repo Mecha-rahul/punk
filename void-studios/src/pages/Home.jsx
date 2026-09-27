@@ -19,7 +19,8 @@ import { useSeo } from '../lib/seo'
 const EDITORIAL = {
   heading: 'From the Archive',
   copy: 'Every AKUMA drop starts in the archive — heavyweight fabrics, references that outlive trends, and details that only show themselves after the tenth wear. Limited batches, hand-finished in the studio.',
-  img: '/assets/lookbook/look-2.jpg',
+  // Cloudinary delivery: f_auto picks WebP/AVIF per browser, q_auto tunes quality.
+  img: 'https://res.cloudinary.com/mak8wmjn/image/upload/f_auto,q_auto,w_1200/v1790488324/archive.png',
 }
 
 // Small collections strip mirroring GENRAGE's collection-list section.
