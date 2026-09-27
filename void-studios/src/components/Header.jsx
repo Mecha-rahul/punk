@@ -55,16 +55,17 @@ export default function Header() {
     <header ref={headerRef} className="sticky top-0 z-50">
       {/* announcement strip removed by owner request — main header starts directly */}
 
-      {/* ---- main bar — light normally, black while hovered ---- */}
+      {/* ---- main bar — light normally, olive while hovered (muted palette
+          olive, NOT the bright green from the merged header-gradient PR) ---- */}
       <div
         className={`group/head relative border-b transition-colors duration-200 ${
-          headHover ? 'border-transparent bg-[#1c843b]' : 'border-line-soft bg-bg-primary'
+          headHover ? 'border-transparent bg-olive' : 'border-line-soft bg-bg-primary'
         }`}
         onMouseEnter={() => setHeadHover(true)}
         onMouseLeave={() => setHeadHover(false)}
       >
-        {/* genrage-style gradient bleed — the black bar melts downward and
-            fades into the pastel page below. pointer-events-none so it never
+        {/* hover bleed — olive bar melts into the olive-dark shade below,
+            fading softly into the cream page. pointer-events-none so it never
             blocks clicks, opacity-toggled for the hover ease. */}
         <div
           aria-hidden="true"
@@ -104,7 +105,7 @@ export default function Header() {
                     {/* full-width mega-menu — opens under the whole bar on hover */}
                     <div
                       className={`invisible absolute left-0 top-full w-full translate-y-1 border-b opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${
-                        headHover ? 'border-ink bg-[#1c843b]' : 'border-line-soft bg-bg-primary'
+                        headHover ? 'border-ink bg-olive' : 'border-line-soft bg-bg-primary'
                       }`}
                     >
                       <div className="ak-shell grid grid-cols-[1fr_280px] gap-10 py-8">
