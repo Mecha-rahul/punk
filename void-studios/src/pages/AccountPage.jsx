@@ -43,10 +43,14 @@ export default function AccountPage() {
             <p className="mt-3 text-sm font-medium">{user.name}</p>
             <p className="text-sm text-ink-soft">{user.email}</p>
           </div>
-          <div className="border border-line-soft bg-bg-primary p-6">
+          <Link
+            to="/orders"
+            className="border border-line-soft bg-bg-primary p-6 transition-colors hover:border-ink"
+          >
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-soft">Orders</p>
-            <p className="mt-3 text-sm text-ink-soft">Order history will appear here once the store goes live.</p>
-          </div>
+            <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em]">My Orders →</p>
+            <p className="mt-1 text-xs text-ink-soft">See what you ordered, payment status, tracking & progress.</p>
+          </Link>
         </div>
 
         <button type="button" onClick={logout} className="ak-btn-outline mt-8">Log Out</button>

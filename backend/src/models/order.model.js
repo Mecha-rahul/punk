@@ -32,6 +32,9 @@ const statusTimelineSchema = new mongoose.Schema(
       required: true,
     },
     note: { type: String, default: "" },
+    // populated when a status change carries shipment tracking (shipped)
+    trackingNumber: { type: String, default: "" },
+    trackingUrl: { type: String, default: "" },
     changedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -91,6 +94,12 @@ const orderSchema = new mongoose.Schema(
       type: [statusTimelineSchema],
       default: [],
     },
+    // Latest courier tracking (set on the "shipped" transition)
+    trackingNumber: { type: String, default: "" },
+    trackingUrl: { type: String, default: "" },
+    // Set true after the confirmation email for this order went out —
+    // makes payment-webhook vs client-verify double-fires idempotent.
+    confirmationEmailSent: { type: Boolean, default: false },
     payment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Payment",
@@ -101,9 +110,20 @@ const orderSchema = new mongoose.Schema(
 );
 
 /** Appends a timeline entry and sets currentStatus in one update. */
-orderSchema.methods.recordStatus = function (status, note = "", changedBy = null) {
+orderSchema.methods.recordStatus = function (status, note = "", changedBy = null, extra = {}) {
   this.currentStatus = status;
-  this.statusTimeline.push({ status, note, changedBy, timestamp: new Date() });
+  this.statusTimeline.push({
+    status,
+    note,
+    changedBy,
+    timestamp: new Date(),
+    trackingNumber: extra.trackingNumber || "",
+    trackingUrl: extra.trackingUrl || "",
+  });
+  // Latest tracking info lives at the top level too, so the customer UI and
+  // emails don't have to scan the timeline for the current courier details.
+  if (extra.trackingNumber) this.trackingNumber = extra.trackingNumber;
+  if (extra.trackingUrl) this.trackingUrl = extra.trackingUrl;
 };
 
 /** Guard used by the admin status endpoint — enforces the legal transition map. */

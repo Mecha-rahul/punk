@@ -46,12 +46,15 @@ const base = `http://127.0.0.1:${server.address().port}`;
 // (NODE_ENV=test → mail suppressed path logs the full text). Capture them so
 // the auth suite can complete the register → verify → login flow.
 const capturedVerifyTokens = [];
+const capturedOrderEmails = []; // subjects of order emails (placed/confirmed/status)
 {
   const origLog = console.log.bind(console);
   console.log = (...args) => {
     const line = args.join(" ");
     const m = line.match(/verify-email\?token=([a-f0-9]+)/);
     if (m) capturedVerifyTokens.push(m[1]);
+    const o = line.match(/📧 \[mail suppressed[^\]]*\]\s*\nTo: .*\nSubject: (Order [^\n]+)/);
+    if (o) capturedOrderEmails.push(o[1]);
     origLog(...args);
   };
 }
@@ -366,7 +369,7 @@ const order = checkoutRes.body.data.order;
 assert.equal(order.currentStatus, "pending_payment");
 assert.equal(order.subtotal, 4797);
 assert.equal(order.discount, 100);
-assert.equal(order.total, 4697); // free shipping ≥ 999
+assert.equal(order.total, 4746); // flat ₹49 shipping (4797 − 100 + 49), no free tier
 passed += 1;
 
 const stockAfter = (await Product.findById(productId)).findVariant(skuM).stock;
@@ -395,6 +398,12 @@ const user2Login = await call("POST", "/api/v1/auth/login", {
 const user2Cookies = collectCookies(user2Login);
 await call("GET", `/api/v1/orders/${order._id}`, { cookies: user2Cookies, expect: 403 });
 
+// Order emails: "placed" fires at checkout (text subject = "Order <num> placed…")
+assert.ok(
+  capturedOrderEmails.some((s) => s.includes(order.orderNumber) && s.toLowerCase().includes("placed")),
+  `order-placed email sent for ${order.orderNumber}`
+);
+
 // Admin order flows
 await call("GET", "/api/v1/orders/admin/all", { cookies: adminCookies, expect: 200 });
 await call("PATCH", `/api/v1/orders/admin/${order._id}/status`, {
@@ -412,6 +421,20 @@ await call("PATCH", `/api/v1/orders/admin/${order._id}/status`, {
   body: { status: "processing" },
   expect: 200,
 });
+await call("PATCH", `/api/v1/orders/admin/${order._id}/status`, {
+  cookies: adminCookies,
+  body: { status: "shipped", note: "Handed to courier", trackingNumber: "AK-TEST-1", trackingUrl: "https://track.example.com/AK-TEST-1" },
+  expect: 200,
+});
+{
+  const shipped = await call("GET", `/api/v1/orders/${order._id}`, { cookies: userCookies, expect: 200 });
+  assert.equal(shipped.body.data.order.trackingNumber, "AK-TEST-1", "tracking number stored on order");
+  assert.ok(shipped.body.data.order.statusTimeline.at(-1).trackingUrl, "tracking url stored in timeline");
+  assert.ok(
+    capturedOrderEmails.some((s) => s.includes(order.orderNumber) && s.toUpperCase().includes("SHIPPED")),
+    "status email sent on shipped transition"
+  );
+}
 
 // ─── 9. Concurrent oversell protection (the crown jewel) ─────────────────────
 // skuL has stock 2. Two users race to buy 2 units each — exactly one wins.

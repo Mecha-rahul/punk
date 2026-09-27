@@ -19,6 +19,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import LogoutPage from './pages/LogoutPage'
 import WishlistPage from './pages/WishlistPage'
+import OrdersPage, { OrderDetailPage } from './pages/OrdersPage'
 import AccountPage from './pages/AccountPage'
 import AdminPage from './pages/AdminPage'
 import SearchPage from './pages/SearchPage'
@@ -64,6 +65,8 @@ export default function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/logout" element={<LogoutPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/orders/:id" element={<OrderDetailPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/search" element={<SearchPage />} />

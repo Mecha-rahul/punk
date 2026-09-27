@@ -191,9 +191,16 @@ export default function CheckoutPage() {
               </p>
             )}
             <div className="mt-8 flex flex-col gap-3">
-              <Link to="/account" className="ak-btn-outline">View Account</Link>
+              {done.order?._id ? (
+                <Link to={`/orders/${done.order._id}`} className="ak-btn-outline">View This Order</Link>
+              ) : (
+                <Link to="/orders" className="ak-btn-outline">View My Orders</Link>
+              )}
               <Link to="/new-arrivals" className="ak-btn-dark">Continue Shopping</Link>
             </div>
+            <p className="mt-4 text-[11px] text-ink-soft">
+              A confirmation email with your order details is on its way — the order also lives in your order history.
+            </p>
           </div>
         </div>
       </div>

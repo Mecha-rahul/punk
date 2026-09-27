@@ -114,6 +114,8 @@ export const api = {
   // HMAC-SHA256(order_id|payment_id, KEY_SECRET) is verified server-side.
   verifyPayment: (body) => request('/payments/razorpay/verify', { method: 'POST', body }),
   myOrders: () => request('/orders/me'),
+  myOrder: (id) => request(`/orders/${id}`),
+  cancelMyOrder: (id) => request(`/orders/${id}/cancel`, { method: 'POST' }),
 
   // user addresses (required by checkout)
   addAddress: (body) => request('/users/me/addresses', { method: 'POST', body }),

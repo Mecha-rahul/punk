@@ -3,8 +3,11 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Payment } from "../models/payment.model.js";
 import { Order } from "../models/order.model.js";
+import { User } from "../models/user.model.js";
 import { InventoryLog } from "../models/inventoryLog.model.js";
 import { razorpayConfigured, verifyPaymentSignature, verifyWebhookSignature } from "../utils/razorpay.js";
+import { sendEmail } from "../utils/email.js";
+import { orderConfirmedEmail } from "../utils/orderEmails.js";
 
 /**
  * POST /payments/razorpay/order — called by the client right after checkout
@@ -104,11 +107,38 @@ const verifyPayment = asyncHandler(async (req, res) => {
     order.recordStatus("confirmed", "Payment authorized", req.user._id);
     await order.save();
   }
+  if (order) await sendConfirmationOnce(order);
 
   return res
     .status(200)
     .json(new ApiResponse(200, { paymentId: payment._id, status: payment.status }, "Payment verified"));
 });
+
+/**
+ * Sends the order-confirmation email exactly once per order. Both the client
+ * verify path and the webhook can arrive for the same payment — the flag on
+ * the order doc makes the second caller a no-op.
+ */
+export const sendConfirmationOnce = async (order) => {
+  if (!order || order.confirmationEmailSent) return;
+  try {
+    order.confirmationEmailSent = true;
+    await order.save();
+    const customer = await User.findById(order.user, "email");
+    if (!customer?.email) return;
+    const result = await sendEmail({
+      to: customer.email,
+      subject: orderConfirmedEmail(order).subject,
+      html: orderConfirmedEmail(order).html,
+      text: orderConfirmedEmail(order).subject,
+    });
+    if (!result.delivered) {
+      console.error(`📧 [order email] confirmation not delivered to ${customer.email}: ${result.reason || "unknown"}`);
+    }
+  } catch (err) {
+    console.error("📧 [order email] confirmation failed:", err.message);
+  }
+};
 
 /**
  * POST /payments/razorpay/webhook — Razorpay's server-to-server callback.
@@ -144,6 +174,7 @@ const razorpayWebhook = asyncHandler(async (req, res) => {
         order.recordStatus("confirmed", "Payment captured (webhook)", null);
         await order.save();
       }
+      if (order) await sendConfirmationOnce(order);
     }
     return ack();
   }

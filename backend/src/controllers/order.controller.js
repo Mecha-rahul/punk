@@ -12,6 +12,23 @@ import { InventoryLog } from "../models/inventoryLog.model.js";
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE, CUSTOMER_CANCELLABLE_STATUSES, LEGAL_ORDER_TRANSITIONS } from "../constants.js";
 import { calcCouponDiscount, generateOrderNumber, pagination, ensureFound } from "../utils/helpers.js";
 import { razorpayConfigured, createRazorpayOrder } from "../utils/razorpay.js";
+import { sendEmail } from "../utils/email.js";
+import { orderPlacedEmail, orderConfirmedEmail, orderStatusEmail } from "../utils/orderEmails.js";
+
+// Order emails are a courtesy, never a correctness step: a failed send is
+// logged (with the reason Brevo reported) and the order flow continues.
+const sendOrderEmail = async (to, template) => {
+  try {
+    const result = await sendEmail({ to, subject: template.subject, html: template.html, text: template.subject });
+    if (!result.delivered) {
+      console.error(`📧 [order email] not delivered to ${to}: ${result.reason || "unknown"}`);
+    }
+    return result.delivered === true;
+  } catch (err) {
+    console.error("📧 [order email] send failed:", err.message);
+    return false;
+  }
+};
 
 // ─── POST /orders/checkout — the core correctness flow ──────────────────────
 /**
@@ -203,6 +220,17 @@ const checkout = asyncHandler(async (req, res) => {
     console.error("InventoryLog write failed (order unaffected):", err.message);
   }
 
+  // Post-commit: "order placed" email with the full item snapshot. The
+  // confirmation email (payment captured) is sent by the payment flow.
+  const userDoc = await User.findById(req.user._id, "email");
+  if (userDoc?.email) {
+    const delivered = await sendOrderEmail(userDoc.email, orderPlacedEmail(result.order));
+    if (delivered) {
+      result.order.confirmationEmailSent = true;
+      await result.order.save();
+    }
+  }
+
   return res.status(201).json(
     new ApiResponse(
       201,
@@ -341,7 +369,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 /** PATCH /admin/orders/:id/status — validates against the legal transition map. */
 const updateOrderStatus = asyncHandler(async (req, res) => {
   const { id } = req.validatedParams;
-  const { status, note } = req.body;
+  const { status, note, trackingNumber, trackingUrl } = req.body;
 
   const order = await Order.findById(id);
   ensureFound(order, "Order not found");
@@ -351,12 +379,25 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     throw new ApiError(400, `Illegal transition: ${order.currentStatus} → ${status}. Allowed: ${allowed}`);
   }
 
-  order.recordStatus(status, note || "", req.user._id);
+  order.recordStatus(status, note || "", req.user._id, { trackingNumber, trackingUrl });
   await order.save();
 
   // Keep the payment record in step with a refund decision.
   if (status === "refunded" && order.payment) {
     await Payment.findByIdAndUpdate(order.payment, { $set: { status: "refunded" } });
+  }
+
+  // Email the customer about every meaningful status move (post-confirm).
+  // pending_payment → confirmed transitions are owned by the payment flow,
+  // which sends the confirmation email on capture.
+  if (status !== "confirmed" && status !== "pending_payment") {
+    const customer = await User.findById(order.user, "email");
+    if (customer?.email) {
+      await sendOrderEmail(
+        customer.email,
+        orderStatusEmail(order, { status, note: note || "", trackingNumber, trackingUrl })
+      );
+    }
   }
 
   return res.status(200).json(new ApiResponse(200, { order }, "Order status updated"));

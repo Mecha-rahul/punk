@@ -267,6 +267,9 @@ export const updateStatusSchema = z.object({
   body: z.object({
     status: z.enum(OrderStatus),
     note: z.string().trim().optional(),
+    // courier tracking — expected on the "shipped" transition, optional elsewhere
+    trackingNumber: z.string().trim().max(80).optional(),
+    trackingUrl: z.string().trim().url().max(300).optional(),
   }),
 });
 
