@@ -1,6 +1,5 @@
 import HeroSlideshow from '../components/HeroSlideshow'
 import MarqueeStrip from '../components/MarqueeStrip'
-import CategoryShowcase from '../components/CategoryShowcase'
 import ProductCarousel from '../components/ProductCarousel'
 import ProductGrid from '../components/ProductGrid'
 import VideoSection from '../components/VideoSection'
@@ -71,10 +70,7 @@ export default function Home() {
       {/* 2 — scrolling marquee */}
       <MarqueeStrip preset="primary" />
 
-      {/* 3 — category showcase (scroll-reveal stagger) */}
-      <CategoryShowcase />
-
-      {/* 4 — collection list strip */}
+      {/* 3 — collection list strip (category showcase removed by owner) */}
       <CollectionList />
 
       {/* 5 — campaign banner (still artwork until campaign film) */}
