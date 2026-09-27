@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import HeroSlideshow from '../components/HeroSlideshow'
 import MarqueeStrip from '../components/MarqueeStrip'
@@ -24,9 +24,26 @@ const EDITORIAL = {
 }
 
 // Small collections strip mirroring GENRAGE's collection-list section.
-// Horizontally swipeable (touch snap + desktop arrows) — five tiles, ~3 visible.
+// Horizontally swipeable (touch snap + desktop arrows) with auto-advance.
+// Loading shows pulsing skeleton tiles — while the PAGE is actually loading,
+// never as an entrance animation (owner: "animation not in opening, only in
+// loading"). Tiles swap in instantly once the window fires `load`.
 function CollectionList() {
   const trackRef = useRef(null)
+  const pausedRef = useRef(false)
+  const resumeRef = useRef(null)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    if (document.readyState === 'complete') {
+      setLoaded(true)
+      return
+    }
+    const done = () => setLoaded(true)
+    window.addEventListener('load', done, { once: true })
+    return () => window.removeEventListener('load', done)
+  }, [])
+
   const tiles = [
     { label: 'Hoodies', to: '/tops/hoodies' },
     { label: 'T-Shirts', to: '/tops/tshirts' },
@@ -35,42 +52,94 @@ function CollectionList() {
     { label: 'Accessories', to: '/accessories' },
   ]
 
-  const scrollBy = (dir) => {
+  const stepSize = () => {
+    const track = trackRef.current
+    const card = track?.querySelector('[data-tile]')
+    return card ? card.offsetWidth + 16 : 296
+  }
+
+  // interactions pause the auto-swipe; it resumes 4s after the last one
+  const pauseAuto = () => {
+    pausedRef.current = true
+    clearTimeout(resumeRef.current)
+    resumeRef.current = setTimeout(() => (pausedRef.current = false), 4000)
+  }
+
+  const scrollByTiles = (dir) => {
     const track = trackRef.current
     if (!track) return
-    const card = track.querySelector('a[data-tile]')
-    const step = card ? card.offsetWidth + 16 : 280
-    track.scrollBy({ left: dir * step * 2, behavior: 'smooth' })
+    pauseAuto()
+    track.scrollBy({ left: dir * stepSize() * 2, behavior: 'smooth' })
   }
+
+  // auto-swipe: one tile every 3.5s, wrapping to the start. Paused while
+  // hovered/touched (via pausedRef), when the tab is hidden, and entirely
+  // for prefers-reduced-motion users.
+  useEffect(() => {
+    if (!loaded) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = setInterval(() => {
+      const track = trackRef.current
+      if (!track || pausedRef.current || document.hidden) return
+      const max = track.scrollWidth - track.clientWidth
+      if (max <= 0) return
+      if (track.scrollLeft >= max - 4) track.scrollTo({ left: 0, behavior: 'smooth' })
+      else track.scrollBy({ left: stepSize(), behavior: 'smooth' })
+    }, 3500)
+    return () => {
+      clearInterval(id)
+      clearTimeout(resumeRef.current)
+    }
+  }, [loaded])
+
+  const skeletonCls = 'aspect-square w-[62vw] flex-shrink-0 animate-pulse bg-bg-secondary sm:w-[38vw] lg:w-[23%]'
 
   return (
     <section className="bg-bg-primary py-14 sm:py-16">
       <div className="ak-shell">
-        <div
-          ref={trackRef}
-          className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0"
-        >
-          {tiles.map((t) => (
-            <Link
-              key={t.to}
-              data-tile
-              to={t.to}
-              className="group relative w-[62vw] flex-shrink-0 snap-start overflow-hidden bg-bg-secondary sm:w-[38vw] lg:w-[23%]"
-            >
-              <div className="aspect-square border border-line-soft" />
-              <span className="absolute inset-0 flex items-center justify-center font-wordmark text-lg uppercase tracking-wide text-ink transition-transform duration-300 group-hover:scale-110 sm:text-2xl">
-                {t.label}
-              </span>
-              <span className="absolute bottom-3 left-1/2 h-px w-0 -translate-x-1/2 bg-accent transition-all duration-300 group-hover:w-1/2" />
-            </Link>
-          ))}
-        </div>
+        {loaded ? (
+          <div
+            ref={trackRef}
+            onMouseEnter={() => {
+              pausedRef.current = true
+              clearTimeout(resumeRef.current)
+            }}
+            onMouseLeave={() => {
+              clearTimeout(resumeRef.current)
+              resumeRef.current = setTimeout(() => (pausedRef.current = false), 1200)
+            }}
+            onTouchStart={pauseAuto}
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0"
+          >
+            {tiles.map((t) => (
+              <Link
+                key={t.to}
+                data-tile
+                to={t.to}
+                className="group relative w-[62vw] flex-shrink-0 snap-start overflow-hidden bg-bg-secondary sm:w-[38vw] lg:w-[23%]"
+              >
+                <div className="aspect-square border border-line-soft" />
+                <span className="absolute inset-0 flex items-center justify-center font-wordmark text-lg uppercase tracking-wide text-ink transition-transform duration-300 group-hover:scale-110 sm:text-2xl">
+                  {t.label}
+                </span>
+                <span className="absolute bottom-3 left-1/2 h-px w-0 -translate-x-1/2 bg-accent transition-all duration-300 group-hover:w-1/2" />
+              </Link>
+            ))}
+          </div>
+        ) : (
+          /* loading skeleton — same geometry so nothing shifts on swap */
+          <div className="-mx-4 flex gap-4 overflow-hidden px-4 sm:mx-0 sm:px-0" aria-hidden="true">
+            {tiles.map((t, i) => (
+              <div key={i} className={skeletonCls} />
+            ))}
+          </div>
+        )}
 
         {/* desktop arrows — touch devices swipe natively */}
         <div className="mt-6 hidden justify-end gap-2 sm:flex">
           <button
             type="button"
-            onClick={() => scrollBy(-1)}
+            onClick={() => scrollByTiles(-1)}
             aria-label="Scroll collections back"
             className="border border-line-soft p-2.5 transition-colors hover:bg-bg-secondary"
           >
@@ -78,7 +147,7 @@ function CollectionList() {
           </button>
           <button
             type="button"
-            onClick={() => scrollBy(1)}
+            onClick={() => scrollByTiles(1)}
             aria-label="Scroll collections forward"
             className="border border-line-soft p-2.5 transition-colors hover:bg-bg-secondary"
           >
