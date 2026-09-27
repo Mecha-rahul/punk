@@ -36,6 +36,7 @@ export default function AdminPage() {
   useSeo({ title: 'Admin', path: '/admin', noindex: true })
   const { user, apiLive, boot, toast } = useStore()
 
+  const [retrying, setRetrying] = useState(false)
   const [loading, setLoading] = useState(false)
   const [loadError, setLoadError] = useState(null)
   const [products, setProducts] = useState([])
@@ -328,8 +329,17 @@ export default function AdminPage() {
             respond just now. The hosted server may be waking up (free tier sleeps when idle).
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <button type="button" onClick={() => boot()} className="ak-btn-dark">
-              Retry connection
+            <button
+              type="button"
+              disabled={retrying}
+              onClick={async () => {
+                setRetrying(true)
+                await boot() // waits for the wake-up, no page reload needed
+                setRetrying(false)
+              }}
+              className="ak-btn-dark disabled:opacity-60"
+            >
+              {retrying ? 'Connecting… (can take ~1 min)' : 'Retry connection'}
             </button>
             <Link to="/" className="ak-btn-outline">Back to Store</Link>
           </div>

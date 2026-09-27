@@ -40,10 +40,11 @@ export function StoreProvider({ children }) {
   const [catalog, setCatalog] = useState(PRODUCTS) // mock products are already in UI shape
 
   const boot = useCallback(async () => {
-    // Retry a few times before declaring the API dead: the hosted backend
+    // Retry aggressively before declaring the API dead: the hosted backend
     // (Render free tier) sleeps when idle and needs up to ~60s to wake, so a
-    // single probe at boot would misreport a perfectly healthy API.
-    const attempts = 4
+    // short probe would misreport a perfectly healthy API. Total patience:
+    // ~75s (6 attempts × ~12.5s request timeout + 1s gaps).
+    const attempts = 6
     for (let i = 0; i < attempts; i++) {
       try {
         const data = await api.products({ limit: 60 })
@@ -53,7 +54,7 @@ export function StoreProvider({ children }) {
         setApiLive(true)
         return true
       } catch {
-        if (i < attempts - 1) await new Promise((r) => setTimeout(r, 4000))
+        if (i < attempts - 1) await new Promise((r) => setTimeout(r, 1000))
       }
     }
     setCatalog(PRODUCTS) // mock ids like 'ak-001'
